@@ -38,11 +38,19 @@ $routes->get('/login', 'Login::index');
 $routes->post('/login', 'login::prosesLogin');
 $routes->get('/logout', 'login::logout');
 
-//user pengguna
+//profile
 $routes->get('/user', 'User::index');
-$routes->get('/user', 'User::user_security');
-$routes->get('/user', 'User::user_officeBoy');
-$routes->get('/user', 'User::user_driver');
+$routes->get('/user/profile_edit', 'User::profile_edit');
+$routes->post('/user/profile_update', 'User::profile_update');
+$routes->post('/user/change_password', 'User::change_password');
+// user pengguna
+// security
+$routes->get('/user/security', 'User::user_security');
+// OB
+$routes->get('/user/OB', 'User::user_officeBoy');
+// driver
+$routes->get('/user/driver', 'User::user_driver');
+
 
 //user akses
 $routes->get('/user_akses', 'User::akses');

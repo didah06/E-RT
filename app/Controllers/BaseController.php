@@ -49,7 +49,59 @@ class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
     }
-    public function _validation()
+    protected function _validation($field, $label, $rules)
     {
+        $validate   = explode('|', $rules);
+        $errors     = [];
+
+        foreach ($validate as $rule) {
+            $exp    = explode('[', $rule);
+            $key    = $exp[0];
+            $param  = str_between($rule, '[', ']');
+
+            if ($key == 'required') {
+                $errors[$key]  = $label . ' harus diisi';
+            } else if ($key == 'is_unique') {
+                $errors[$key]  = $label . ' sudah tersedia';
+            } else if ($key == 'min_length') {
+                $errors[$key]  = $label . ' paling sedikit ' . $param . ' karakter';
+            } else if ($key == 'max_length') {
+                $errors[$key]  = $label . ' paling banyak ' . $param . ' karakter';
+            } else if ($key == 'is_natural') {
+                $errors[$key]  = $label . ' harus angka';
+            } else if ($key == 'valid_date') {
+                $errors[$key]  = $label . ' harus berisi tanggal valid (' . $param . ')';
+            } else if ($key == 'uploaded') {
+                $errors[$key]  = $label . ' belum dipilih';
+            } else if ($key == 'max_size') {
+                $max    = str_replace($field . ',', '', $param);
+                $errors[$key]  = $label . ' terlalu besar (max: ' . $max . 'KB )';
+            } else if ($key == 'max_dims') {
+                $max    = str_replace($field . ',', '', $param);
+                $max    = str_replace(',', 'x', $max);
+                $errors[$key]  = $label . ' dimensi terlalu besar (max: ' . $max . ')';
+            } else if ($key == 'mime_in') {
+                $param  = str_replace($field . ',', '', $param);
+                $errors[$key]  = $label . ' type tidak diizinkan (type: ' . $param . ')';
+            } else if ($key == 'ext_in') {
+                $param  = str_replace($field . ',', '', $param);
+                $errors[$key]  = $label . ' extension tidak diizinkan (type: ' . $param . ')';
+            } else if ($key == 'is_image') {
+                $errors[$key]  = $label . ' bukan file gambar';
+            }
+        }
+        if (!$this->validate(
+            [
+                $field  => [
+                    'rules'     => $rules,
+                    'errors'    => $errors,
+                ],
+            ],
+        )) {
+            $validation     = \Config\Services::validation();
+            return $validation->getError($field);
+        } else {
+            return '';
+        }
     }
 }

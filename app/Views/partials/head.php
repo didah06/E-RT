@@ -19,6 +19,13 @@
     <!-- Custom Css -->
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/main.css">
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/color_skins.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/toastr.min.css">
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?= base_url(); ?>/public/assets/js/custom.js"></script>
+    <script src="<?= base_url(); ?>/public/assets/js/toastr.min.js"></script>
+
+
 </head>
 
 <body class="theme-cyan">
@@ -195,7 +202,7 @@
             <ul class="list">
                 <li>
                     <div class="user-info">
-                        <div class="image"><img src="<?= $user_login->foto; ?>" alt="User"></div>
+                        <div class="image"><img src="<?= _siteURL('master/assets/img/profile/thumb/' . $user_login->foto); ?>" alt="User" height="70px"></div>
                         <div class="detail">
                             <h4><?= $user_login->nama; ?></h4>
                             <small><?= $user_login->jabatan; ?></small>
@@ -209,9 +216,9 @@
                 <li class="header">USER PENGGUNA</li>
                 <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-add"></i><span>User</span> </a>
                     <ul class="ml-menu">
-                        <li><a href="<?= base_url('user/user_security'); ?>">Security</a></li>
-                        <li><a href="<?= base_url('user/user_officeBoy'); ?>">Office Boy</a></li>
-                        <li><a href="<?= base_url('user/user_driver'); ?>">Driver</a></li>
+                        <li><a href="<?= base_url('user/security'); ?>">Security</a></li>
+                        <li><a href="<?= base_url('user/OB'); ?>">Office Boy</a></li>
+                        <li><a href="<?= base_url('user/driver'); ?>">Driver</a></li>
                     </ul>
                 </li>
                 <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-o"></i><span>Pengaturan Akses</span> </a>

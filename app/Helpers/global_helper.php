@@ -127,3 +127,20 @@ function _siteUrl($uri = '')
     $domainName = $_SERVER['HTTP_HOST'] . '/';
     return $protocol . $domainName . $uri;
 }
+function str_between($str, $starting_word, $ending_word)
+{
+    $subtring_start = strpos($str, $starting_word);
+    $subtring_start += strlen($starting_word);
+    $size           = strpos($str, $ending_word, $subtring_start) - $subtring_start;
+    return trim(substr($str, $subtring_start, $size));
+}
+function _validationHasErrors($array)
+{
+    $return = true;
+    foreach ($array as $value) {
+        if ($value != '') {
+            $return = false;
+        }
+    }
+    return $return;
+}

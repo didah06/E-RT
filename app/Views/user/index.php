@@ -33,30 +33,39 @@
                     </ul>
                 </div>
                 <div class="body">
+                    <?php if (session()->getFlashdata('success')) : ?>
+                        <div class="alert alert-success"><?= session()->getFlashdata('success') ?>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (session()->getFlashdata('error')) : ?>
+                        <div class="alert alert-danger"><?= session()->getFlashdata('error') ?>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <?php endif; ?>
                     <div class="header l-cyan">
                         <h4 class="m-t-10"><?= $user_login->nama; ?></h4>
                     </div>
                     <div class="member-img">
-                        <a href="profile.html" class="">
-                            <img src="<?= $user_login->foto; ?>" class="rounded-circle" alt="profile-image">
+                        <a href="profile.html">
+                            <img src="<?= _siteURL('master/assets/img/profile/thumb/' . $user_login->foto); ?>" class="rounded-circle" alt="profile-image" height="100px">
                         </a>
                     </div>
-                    <div class="d-flex flex-wrap align-items-start gap-2 gap-lg-3 text-muted font-size-13">
-                        <div><i class="mdi mdi-circle-medium me-1 text-success align-middle"></i><?= $user_login->role; ?></div>
-                        <div><i class="mdi mdi-circle-medium me-1 text-success align-middle"></i><?= $user_login->username; ?></div>
-                    </div>
-                    <div class="body">
-                        <div class="col-12 pt-4">
+                    <div class="d-flex flex-wrap text-center">
+                        <ul class="profile-detail pt-3">
+                            <li>
+                                <?= $user_login->role; ?>
+                            </li>
+                        </ul>
+                        <ul class="profile-detail pt-3">
+                            <li><?= $user_login->username; ?></li>
+                        </ul>
+                        <div class="profile-detail pl-4">
                             <p class="text-muted">Terakhir login <?= date('d-m-Y H:i:s', $user_login->last_login); ?></p>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-6">
-                                <p><i class="zmdi zmdi-caret-right">&nbsp;</i><?= $user_login->username; ?></p>
-                            </div>
-                            <div class="col-6">
-                                <p><i class="zmdi zmdi-caret-right">&nbsp;</i><?= $user_login->role; ?></p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,24 +82,40 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Password</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Password">
+                            <?= form_open(base_url('user/change_password'), ['class' => 'form_update']); ?>
+                            <label for="exampleInputPassword1">Password</label>
+                            <div class="form-group">
+                                <div class="input-group mb-2">
+                                    <input type="password" class="form-control" name="password" value="<?= old('password'); ?>" placeholder="Enter Password">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="zmdi zmdi-eye icon"></i></div>
+                                    </div>
+                                    <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Password Baru</label>
-                                    <input type="password" class="form-control" id="new_password" placeholder="New Password">
+                            </div>
+                            <label for="exampleInputPassword1">Password Baru</label>
+                            <div class="form-group">
+                                <div class="input-group mb-2">
+                                    <input type="password" class="form-control" name="new_password" value="<?= old('password'); ?>" placeholder="Enter New Password">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="zmdi zmdi-eye icon"></i></div>
+                                    </div>
+                                    <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Konfirmasi Password</label>
-                                    <input type="password" class="form-control" id="confirm_password" placeholder="Konfirmasi Password">
+                            </div>
+                            <label for="exampleInputPassword1">Konfirmasi Password</label>
+                            <div class="form-group">
+                                <div class="input-group mb-2">
+                                    <input type="password" class="form-control" name="confirm_password" placeholder=" Enter Konfirmasi Password">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="zmdi zmdi-eye icon"></i></div>
+                                    </div>
+                                    <div class="invalid-feedback"></div>
                                 </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -132,136 +157,12 @@
         <div class="col-lg-8 col-md-12">
             <div class="card">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#mypost">My Post</a></li>
                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#timeline">Timeline</a></li>
                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Setting</a></li>
                 </ul>
             </div>
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane blog-page active" id="mypost">
-                    <div class="card single_post">
-                        <div class="body">
-                            <h3 class="m-t-0 m-b-5"><a href="blog-details.html">All photographs are accurate. None of them is the truth</a></h3>
-                            <ul class="meta">
-                                <li><a href="#"><i class="zmdi zmdi-account col-blue"></i>Posted By: John Smith</a></li>
-                                <li><a href="#"><i class="zmdi zmdi-label col-red"></i>Photography</a></li>
-                                <li><a href="#"><i class="zmdi zmdi-comment-text col-blue"></i>Comments: 3</a></li>
-                            </ul>
-                        </div>
-                        <div class="body">
-                            <div class="img-post m-b-15">
-                                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                                    <div class="carousel-inner" role="listbox">
-                                        <div class="carousel-item active">
-                                            <img class="d-block img-fluid" src="<?= base_url(); ?>/public/assets/images/blog/blog-page-1.jpg" alt="First slide">
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img class="d-block img-fluid" src="<?= base_url(); ?>/public/assets/images/blog/blog-page-2.jpg" alt="Second slide">
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img class="d-block img-fluid" src="<?= base_url(); ?>/public/assets/images/blog/blog-page-3.jpg" alt="Third slide">
-                                        </div>
-                                    </div>
-                                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </div>
-                                <div class="social_share">
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
-                                </div>
-                            </div>
-                            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal</p>
-                            <a href="blog-details.html" title="read more" class="btn btn-round btn-info">Read More</a>
-                        </div>
-                    </div>
-                    <div class="card single_post">
-                        <div class="body">
-                            <h3 class="m-t-0 m-b-5"><a href="blog-details.html">Apple Introduces Search Ads Basic</a></h3>
-                            <ul class="meta">
-                                <li><a href="#"><i class="zmdi zmdi-account col-blue"></i>Posted By: John Smith</a></li>
-                                <li><a href="#"><i class="zmdi zmdi-label col-amber"></i>Technology</a></li>
-                                <li><a href="#"><i class="zmdi zmdi-comment-text col-blue"></i>Comments: 3</a></li>
-                            </ul>
-                        </div>
-                        <div class="body">
-                            <div class="img-post m-b-15">
-                                <img src="<?= base_url(); ?>/public/assets/images/blog/blog-page-2.jpg" alt="Awesome Image">
-                                <div class="social_share">
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
-                                </div>
-                            </div>
-                            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal</p>
-                            <a href="blog-details.html" title="read more" class="btn btn-round btn-info">Read More</a>
-                        </div>
-                    </div>
-                    <div class="row clearfix">
-                        <div class="col-lg-6 col-md-12">
-                            <div class="card single_post">
-                                <div class="body">
-                                    <h3 class="m-t-0 m-b-5"><a href="blog-details.html">WTCR from 2018: new rules, more cars, more races</a></h3>
-                                    <ul class="meta">
-                                        <li><a href="#"><i class="zmdi zmdi-account col-blue"></i>Posted By: John Smith</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-label col-lime"></i>Sports</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-comment-text col-blue"></i>Comments: 3</a></li>
-                                    </ul>
-                                </div>
-                                <div class="body">
-                                    <div class="img-post m-b-15">
-                                        <img src="<?= base_url(); ?>/public/assets/images/blog/blog-page-3.jpg" alt="Awesome Image">
-                                        <div class="social_share">
-                                            <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
-                                            <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
-                                            <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
-                                        </div>
-                                    </div>
-                                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old</p>
-                                    <a href="blog-details.html" title="read more" class="btn btn-round btn-info">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-12">
-                            <div class="card single_post">
-                                <div class="body">
-                                    <h3 class="m-t-0 m-b-5"><a href="blog-details.html">CSS Timeline Examples from CodePen</a></h3>
-                                    <ul class="meta">
-                                        <li><a href="#"><i class="zmdi zmdi-account col-blue"></i>Posted By: John Smith</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-label col-green"></i>Web Design</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-comment-text col-blue"></i>Comments: 3</a></li>
-                                    </ul>
-                                </div>
-                                <div class="body">
-                                    <div class="img-post m-b-15">
-                                        <img src="<?= base_url(); ?>/public/assets/images/blog/blog-page-4.jpg" alt="Awesome Image">
-                                        <div class="social_share">
-                                            <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
-                                            <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
-                                            <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
-                                        </div>
-                                    </div>
-                                    <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words</p>
-                                    <a href="blog-details.html" title="read more" class="btn btn-round btn-info">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <ul class="pagination pagination-primary">
-                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                    </ul>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="timeline">
+                <div role="tabpanel" class="tab-pane active" id="timeline">
                     <ul class="cbp_tmtimeline">
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-04T18:30"><span class="hidden">25/12/2017</span> <span class="large">Now</span></time>
@@ -345,16 +246,18 @@
                             <h2><strong>Security</strong> Settings</h2>
                         </div>
                         <div class="body">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Username">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" placeholder="Current Password">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" placeholder="New Password">
-                            </div>
-                            <button class="btn btn-info btn-round">Save Changes</button>
+                            <form>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Enter Password" name="password" value="<?= old('password'); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Enter Password" name="new password" value="<?= old('password'); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Enter Password" name="confirm_password" value="<?= old('password'); ?>">
+                                </div>
+                                <button class="btn btn-info btn-round" type="submit">Save Changes</button>
+                            </form>
                         </div>
                     </div>
                     <div class="card">
@@ -418,3 +321,33 @@
         </div>
     </div>
 </section>
+<script>
+    $(document).ready(function() {
+        $('.form_update').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    processDone();
+                    if (d['success'] > 0) {
+                        $('input[name=rscript]').val(d['rscript']);
+                        $('#myModal').modal('hide');
+                        toastr.success('Password anda berhasil diubah');
+                    } else {
+                        invalidError(d);
+                    }
+                }
+            });
+        });
+    });
+</script>

@@ -5,6 +5,7 @@
 
 <script src="<?= base_url(); ?>/public/assets/plugins/dropzone/dropzone.js"></script> <!-- Dropzone Plugin Js -->
 <script src="<?= base_url(); ?>/public/assets/bundles/mainscripts.bundle.js"></script>
+
 <!-- <script>
     $('select').selectpicker();
 </script> -->
