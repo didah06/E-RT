@@ -14,16 +14,25 @@
     <link rel="shortcut icon" href="<?= base_url(); ?>/public/assets/images/logo.png">
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/dropzone/dropzone.css">
-    <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/bootstrap-select/css/bootstrap-select.css" />
-    <link href="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/bootstrap-select/css/bootstrap-select.min.css" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Custom Css -->
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/main.css">
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/color_skins.css">
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?= base_url(); ?>/public/assets/js/custom.js"></script>
     <script src="<?= base_url(); ?>/public/assets/js/toastr.min.js"></script>
+    <script src="<?= base_url(); ?>/public/assets/bundles/datatablescripts.bundle.js"></script>
+    <script src="<?= base_url(); ?>/public/assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
+    <script src="<?= base_url(); ?>/public/assets/js/pages/tables/jquery-datatable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="<?= base_url(); ?>/public/assets/plugins/bootstrap-select/js/bootstrap-select.min.js"></script> -->
 
 
 </head>
@@ -191,7 +200,7 @@
                 <li>
                     <a href="javascript:void(0);" class="fullscreen hidden-sm-down" data-provide="fullscreen" data-close="true"><i class="zmdi zmdi-fullscreen"></i></a>
                 </li>
-                <li><a href="<?= base_url('login/logout'); ?>" class="mega-menu" data-close="true"><i class="zmdi zmdi-power"></i></a></li>
+                <li><a href="<?= base_url('logout'); ?>" class="mega-menu" data-close="true"><i class="zmdi zmdi-power"></i></a></li>
             </ul>
         </div>
     </nav>
@@ -207,87 +216,67 @@
                             <h4><?= $user_login->nama; ?></h4>
                             <small><?= $user_login->jabatan; ?></small>
                         </div>
-                        <a href="<?= base_url('user'); ?>" title="Contact List"><i class="zmdi zmdi-account"></i></a>
-                        <a href="<?= base_url('login/logout'); ?>" title="Sign out"><i class="zmdi zmdi-power"></i></a>
+                        <a href="<?= base_url('profile'); ?>" title="Contact List"><i class="zmdi zmdi-account"></i></a>
+                        <a href="<?= base_url('logout'); ?>" title="Sign out"><i class="zmdi zmdi-power"></i></a>
                     </div>
                 </li>
-                <li> <a href="<?= base_url(); ?>" class="load-click"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
-                <li> <a href="<?= base_url('user'); ?>" class="load-click"><i class="zmdi zmdi-account"></i><span>Profile</span></a></li>
-                <li class="header">USER PENGGUNA</li>
-                <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-add"></i><span>User</span> </a>
-                    <ul class="ml-menu">
-                        <li><a href="<?= base_url('user/security'); ?>">Security</a></li>
-                        <li><a href="<?= base_url('user/OB'); ?>">Office Boy</a></li>
-                        <li><a href="<?= base_url('user/driver'); ?>">Driver</a></li>
-                    </ul>
-                </li>
-                <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-o"></i><span>Pengaturan Akses</span> </a>
-                </li>
-                <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-balance-wallet"></i><span>Payments</span> </a>
-                    <ul class="ml-menu">
-                        <li> <a href="payments.html">Payments</a></li>
-                        <li> <a href="add-payments.html">Add Payment</a></li>
-                        <li> <a href="patient-invoice.html">Patient Invoice</a></li>
-                    </ul>
-                </li>
-                <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>App</span> </a>
-                    <ul class="ml-menu">
-                        <li><a href="mail-inbox.html">Inbox</a></li>
-                        <li><a href="chat.html">Chat</a></li>
-                        <li><a href="events.html">Calendar</a></li>
-                        <li><a href="file-dashboard.html">File Manager</a></li>
-                        <li><a href="contact.html">Contact list</a></li>
-                        <li><a href="blog-dashboard.html">Blog</a></li>
-                    </ul>
-                </li>
-                <li class="header">EXTRA COMPONENTS</li>
-                <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-delicious"></i><span>Widgets</span> </a>
-                    <ul class="ml-menu">
-                        <li><a href="widgets-app.html">Apps Widgetse</a></li>
-                        <li><a href="widgets-data.html">Data Widgetse</a></li>
-                    </ul>
-                </li>
-                <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-lock"></i><span>Authentication</span> </a>
-                    <ul class="ml-menu">
-                        <li><a href="sign-in.html">Sign In</a> </li>
-                        <li><a href="sign-up.html">Sign Up</a> </li>
-                        <li><a href="forgot-password.html">Forgot Password</a> </li>
-                        <li><a href="404.html">Page 404</a> </li>
-                        <li><a href="500.html">Page 500</a> </li>
-                        <li><a href="page-offline.html">Page Offline</a> </li>
-                        <li><a href="locked.html">Locked Screen</a> </li>
-                    </ul>
-                </li>
-                <li class="active open"> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-copy"></i><span>Sample Pages</span> </a>
-                    <ul class="ml-menu">
-                        <li class="active"><a href="blank.html">Blank Page</a> </li>
-                        <li> <a href="image-gallery.html">Image Gallery</a> </li>
-                        <li><a href="profile.html">Profile</a></li>
-                        <li><a href="timeline.html">Timeline</a></li>
-                        <li><a href="pricing.html">Pricing</a></li>
-                        <li><a href="invoices.html">Invoices</a></li>
-                        <li><a href="search-results.html">Search Results</a></li>
-                    </ul>
-                </li>
-                <li class="header">Extra</li>
-                <li>
-                    <div class="progress-container progress-primary m-t-10">
-                        <span class="progress-badge">Traffic this Month</span>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="width: 67%;">
-                                <span class="progress-value">67%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="progress-container progress-info">
-                        <span class="progress-badge">Server Load</span>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="86" aria-valuemin="0" aria-valuemax="100" style="width: 86%;">
-                                <span class="progress-value">86%</span>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                <li class="<?= is_menu_active('') ?>"> <a href="<?= base_url(); ?>" class="load-click"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
+                <li class="<?= is_menu_active('profile') ?>"> <a href="<?= base_url('profile'); ?>" class="load-click"><i class="zmdi zmdi-account"></i><span>Profile</span></a></li>
+
+                <?php $menu = _userMenu('sistem_manajemen') ?>
+                <?php if ($menu) : ?>
+                    <li class="header" data-key="t-menu">RUMAH TANGGA</li>
+
+                    <?php foreach ($menu as $userMenu) :
+                        $arrow      = $userMenu->is_sub == 0 ? 'has-arrow' : 'menu-toggle';
+                        $href_menu  = $userMenu->is_sub == 1 ? 'javascript: void(0);' : base_url($userMenu->url); ?>
+
+                        <li class="<?= is_menu_active($userMenu->url); ?>">
+                            <a href="<?= $href_menu; ?>" class="<?= $arrow; ?>">
+                                <i class="<?= $userMenu->icon; ?>"></i>
+                                <span data-key="t-<?= $userMenu->menu; ?>"><?= $userMenu->menu; ?></span>
+                            </a>
+                            <?php if ($userMenu->is_sub == 1) : ?>
+                                <ul class="ml-menu">
+                                    <?php foreach (_userSubMenu($userMenu->id) as $userSubMenu) : ?>
+                                        <li class="<?= is_menu_active($userSubMenu->url); ?>">
+                                            <a href="<?= base_url($userSubMenu->url); ?>" class="load-click">
+                                                <span data-key="t-<?= $userSubMenu->sub_menu; ?>"><?= $userSubMenu->sub_menu; ?></span>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php $menu = _userMenu('user_pengguna') ?>
+                <?php if ($menu) : ?>
+                    <li class="header" data-key="t-menu">USER PENGGUNA</li>
+
+                    <?php foreach ($menu as $userMenu) :
+                        $arrow      = $userMenu->is_sub == 0 ? 'has-arrow' : 'menu-toggle';
+                        $href_menu  = $userMenu->is_sub == 1 ? 'javascript: void(0);' : base_url($userMenu->url); ?>
+
+                        <li class="<?= is_menu_active($userMenu->url); ?>">
+                            <a href="<?= $href_menu; ?>" class="<?= $arrow; ?>">
+                                <i class="<?= $userMenu->icon; ?>"></i>
+                                <span data-key="t-<?= $userMenu->menu; ?>"><?= $userMenu->menu; ?></span>
+                            </a>
+                            <?php if ($userMenu->is_sub == 1) : ?>
+                                <ul class="ml-menu">
+                                    <?php foreach (_userSubMenu($userMenu->id) as $userSubMenu) : ?>
+                                        <li class="<?= is_menu_active($userSubMenu->url); ?>">
+                                            <a href="<?= base_url($userSubMenu->url); ?>" class="load-click">
+                                                <span data-key="t-<?= $userSubMenu->sub_menu; ?>"><?= $userSubMenu->sub_menu; ?></span>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </ul>
         </div>
     </aside>

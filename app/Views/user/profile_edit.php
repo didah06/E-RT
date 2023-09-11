@@ -37,7 +37,7 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <?= form_open_multipart(base_url('user/profile_update')) ?>
+                        <?= form_open_multipart(base_url('profile_update')) ?>
                         <div class="row clearfix">
                             <div class="col-md-1">
                                 <div class="avatar-xl mb-3">
@@ -112,9 +112,9 @@
                                 </div>
                             </div>
                             <div class="row clearfix">
-                                <div class="col-sm-12 text-right pt-5">
+                                <div class="col-sm-12 text-center pt-5">
                                     <button type="submit" class="btn btn-primary btn-round btn-save">Simpan</button>
-                                    <a type="button" class="btn btn-round btn-simple" href="<?= base_url('/user'); ?>">Batal</a>
+                                    <a type="button" class="btn btn-round btn-simple" href="<?= base_url('profile'); ?>">Batal</a>
                                 </div>
                             </div>
                         </div>

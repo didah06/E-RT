@@ -1,9 +1,9 @@
-<section class="content profile-page">
+<section class="content">
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Profile
-                    <small class="text-muted">Welcome to <?= appName(); ?></small>
+                <h2>Master User
+                    <small class="text-muted"><?= appName(); ?></small>
                 </h2>
             </div>
             <div class="col-lg-5 col-md-6 col-sm-12">
@@ -11,319 +11,306 @@
                     <i class="zmdi zmdi-plus"></i>
                 </button>
                 <ul class="breadcrumb float-md-right">
-                    <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> <?= appName(); ?></a></li>
-                    <li class="breadcrumb-item active"> Profile</li>
+                    <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i><?= appName(); ?></a></li>
+                    <li class="breadcrumb-item active">Master User</li>
                 </ul>
+            </div>
+            <div class="btn-user pt-3 pl-3">
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="zmdi zmdi-plus-circle"></i>Tambah User</button>
             </div>
         </div>
     </div>
-    <div class="row clearfix">
-        <div class="col-lg-4 col-md-12">
-            <div class="card member-card">
-                <div class="header" style="min-height: 30px;">
-                    <ul class="header-dropdown">
-                        <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
-                            <ul class="dropdown-menu dropdown-menu-right slideUp float-right">
-                                <li><a href="<?= base_url('user/profile_edit'); ?>">Edit Profile</a></li>
-                                <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                                        Ganti Password
-                                    </button></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="body">
-                    <?php if (session()->getFlashdata('success')) : ?>
-                        <div class="alert alert-success"><?= session()->getFlashdata('success') ?>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (session()->getFlashdata('error')) : ?>
-                        <div class="alert alert-danger"><?= session()->getFlashdata('error') ?>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    <?php endif; ?>
-                    <div class="header l-cyan">
-                        <h4 class="m-t-10"><?= $user_login->nama; ?></h4>
-                    </div>
-                    <div class="member-img">
-                        <a href="profile.html">
-                            <img src="<?= _siteURL('master/assets/img/profile/thumb/' . $user_login->foto); ?>" class="rounded-circle" alt="profile-image" height="100px">
-                        </a>
-                    </div>
-                    <div class="d-flex flex-wrap text-center">
-                        <ul class="profile-detail pt-3">
-                            <li>
-                                <?= $user_login->role; ?>
-                            </li>
-                        </ul>
-                        <ul class="profile-detail pt-3">
-                            <li><?= $user_login->username; ?></li>
-                        </ul>
-                        <div class="profile-detail pl-4">
-                            <p class="text-muted">Terakhir login <?= date('d-m-Y H:i:s', $user_login->last_login); ?></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- modal -->
-            <div class="modal fade" id="myModal" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6 class="modal-title" id="exampleModalLongTitle">Ganti Password</h6>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <?= form_open(base_url('user/change_password'), ['class' => 'form_update']); ?>
-                            <label for="exampleInputPassword1">Password</label>
-                            <div class="form-group">
-                                <div class="input-group mb-2">
-                                    <input type="password" class="form-control" name="password" value="<?= old('password'); ?>" placeholder="Enter Password">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text"><i class="zmdi zmdi-eye icon"></i></div>
-                                    </div>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <label for="exampleInputPassword1">Password Baru</label>
-                            <div class="form-group">
-                                <div class="input-group mb-2">
-                                    <input type="password" class="form-control" name="new_password" value="<?= old('password'); ?>" placeholder="Enter New Password">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text"><i class="zmdi zmdi-eye icon"></i></div>
-                                    </div>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <label for="exampleInputPassword1">Konfirmasi Password</label>
-                            <div class="form-group">
-                                <div class="input-group mb-2">
-                                    <input type="password" class="form-control" name="confirm_password" placeholder=" Enter Konfirmasi Password">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text"><i class="zmdi zmdi-eye icon"></i></div>
-                                    </div>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end modal -->
-
-            <div class="card">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#friends">Friends</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane body active" id="about">
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->jk ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->tmpt_lahir; ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->tgl_lahir; ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->jabatan; ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->role; ?></p>
-                    </div>
-                    <div class="tab-pane body" id="friends">
-                        <?php if (count($rekan) == 0) : ?>
-                            <p class="card-title-desc text-center">--Tidak ada--</p>
-                        <?php endif; ?>
-                        <?php foreach ($rekan as $team) : ?>
-                            <div class="row">
-                                <div class="column pl-2 pr-3">
-                                    <img src="<?= _siteURL('master/assets/img/profile/thumb/' . $team->foto); ?>" alt="" class="img-thumbnail rounded-circle">
-                                </div>
-                                <div class="column">
-                                    <p><?= strlen($team->nama) > 20 ? trim(substr($team->nama, 0, 20)) . '...' : $team->nama; ?></p>
-                                    <small><?= $team->jabatan; ?></small>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-8 col-md-12">
-            <div class="card">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#timeline">Timeline</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Setting</a></li>
-                </ul>
-            </div>
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="timeline">
-                    <ul class="cbp_tmtimeline">
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-11-04T18:30"><span class="hidden">25/12/2017</span> <span class="large">Now</span></time>
-                            <div class="cbp_tmicon"><i class="zmdi zmdi-account"></i></div>
-                            <div class="cbp_tmlabel empty"> <span>No Activity</span> </div>
-                        </li>
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-11-04T03:45"><span>03:45 AM</span> <span>Today</span></time>
-                            <div class="cbp_tmicon bg-info"><i class="zmdi zmdi-label"></i></div>
-                            <div class="cbp_tmlabel">
-                                <h2><a href="javascript:void(0);">Art Ramadani</a> <span>posted a status update</span></h2>
-                                <p>Tolerably earnestly middleton extremely distrusts she boy now not. Add and offered prepare how cordial two promise. Greatly who affixed suppose but enquire compact prepare all put. Added forth chief trees but rooms think may.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>01:22 PM</span> <span>Yesterday</span></time>
-                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
-                            <div class="cbp_tmlabel">
-                                <h2><a href="javascript:void(0);">Job Meeting</a></h2>
-                                <p>You have a meeting at <strong>Laborator Office</strong> Today.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-10-22T12:13"><span>12:13 PM</span> <span>Two weeks ago</span></time>
-                            <div class="cbp_tmicon bg-blush"><i class="zmdi zmdi-pin"></i></div>
-                            <div class="cbp_tmlabel">
-                                <h2><a href="javascript:void(0);">Arlind Nushi</a> <span>checked in at</span> <a href="javascript:void(0);">New York</a></h2>
-                                <blockquote>
-                                    <p class="blockquote blockquote-primary">
-                                        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
-                                        <br>
-                                        <small>
-                                            - Isabella
-                                        </small>
-                                    </p>
-                                </blockquote>
-                                <div class="row clearfix">
-                                    <div class="col-lg-12">
-                                        <div class="map m-t-10">
-                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.91477011208!2d-74.11976308802028!3d40.69740344230033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY%2C+USA!5e0!3m2!1sen!2sin!4v1508039335245" frameborder="0" style="border:0; width: 100%;" allowfullscreen=""></iframe>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-10-22T12:13"><span>12:13 PM</span> <span>Two weeks ago</span></time>
-                            <div class="cbp_tmicon bg-orange"><i class="zmdi zmdi-camera"></i></div>
-                            <div class="cbp_tmlabel">
-                                <h2><a href="javascript:void(0);">Eroll Maxhuni</a> <span>uploaded</span> 4 <span>new photos to album</span> <a href="javascript:void(0);">Summer Trip</a></h2>
-                                <blockquote>Pianoforte principles our unaffected not for astonished travelling are particular.</blockquote>
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="<?= base_url(); ?>/public/assets/images/image1.jpg" alt="" class="img-fluid img-thumbnail m-t-30"></a> </div>
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"> <img src="<?= base_url(); ?>/public/assets/images/image2.jpg" alt="" class="img-fluid img-thumbnail m-t-30"></a> </div>
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"> <img src="<?= base_url(); ?>/public/assets/images/image3.jpg" alt="" class="img-fluid img-thumbnail m-t-30"> </a> </div>
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"> <img src="<?= base_url(); ?>/public/assets/images/image4.jpg" alt="" class="img-fluid img-thumbnail m-t-30"> </a> </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>01:22 PM</span> <span>Two weeks ago</span></time>
-                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
-                            <div class="cbp_tmlabel">
-                                <h2><a href="javascript:void(0);">Job Meeting</a></h2>
-                                <p>You have a meeting at <strong>Laborator Office</strong> Today.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-10-22T12:13"><span>12:13 PM</span> <span>Month ago</span></time>
-                            <div class="cbp_tmicon bg-blush"><i class="zmdi zmdi-pin"></i></div>
-                            <div class="cbp_tmlabel">
-                                <h2><a href="javascript:void(0);">Arlind Nushi</a> <span>checked in at</span> <a href="javascript:void(0);">Laborator</a></h2>
-                                <blockquote>Great place, feeling like in home.</blockquote>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="usersettings">
-                    <div class="card">
-                        <div class="header">
-                            <h2><strong>Security</strong> Settings</h2>
-                        </div>
-                        <div class="body">
-                            <form>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Enter Password" name="password" value="<?= old('password'); ?>">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Enter Password" name="new password" value="<?= old('password'); ?>">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Enter Password" name="confirm_password" value="<?= old('password'); ?>">
-                                </div>
-                                <button class="btn btn-info btn-round" type="submit">Save Changes</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="header">
-                            <h2><strong>Account</strong> Settings</h2>
-                        </div>
-                        <div class="body">
-                            <div class="row clearfix">
-                                <div class="col-lg-6 col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="First Name">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Last Name">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="City">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="E-mail">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Country">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea rows="4" class="form-control no-resize" placeholder="Address Line 1"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="checkbox">
-                                        <input id="procheck1" type="checkbox">
-                                        <label for="procheck1">Profile Visibility For Everyone</label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <input id="procheck2" type="checkbox">
-                                        <label for="procheck2">New task notifications</label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <input id="procheck3" type="checkbox">
-                                        <label for="procheck3">New friend request notifications</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <button class="btn btn-primary btn-round">Save Changes</button>
-                                </div>
-                            </div>
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <div class="card patients-list">
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" width="10%">#</th>
+                                        <th>Nama</th>
+                                        <th>Username</th>
+                                        <th>Jenis Kelamin</th>
+                                        <th>No Hp</th>
+                                        <th>Jabatan</th>
+                                        <th>Departemen</th>
+                                        <th>Divisi</th>
+                                        <th>Direktorat</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($user as $table) : ?>
+                                        <tr>
+                                            <td>
+                                                <button class="btn btn-warning btn-icon btn-round hidden-sm-down float-right m-l-3 btn-edit" data-id="<?= $table->user_id; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-icon btn-round hidden-sm-down float-right  m-l-3 btn-delete" data-id="<?= $table->user_id; ?>" type="button">
+                                                    <i class="zmdi zmdi-delete"></i>
+                                                </button>
+                                            </td>
+                                            <td><?= $table->nama; ?></td>
+                                            <td><?= $table->username; ?></td>
+                                            <td><?= $table->jk; ?></td>
+                                            <td><?= $table->hp ? $table->hp : '-' ?>
+                                            <td><?= $table->jabatan; ?></td>
+                                            <td><?= $table->departemen ? $table->departemen : '-'; ?></td>
+                                            <td><?= $table->divisi ? $table->divisi : '-'; ?></td>
+                                            <td><?= $table->direktorat ? $table->direktorat : '-'; ?></td>
+                                            <td>
+                                                <span class="badge badge-soft-<?= $table->is_aktif == 1 ? 'success' : 'danger'; ?>"><?= $table->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif'; ?></span>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- User add -->
+    <!-- modal -->
+    <div class="modal fade" id="myModal" data-backdrop="false" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah Master User</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-area"></div>
+                    <?= form_open(base_url('user'), ['class' => 'add-form']); ?>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">User</label>
+                            <select class="form-control select-only" name="user_id">
+                                <option value="" selected disabled>- Pilih User -</option>
+                                <?php foreach ($ms_user as $item) : ?>
+                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                <?php endforeach; ?>
+
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Role</label>
+                            <select class="form-control show-tick" name="role">
+                                <option value="" selected disabled>- Pilih Role -</option>
+                                <?php foreach ($role as $item) : ?>
+                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                <?php endforeach; ?>
+
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Direktorat</label>
+                            <select class="form-control show-tick" name="id_direktorat">
+                                <option value="" selected disabled>- Pilih Direktorat -</option>
+                                <?php foreach ($direktorat as $item) : ?>
+                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                <?php endforeach; ?>
+
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Divisi</label>
+                            <select class="form-control show-tick" name="id_divisi">
+                                <option value="" selected disabled>- Pilih Divisi -</option>
+
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Departemen</label>
+                            <select class="form-control show-tick" name="id_dept">
+                                <option value="" selected disabled>- Pilih Departemen -</option>
+
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Nama</label>
+                            <input class="form-control" type="text" name="nama">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Jabatan</label>
+                            <input class="form-control" type="text" name="jabatan">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Jenis Kelamin</label>
+                            <select class="form-control select-only" name="jk">
+                                <option value="" selected disabled>-Pilih Jenis Kelamin-</option>
+                                <option value="Laki-Laki">Laki-Laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>No Hp</label>
+                            <input class="form-control" type="text" name="hp">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Tempat Lahir</label>
+                            <input class="form-control" type="text" name="tmpt_lahir">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Tanggal Lahir</label>
+                            <input class="form-control" type="date" name="tgl_lahir">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="text-center mb-3">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
+    <!-- User Edit -->
+    <!-- modal -->
+    <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLongTitle">Edit Master User</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-area"></div>
+                    <?= form_open(base_url('user'), ['class' => 'update-form']); ?>
+                    <input type="hidden" name="_method" value="PUT" />
+                    <input type="hidden" name="e_user_id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Role</label>
+                            <select class="form-control show-tick" name="e_role">
+                                <option value="" selected disabled>- Pilih Role -</option>
+                                <?php foreach ($role as $item) : ?>
+                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Direktorat</label>
+                            <select class="form-control show-tick" name="e_id_direktorat">
+                                <option value="" selected disabled>- Pilih Direktorat -</option>
+                                <?php foreach ($direktorat as $item) : ?>
+                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                <?php endforeach; ?>
+
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Divisi</label>
+                            <select class="form-control show-tick" name="e_id_divisi">
+                                <option value="" selected disabled>- Pilih Divisi -</option>
+                                <?php foreach ($divisi as $item) : ?>
+                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Departemen</label>
+                            <select class="form-control show-tick" name="e_id_dept">
+                                <option value="" selected disabled>- Pilih Departemen -</option>
+                                <?php foreach ($departemen as $item) : ?>
+                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Nama</label>
+                            <input class="form-control" type="text" name="e_nama">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Jabatan</label>
+                            <input class="form-control" type="text" name="e_jabatan">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Jenis Kelamin</label>
+                            <select class="form-control select-only" name="e_jk">
+                                <option value="" selected disabled>-Pilih Jenis Kelamin-</option>
+                                <option value="Laki-Laki">Laki-Laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>No Hp</label>
+                            <input class="form-control" type="text" name="e_hp">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Tempat Lahir</label>
+                            <input class="form-control" type="text" name="e_tmpt_lahir">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Tanggal Lahir</label>
+                            <input class="form-control" type="date" name="e_tgl_lahir">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="text-center mb-3">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
 </section>
 <script>
     $(document).ready(function() {
-        $('.form_update').on('submit', function(e) {
+        $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
             $.ajax({
@@ -338,14 +325,150 @@
                     });
                 },
                 success: function(d) {
-                    processDone();
                     if (d['success'] > 0) {
-                        $('input[name=rscript]').val(d['rscript']);
-                        $('#myModal').modal('hide');
-                        toastr.success('Password anda berhasil diubah');
+                        location.reload();
                     } else {
+                        processDone();
                         invalidError(d);
                     }
+                }
+            })
+        });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success'] > 0) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
+        $('.btn-delete').on('click', function() {
+            var userId = $(this).data('id');
+            Swal.fire({
+                title: 'Apa anda yakin?',
+                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus',
+                confirmButtonColor: '#fd625e',
+                cancelButtonText: 'Batal',
+            }).then(function(result) {
+                if (result.value) {
+                    processStart();
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url('user/delete'); ?>",
+                        data: {
+                            user_id: userId
+                        },
+                        error: function(xhr) {
+                            processDone();
+                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+                        },
+                        success: function(d) {
+                            if (d['success'] > 0) {
+                                location.reload();
+                            } else {
+                                processDone();
+                                invalidError(d);
+                                Swal.fire('Hapus gagal', d['msg'], 'error');
+                            }
+                        }
+                    })
+                }
+            });
+        });
+        $('select[name=user_id]').on('change', function() {
+            $.getJSON("<?= base_url('select_user'); ?>/" + $(this).val(), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=nama]').val(d['data'].nama);
+                    $('input[name=jabatan]').val(d['data'].jabatan);
+                    $('input[name=hp').val(d['data'].hp);
+                    $('select[name=jk]').val(d['data'].jk).trigger('change');
+                    $('input[name=tmpt_lahir]').val(d['data'].tmpt_lahir);
+                    $('input[name=tgl_lahir]').val(d['data'].tgl_lahir);
+                    if (d['data'].jabatan.indexOf("Direktur") >= 0 || d['data'].jabatan.indexOf("Pembina") >= 0 || d['data'].jabatan.indexOf("Pengawas") >= 0) {
+                        $('select[name=id_divisi]').attr('disabled', 'disabled');
+                        $('select[name=id_divisi]').selectpicker('refresh');
+                        $('select[name=id_dept]').attr('disabled', 'disabled');
+                        $('select[name=id_dept]').selectpicker('refresh');
+                    } else if (d['data'].jabatan.indexOf("Kepala Divisi") >= 0 || d['data'].jabatan.indexOf("Waka. Pengasuh") >= 0 || d['data'].jabatan.indexOf("Kepala Departemen QA/QC") >= 0) {
+                        $('select[name=id_dept]').attr('disabled', 'disabled');
+                        $('select[name=id_dept]').selectpicker('refresh');
+                    }
+                } else {
+                    $('select[name=id_divisi]').removeAttr('disabled')
+                    $('select[name=id_divisi]').selectpicker('refresh')
+                    $('select[name=id_dept]').removeAttr('disabled')
+                    $('select[name=id_dept]').selectpicker('refresh')
+                }
+            });
+        });
+        $('select[name=id_direktorat]').on('change', function() {
+            if ($(this).val() > 0) {
+                $('select[name=id_divisi]').html('<option value="" selected disabled>Loading...</option>');
+                $('select[name=id_divisi]').selectpicker('refresh');
+                $.get("<?= base_url('select_divisi'); ?>/" + $(this).val(), function(d) {
+                    $('select[name=id_divisi]').html(d);
+                    $('select[name=id_divisi]').selectpicker('refresh');
+                });
+            }
+        });
+        $('select[name=id_divisi]').on('change', function() {
+            if ($(this).val() > 0) {
+                $('select[name=id_dept]').html('<option value="" selected disabled>Loading...</option>');
+                $('select[name=id_dept]').selectpicker('refresh');
+                $.get("<?= base_url('select_departemen'); ?>/" + $(this).val(), function(d) {
+                    $('select[name=id_dept]').html(d);
+                    $('select[name=id_dept]').selectpicker('refresh');
+                });
+            }
+        });
+        $('.btn-edit').on('click', function() {
+            $.getJSON("<?= base_url('user_edit'); ?>/" + $(this).data('id'), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=e_user_id]').val(d['data'].user_id);
+                    $('select[name=e_role]').val(d['data'].role).trigger('change');
+                    $('select[name=e_id_direktorat]').val(d['data'].id_direktorat).trigger('change');
+                    $('select[name=e_id_divisi').val(d['data'].id_divisi).trigger('change');
+                    $('select[name=e_id_dept]').val(d['data'].id_dept).trigger('change');
+                    $('input[name=e_nama]').val(d['data'].nama);
+                    $('input[name=e_jabatan]').val(d['data'].jabatan);
+                    $('input[name=e_hp]').val(d['data'].hp);
+                    $('select[name=e_jk]').val(d['data'].jk).trigger('change');
+                    $('input[name=e_tmpt_lahir]').val(d['data'].tmpt_lahir);
+                    $('input[name=e_tgl_lahir]').val(d['data'].tgl_lahir);
+                    if (d['data'].jabatan.indexOf("Direktur") >= 0 || d['data'].jabatan.indexOf("Pembina") >= 0 || d['data'].jabatan.indexOf("Pengawas") >= 0) {
+                        $('select[name=e_id_divisi]').attr('disabled', 'disabled');
+                        $('select[name=e_id_divisi]').selectpicker('refresh');
+                        $('select[name=e_id_dept]').attr('disabled', 'disabled');
+                        $('select[name=e_id_dept]').selectpicker('refresh');
+                    } else if (d['data'].jabatan.indexOf("Kepala Divisi") >= 0 || d['data'].jabatan.indexOf("Waka. Pengasuh") >= 0 || d['data'].jabatan.indexOf("Kepala Departemen QA/QC") >= 0) {
+                        $('select[name=e_id_dept]').attr('disabled', 'disabled');
+                        $('select[name=e_id_dept]').selectpicker('refresh');
+                    }
+                } else {
+                    $('select[name=e_id_divisi]').removeAttr('disabled')
+                    $('select[name=e_id_divisi]').selectpicker('refresh')
+                    $('select[name=e_id_dept]').removeAttr('disabled')
+                    $('select[name=e_id_dept]').selectpicker('refresh')
                 }
             });
         });

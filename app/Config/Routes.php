@@ -21,7 +21,7 @@ $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -39,21 +39,44 @@ $routes->post('/login', 'login::prosesLogin');
 $routes->get('/logout', 'login::logout');
 
 //profile
-$routes->get('/user', 'User::index');
-$routes->get('/user/profile_edit', 'User::profile_edit');
-$routes->post('/user/profile_update', 'User::profile_update');
-$routes->post('/user/change_password', 'User::change_password');
+$routes->get('/profile', 'User::profile');
+$routes->get('/profile_edit', 'User::profile_edit');
+$routes->post('/profile_update', 'User::profile_update');
+$routes->post('/change_password', 'User::change_password');
+
 // user pengguna
-// security
-$routes->get('/user/security', 'User::user_security');
-// OB
-$routes->get('/user/OB', 'User::user_officeBoy');
+$routes->get('/user', 'User::index');
+$routes->post('/user', 'User::user_save');
+$routes->put('/user', 'User::user_update');
+$routes->post('/user/delete', 'User::user_delete');
+
+$routes->get('/select_divisi/(:num)', 'User::select_divisi/$1');
+$routes->get('/select_departemen/(:num)', 'User::select_departemen/$1');
+$routes->get('/select_user/(:segment)', 'User::select_user/$1');
+$routes->get('/select_userDept/(:segment)', 'User::select_userDept/$1');
+$routes->get('/user_edit/(:num)', 'User::user_edit/$1');
+// user rumah tangga
 // driver
-$routes->get('/user/driver', 'User::user_driver');
-
-
+$routes->get('/driver', 'User::driver');
+$routes->post('/driver', 'User::driver_save');
+// security
+$routes->get('/security', 'User::security');
 //user akses
 $routes->get('/user_akses', 'User::akses');
+
+// sistem manajemen
+// transportasi
+$routes->get('/tp', 'Transportasi::index');
+$routes->post('/tp/form', 'Transportasi::form');
+$routes->get('/tp/jadwal', 'Transportasi::index/jadwal');
+$routes->get('/tp/record_perjalanan', 'Transportasi::record');
+$routes->get('/tp/pemeliharaan_kendaraan', 'Transportasi::maintenance');
+$routes->get('/tp/inventaris', 'Transportasi::inventaris');
+
+// keamanan
+// Dapur
+// Seragam
+// Fotokopi
 
 
 /*

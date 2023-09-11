@@ -51,7 +51,7 @@
                                 <i type="button" class="zmdi zmdi-close pl-4" data-dismiss="alert" aria-label="Close"></i>
                             </div>
                         <?php endif; ?>
-                        <?php echo form_open('login/prosesLogin'); ?>
+                        <?php echo form_open(base_url('login')); ?>
                         <div class="input-group input-lg">
                             <input type="text" placeholder="Username" id="username" name="username" class="form-control <?= (session()->getFlashdata('username')) ? 'is-invalid' : ''; ?>" value="<?= old('username'); ?>">
                             <span class="input-group-addon pl-1">
