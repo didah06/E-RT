@@ -2,8 +2,8 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Master User
-                    <small class="text-muted"><?= appName(); ?></small>
+                <h2>Driver
+                    <small class="text-muted">Welcome to <?= appName(); ?></small>
                 </h2>
             </div>
             <div class="col-lg-5 col-md-6 col-sm-12">
@@ -12,7 +12,7 @@
                 </button>
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i><?= appName(); ?></a></li>
-                    <li class="breadcrumb-item active">Master User</li>
+                    <li class="breadcrumb-item active">Driver</li>
                 </ul>
             </div>
             <div class="btn-user pt-3 pl-3">
@@ -25,8 +25,8 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        <div class="table-responsive" id="datatables">
+                            <table class="table m-b-0 table-hover">
                                 <thead>
                                     <tr>
                                         <th class="text-center" width="8%">#</th>
@@ -73,20 +73,20 @@
             </div>
         </div>
     </div>
-    <!-- User add -->
+    <!-- direktur add -->
     <!-- modal -->
     <div class="modal fade" id="myModal" data-backdrop="false" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah Master User</h6>
+                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah Driver</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="error-area"></div>
-                    <?= form_open(base_url('user'), ['class' => 'add-form']); ?>
+                    <?= form_open(base_url('driver'), ['class' => 'add-form']); ?>
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label">User</label>
@@ -95,23 +95,9 @@
                                 <?php foreach ($ms_user as $item) : ?>
                                     <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
                                 <?php endforeach; ?>
-
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-6">
-                            <label>Role</label>
-                            <select class="form-control show-tick" name="role">
-                                <option value="" selected disabled>- Pilih Role -</option>
-                                <?php foreach ($role as $item) : ?>
-                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                <?php endforeach; ?>
-
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                             <label>Direktorat</label>
                             <select class="form-control show-tick" name="id_direktorat">
@@ -123,21 +109,19 @@
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <label>Divisi</label>
                             <select class="form-control show-tick" name="id_divisi">
                                 <option value="" selected disabled>- Pilih Divisi -</option>
-
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                             <label>Departemen</label>
                             <select class="form-control show-tick" name="id_dept">
                                 <option value="" selected disabled>- Pilih Departemen -</option>
-
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
@@ -194,33 +178,23 @@
         </div>
     </div>
     <!-- end modal -->
-    <!-- User Edit -->
+    <!-- Driver Edit -->
     <!-- modal -->
-    <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+    <div class="modal fade modal-update" id="ModalEdit" data-backdrop="false" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLongTitle">Edit Master User</h6>
+                    <h6 class="modal-title" id="exampleModalLongTitle">Edit User Driver</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="error-area"></div>
-                    <?= form_open(base_url('user'), ['class' => 'update-form']); ?>
+                    <?= form_open(base_url('driver'), ['class' => 'update-form']); ?>
                     <input type="hidden" name="_method" value="PUT" />
                     <input type="hidden" name="e_user_id">
                     <div class="row">
-                        <div class="col-md-6">
-                            <label>Role</label>
-                            <select class="form-control show-tick" name="e_role">
-                                <option value="" selected disabled>- Pilih Role -</option>
-                                <?php foreach ($role as $item) : ?>
-                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
                         <div class="col-md-6">
                             <label>Direktorat</label>
                             <select class="form-control show-tick" name="e_id_direktorat">
@@ -228,12 +202,9 @@
                                 <?php foreach ($direktorat as $item) : ?>
                                     <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
                                 <?php endforeach; ?>
-
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                             <label>Divisi</label>
                             <select class="form-control show-tick" name="e_id_divisi">
@@ -244,7 +215,9 @@
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-6">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
                             <label>Departemen</label>
                             <select class="form-control show-tick" name="e_id_dept">
                                 <option value="" selected disabled>- Pilih Departemen -</option>
@@ -400,24 +373,9 @@
                 if (d['status'] === true) {
                     $('input[name=nama]').val(d['data'].nama);
                     $('input[name=jabatan]').val(d['data'].jabatan);
-                    $('input[name=hp').val(d['data'].hp);
                     $('select[name=jk]').val(d['data'].jk).trigger('change');
                     $('input[name=tmpt_lahir]').val(d['data'].tmpt_lahir);
                     $('input[name=tgl_lahir]').val(d['data'].tgl_lahir);
-                    if (d['data'].jabatan.indexOf("Direktur") >= 0 || d['data'].jabatan.indexOf("Pembina") >= 0 || d['data'].jabatan.indexOf("Pengawas") >= 0) {
-                        $('select[name=id_divisi]').attr('disabled', 'disabled');
-                        $('select[name=id_divisi]').selectpicker('refresh');
-                        $('select[name=id_dept]').attr('disabled', 'disabled');
-                        $('select[name=id_dept]').selectpicker('refresh');
-                    } else if (d['data'].jabatan.indexOf("Kepala Divisi") >= 0 || d['data'].jabatan.indexOf("Waka. Pengasuh") >= 0 || d['data'].jabatan.indexOf("Kepala Departemen QA/QC") >= 0) {
-                        $('select[name=id_dept]').attr('disabled', 'disabled');
-                        $('select[name=id_dept]').selectpicker('refresh');
-                    }
-                } else {
-                    $('select[name=id_divisi]').removeAttr('disabled')
-                    $('select[name=id_divisi]').selectpicker('refresh')
-                    $('select[name=id_dept]').removeAttr('disabled')
-                    $('select[name=id_dept]').selectpicker('refresh')
                 }
             });
         });
@@ -445,7 +403,6 @@
             $.getJSON("<?= base_url('user_edit'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_user_id]').val(d['data'].user_id);
-                    $('select[name=e_role]').val(d['data'].role).trigger('change');
                     $('select[name=e_id_direktorat]').val(d['data'].id_direktorat).trigger('change');
                     $('select[name=e_id_divisi').val(d['data'].id_divisi).trigger('change');
                     $('select[name=e_id_dept]').val(d['data'].id_dept).trigger('change');
@@ -455,20 +412,7 @@
                     $('select[name=e_jk]').val(d['data'].jk).trigger('change');
                     $('input[name=e_tmpt_lahir]').val(d['data'].tmpt_lahir);
                     $('input[name=e_tgl_lahir]').val(d['data'].tgl_lahir);
-                    if (d['data'].jabatan.indexOf("Direktur") >= 0 || d['data'].jabatan.indexOf("Pembina") >= 0 || d['data'].jabatan.indexOf("Pengawas") >= 0) {
-                        $('select[name=e_id_divisi]').attr('disabled', 'disabled');
-                        $('select[name=e_id_divisi]').selectpicker('refresh');
-                        $('select[name=e_id_dept]').attr('disabled', 'disabled');
-                        $('select[name=e_id_dept]').selectpicker('refresh');
-                    } else if (d['data'].jabatan.indexOf("Kepala Divisi") >= 0 || d['data'].jabatan.indexOf("Waka. Pengasuh") >= 0 || d['data'].jabatan.indexOf("Kepala Departemen QA/QC") >= 0) {
-                        $('select[name=e_id_dept]').attr('disabled', 'disabled');
-                        $('select[name=e_id_dept]').selectpicker('refresh');
-                    }
-                } else {
-                    $('select[name=e_id_divisi]').removeAttr('disabled')
-                    $('select[name=e_id_divisi]').selectpicker('refresh')
-                    $('select[name=e_id_dept]').removeAttr('disabled')
-                    $('select[name=e_id_dept]').selectpicker('refresh')
+
                 }
             });
         });

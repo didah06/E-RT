@@ -276,3 +276,25 @@ function getMasterUser($where = [])
     $db->where($where);
     return $db->get()->getRow();
 }
+function selectKendaraan()
+{
+    $db = connectDb('ms_kendaraan');
+    $db->select("id_kendaraan AS id, CONCAT(jenis_kendaraan, ' - (', merk, ')') AS text");
+    $db->orderBy('jenis_kendaraan', 'ASC');
+    return $db->get()->getResult();
+}
+function generateKodeBooking()
+{
+    $prefix = 'RT'; // Prefix for the booking code
+    $length = 6; // Length of the random part
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Characters to use
+
+    $randomPart = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomPart .= $characters[rand(0, strlen($characters) - 1)];
+    }
+
+    $kode_booking = $prefix . '-' . $randomPart;
+
+    return $kode_booking;
+}

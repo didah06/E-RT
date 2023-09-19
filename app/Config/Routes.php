@@ -49,7 +49,6 @@ $routes->get('/user', 'User::index');
 $routes->post('/user', 'User::user_save');
 $routes->put('/user', 'User::user_update');
 $routes->post('/user/delete', 'User::user_delete');
-
 $routes->get('/select_divisi/(:num)', 'User::select_divisi/$1');
 $routes->get('/select_departemen/(:num)', 'User::select_departemen/$1');
 $routes->get('/select_user/(:segment)', 'User::select_user/$1');
@@ -59,19 +58,29 @@ $routes->get('/user_edit/(:num)', 'User::user_edit/$1');
 // driver
 $routes->get('/driver', 'User::driver');
 $routes->post('/driver', 'User::driver_save');
+$routes->put('/driver', 'User::driver_update');
+$routes->delete('/driver/delete', 'User::driver_delete');
 // security
 $routes->get('/security', 'User::security');
-//user akses
+// user akses
 $routes->get('/user_akses', 'User::akses');
 
-// sistem manajemen
-// transportasi
-$routes->get('/tp', 'Transportasi::index');
-$routes->post('/tp/form', 'Transportasi::form');
-$routes->get('/tp/jadwal', 'Transportasi::index/jadwal');
-$routes->get('/tp/record_perjalanan', 'Transportasi::record');
-$routes->get('/tp/pemeliharaan_kendaraan', 'Transportasi::maintenance');
-$routes->get('/tp/inventaris', 'Transportasi::inventaris');
+//transportasi
+$routes->resource('transportasi'); // api
+$routes->get('/booking', 'Transportasi::booking');
+$routes->get('/details/(:num)', 'Transportasi::booking_details/$1');
+$routes->post('approved_kadep/(:num)', 'Transportasi::approved_kadep/$1');
+$routes->put('approved_kadiv/(:num)', 'Transportasi::approve_kadiv/$1');
+$routes->put('approved_RT/(:num)', 'Transportasi::approve_RT/$1');
+$routes->post('unapproved/(:num)', 'Transportasi::unapproved/$1');
+$routes->put('booking_edit', 'Transportasi::approve_kadev');
+$routes->post('booking/delete', 'Transportasi::booking_delete');
+
+
+$routes->get('/record_perjalanan', 'Transportasi::record');
+$routes->get('/pemeliharaan_kendaraan', 'Transportasi::maintenance');
+$routes->get('/inventaris', 'Transportasi::inventaris');
+
 
 // keamanan
 // Dapur

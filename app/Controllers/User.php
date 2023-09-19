@@ -103,7 +103,7 @@ class User extends BaseController
                     'master_id'         => $user->user_id,
                     'id_direktorat'     => $direktorat->id_direktorat,
                     'id_divisi'         => $role != 'Direktur' ? $divisi->id_divisi : null,
-                    'id_dept'           => $role != 'Direktur' && $role != 'Divisi' ? $departemen->id_dept : null,
+                    'id_dept'           => $role != 'Direktur' && $role != 'Kadiv' ? $departemen->id_dept : null,
                     'role'              => $role,
                 ];
                 $add = $this->model->insert($data);
@@ -141,7 +141,7 @@ class User extends BaseController
             'e_tgl_lahir'         => $this->_validation('e_tgl_lahir', 'Tanggal Lahir', 'required|valid_date[Y-m-d]'),
         ];
         $json['select'] = [
-            'e_user_id'           => $this->_validation('e_user_id', 'User', 'required|is_natural|is_unique[ms_user.master_id]'),
+            'e_user_id'           => $this->_validation('e_user_id', 'User', 'required|is_natural'),
             'e_id_direktorat'     => $this->_validation('e_id_direktorat', 'Direktorat', 'required|is_natural'),
             'e_jk'                => $this->_validation('e_jk', 'Jenis Kelamin', 'required'),
         ];
@@ -424,6 +424,87 @@ class User extends BaseController
             $json['rscript']    = csrf_hash();
             echo json_encode($json);
         }
+    }
+    public function driver_update()
+    {
+        $json['input'] = [
+            'e_nama'              => $this->_validation('e_nama', 'Nama', 'required|min_length[5]'),
+            'e_jabatan'           => $this->_validation('e_jabatan', 'Jabatan', 'required|min_length[2]'),
+            'e_tmpt_lahir'        => $this->_validation('e_tmpt_lahir', 'Tempat Lahir', 'required'),
+            'e_tgl_lahir'         => $this->_validation('e_tgl_lahir', 'Tanggal Lahir', 'required|valid_date[Y-m-d]'),
+        ];
+        $json['select'] = [
+            'e_user_id'           => $this->_validation('e_user_id', 'User', 'required|is_natural'),
+            'e_id_dept'           => $this->_validation('e_id_dept', 'Departemen', 'required|is_natural'),
+            'e_jk'                => $this->_validation('e_jk', 'Jenis Kelamin', 'required'),
+        ];
+        if (!empty($this->request->getVar('e_hp'))) {
+            $json['input']['e_hp']    = $this->_validation('e_hp', 'No. Handphone', 'min_length[8]|is_natural');
+        }
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('e_user_id'))])->get()->getRow();
+            $departemen    = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('e_id_dept'))])->get()->getRow();
+            if (!$user) {
+                $json['select'] = [
+                    'e_user_id'       => 'Pilihan data tidak ditemukan',
+                ];
+            } else if (!$departemen) {
+                $json['select'] = [
+                    'id_dept' => 'Pilihan data tidak ditemukan',
+                ];
+            } else {
+                $nama           = _getVar($this->request->getVar('e_nama'));
+                $jabatan        = _getVar($this->request->getVar('e_jabatan'));
+                $jk             = _getVar($this->request->getVar('e_jk'));
+                $hp             = !empty($this->request->getVar('e_hp')) ? _noHP(_getVar($this->request->getVar('e_hp'))) : '';
+                $tmpt_lahir     = _getVar($this->request->getVar('e_tmpt_lahir'));
+                $tgl_lahir      = _getVar($this->request->getVar('e_tgl_lahir'));
+                $data           = [
+                    'nama'              => $nama,
+                    'jabatan'           => $jabatan,
+                    'jk'                => $jk,
+                    'hp'                => $hp,
+                    'tmpt_lahir'        => $tmpt_lahir,
+                    'tgl_lahir'         => $tgl_lahir,
+                ];
+                $update = updateData('db_master.ms_user', $data, ['user_id'     => $user->user_id]);
+                $data = [
+                    'master_id'         => $user->user_id,
+                    'id_direktorat'     => $departemen->id_direktorat,
+                    'id_divisi'         => $departemen->id_divisi,
+                    'id_dept'           => $departemen->id_dept,
+                    'role'              => 'Driver',
+                ];
+                $update = updateData('ms_user', $data, ['master_id'     => $user->user_id]);
+                $update += $this->model->db->affectedRows();
+                if ($update > 0) {
+                    $json['success']    = $update;
+                } else {
+                    $json['error']        = 'Tidak ada data yang berubah';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function driver_delete()
+    {
+        $json['input']['user_id'] = $this->_validation('user_id', 'User', 'required|is_natural');
+        if (_validationHasErrors(array_merge($json['input']))) {
+            $user = getUser(['user_id' => _getVar($this->request->getVar('user_id'))])->getRow();
+            if (!$user) {
+                $json['msg'] = 'User tidak ditemukan';
+            } else {
+                $delete = $this->model->delete($user->id);
+                if ($delete) {
+                    $json['success']    = 1;
+                } else {
+                    $json['msg']        = $delete;
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
     }
     public function select_user($user_id)
     {

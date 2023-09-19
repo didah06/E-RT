@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -32,6 +33,11 @@
     <script src="<?= base_url(); ?>/public/assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
     <script src="<?= base_url(); ?>/public/assets/js/pages/tables/jquery-datatable.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <!-- jQuery Number -->
+    <script src="<?= base_url(); ?>/public/assets/plugins/jquery-number/jquery.number.js"></script>
+    <!-- Number Devider -->
+    <script src="<?= base_url(); ?>/public/assets/plugins/number-divider/number-divider.js"></script>
     <!-- <script src="<?= base_url(); ?>/public/assets/plugins/bootstrap-select/js/bootstrap-select.min.js"></script> -->
 
 
@@ -54,7 +60,7 @@
         <div class="col-12">
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="index.html"><i class="zmdi zmdi-settings"></i><span class="m-l-10"><?= appName(); ?></span></a>
+                <a class="navbar-brand" href="<?= base_url(); ?>"><i class="zmdi zmdi-settings"></i><span class="m-l-10"><?= appName(); ?></span></a>
             </div>
             <ul class="nav navbar-nav navbar-left">
                 <li><a href="javascript:void(0);" class="ls-toggle-btn" data-close="true"><i class="zmdi zmdi-swap"></i></a></li>

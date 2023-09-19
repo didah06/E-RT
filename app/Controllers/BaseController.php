@@ -71,6 +71,8 @@ class BaseController extends Controller
                 $errors[$key]  = $label . ' harus angka';
             } else if ($key == 'valid_date') {
                 $errors[$key]  = $label . ' harus berisi tanggal valid (' . $param . ')';
+            } else if ($key == 'valid_time') {
+                $errors[$key] = $label . 'harus berisi waktu valid (' . $param . ')';
             } else if ($key == 'uploaded') {
                 $errors[$key]  = $label . ' belum dipilih';
             } else if ($key == 'max_size') {
@@ -88,6 +90,8 @@ class BaseController extends Controller
                 $errors[$key]  = $label . ' extension tidak diizinkan (type: ' . $param . ')';
             } else if ($key == 'is_image') {
                 $errors[$key]  = $label . ' bukan file gambar';
+            } else if ($key == 'decimal') {
+                $errors[$key]  = $label . 'harus berisi decimal valid';
             }
         }
         if (!$this->validate(
