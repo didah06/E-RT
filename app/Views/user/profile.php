@@ -124,8 +124,8 @@
 
             <div class="card">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#friends">Friends</a></li>
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#about">Profile Details</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#friends">Rekan Departemen</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane body active" id="about">
@@ -157,8 +157,8 @@
         <div class="col-lg-8 col-md-12">
             <div class="card">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#timeline">Timeline</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Setting</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#timeline">Notifications</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Signature</a></li>
                 </ul>
             </div>
             <div class="tab-content">

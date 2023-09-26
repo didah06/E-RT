@@ -66,15 +66,23 @@ $routes->get('/security', 'User::security');
 $routes->get('/user_akses', 'User::akses');
 
 //transportasi
+// booking
 $routes->resource('transportasi'); // api
 $routes->get('/booking', 'Transportasi::booking');
+$routes->get('validasi_jadwal/(:segment)/(:segment)/(:segment)', 'Transportasi::validasi_jadwal/$1/$2/$3');
+// $routes->get('validasi_jam_kembali', 'Transportasi::validasi_jam_kembali/$1');
 $routes->get('/details/(:num)', 'Transportasi::booking_details/$1');
+$routes->post('/details_save', 'Transportasi::details_save');
 $routes->post('approved_kadep/(:num)', 'Transportasi::approved_kadep/$1');
-$routes->put('approved_kadiv/(:num)', 'Transportasi::approve_kadiv/$1');
-$routes->put('approved_RT/(:num)', 'Transportasi::approve_RT/$1');
+$routes->post('approved_kadiv/(:num)', 'Transportasi::approved_kadiv/$1');
+$routes->post('approved_RT/(:num)', 'Transportasi::approved_RT/$1');
 $routes->post('unapproved/(:num)', 'Transportasi::unapproved/$1');
 $routes->put('booking_edit', 'Transportasi::approve_kadev');
 $routes->post('booking/delete', 'Transportasi::booking_delete');
+// jadwal
+$routes->get('/jadwal', 'Transportasi::jadwal');
+$routes->post('/jadwal', 'Transportasi::set_jadwal');
+
 
 
 $routes->get('/record_perjalanan', 'Transportasi::record');

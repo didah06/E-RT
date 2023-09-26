@@ -298,3 +298,39 @@ function generateKodeBooking()
 
     return $kode_booking;
 }
+function selectKodeBooking()
+{
+    $db = connectDb('tb_booking_transport');
+    $db->select("id_booking AS id, CONCAT(kode_booking, ' - (', tujuan, ')') AS text, TIME_FORMAT(jam_keberangkatan, '%H:%i') AS jam_keberangkatan_formatted");
+    $db->where('status', 'diproses');
+    $db->orderBy('id_booking', 'ASC');
+    return $db->get()->getResult();
+}
+function selectJadwalStart()
+{
+    $db = connectdb('ms_jadwal');
+    $db->select("start_time AS text");
+    $db->orderBy('id_jadwal', 'ASC');
+    return $db->get()->getResult();
+}
+function selectJadwalEnd()
+{
+    $db = connectdb('ms_jadwal');
+    $db->select("end_time AS text");
+    $db->orderBy('end_time', 'ASC');
+    return $db->get()->getResult();
+}
+function isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_kembali)
+{
+    $db = \config\Database::connect();
+    // $db->where('status', 'proses');
+    // $db->where('tanggal_pemakaian', $tanggal_pemakaian);
+    // $db->where('jam_keberangkatan <=', $jam_pulang);
+    // $db->where('jam_pulang >=', $jam_keberangkatan);
+    // $count = $db->countAllResults();
+    // return $count;
+    $query = $db->query("SELECT COUNT(*) AS counttime FROM `tb_booking_transport` WHERE `tanggal_pemakaian` = '$tanggal_pemakaian'
+    AND (`jam_keberangkatan` <= '$jam_keberangkatan' AND `jam_kembali` >= '$jam_keberangkatan') 
+    OR (`jam_keberangkatan` <= '$jam_kembali' AND `jam_kembali` >= '$jam_kembali')");
+    return $query->getRow()->counttime;
+}

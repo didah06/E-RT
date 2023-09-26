@@ -25,35 +25,42 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <div class="body">
+                        <div class="alert alert-danger alert-dismissible" id="time-alert" role="alert" style="display:none">
+                            <strong>Maaf !</strong> pada jam tersebut sudah ada yang booking!.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                         <?= form_open(base_url('transportasi'), ['class' => 'add-form']); ?>
                         <div class="row clearfix">
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <label class="form-label">Hari Pemakaian</label>
-                                    <select class="form-control select-only" name="hari_pemakaian">
-                                        <option value="" selected disabled>--Pilih Hari--</option>
-                                        <option value="Senin">Senin</option>
-                                        <option value="Selasa">Selasa</option>
-                                        <option value="Rabu">Rabu</option>
-                                        <option value="Kamis">Kamis</option>
-                                        <option value="Jumat">Jum'at</option>
-                                        <option value="Sabtu">Sabtu</option>
-                                        <option value="Minggu">Minggu</option>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
                                     <label class="form-label">Tanggal Pemakaian</label>
-                                    <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="tanggal_pemakaian">
+                                    <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="tanggal_pemakaian" id="tanggal_pemakaian" onchange="checktime()">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="mb-3">
                                     <label class="form-label">Jam Keberangkatan</label>
-                                    <input type="time" class="form-control" name="jam_keberangkatan">
+                                    <select class="form-control select-only" name="jam_keberangkatan" id="jam_keberangkatan" onchange="checktime()">
+                                        <option value="" selected disabled>- Pilih Jam Keberangkatan -</option>
+                                        <?php foreach ($start_time as $item) : ?>
+                                            <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Kembali</label>
+                                    <select class="form-control select-only" name="jam_kembali" id="jam_kembali" onchange="checktime()">
+                                        <option value="" selected disabled>- Pilih Jam Kembali -</option>
+                                        <?php foreach ($start_time as $item) : ?>
+                                            <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -90,48 +97,28 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
-                                    <label class="form-label">Jumlah Kendaraan</label>
-                                    <input type="number" class="form-control divide" name="jumlah_kendaraan">
-                                    <div class=" invalid-feedback">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="mb-3">
-                                    <label class="form-label">Jenis Kendaraan</label>
-                                    <select class="form-control select-only" name="id_kendaraan">
-                                        <option value="" selected disabled>--Pilih Kendaraan--</option>
-                                        <?php foreach ($kendaraan as $item) : ?>
-                                            <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
                                     <label class="form-label">Anggaran</label>
                                     <input type="text" class="form-control divide" name="anggaran">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="mb-3">
                                     <label class="form-label">Tujuan</label>
                                     <input type="text" class="form-control" name="tujuan">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="mb-3">
                                     <label class="form-label">Acara Kegiatan</label>
                                     <input type="text" class="form-control" name="acara_kegiatan">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4 pt-3">
-                                <button type="submit" class="btn btn-primary btn-round btn-save">Simpan</button>
-                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
                         </div>
                         </form>
                     </div>
@@ -140,11 +127,10 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th width="10%">#</th>
                                         <th>Status</th>
                                         <th>Tipe</th>
                                         <th>Kode Booking</th>
-                                        <th>Hari Pemakaian</th>
                                         <th>Tanggal Pemakaian</th>
                                         <th>Cara Pemakaian</th>
                                         <th>Tujuan</th>
@@ -158,20 +144,28 @@
                                 <tbody>
                                     <?php foreach ($booking as $table) : ?>
                                         <tr>
-                                            <td>
-                                                <a href="<?= base_url('details/' . $table->id_booking); ?>">
-                                                    <span class="zmdi zmdi-assignment" style="font-size: 30px;"></span>
+                                            <td class="text-center">
+                                                <a href=" <?= base_url('details/' . $table->id_booking); ?>">
+                                                    <span class="badge badge-info" style="align-items: center; justify-content: center; width: 40px; height: 35px;">
+                                                        <span class="zmdi zmdi-assignment" style="font-size: 18px;" data-id="<?= $table->id_booking; ?>"></span>
+                                                    </span>
                                                 </a>
+                                                <?php if ($table->status === 'ditolak' || $table->status === 'baru') : ?>
+                                                    <span class="badge badge-primary btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;">
+                                                        <span class="zmdi zmdi-edit" style="font-size: 18px;" data-id="<?= $table->id_booking; ?>"></span>
+                                                    </span>
+                                                    <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;">
+                                                        <span class="zmdi zmdi-delete" style="font-size: 18px;" data-id="<?= $table->id_booking; ?>"></span>
+                                                    </span>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
                                                 <span class="<?= $table->status === 'baru' ? 'badge badge-primary' : ($table->status === 'diproses' ? 'badge badge-warning' : ($table->status === 'selesai' ? 'badge badge-success' : ($table->status === 'ditolak' ? 'badge badge-danger' : 'badge badge-info'))) ?>">
-                                                    <?= $table->status === 'baru' ? 'Booking Baru' : ($table->status === 'approved kadep' && $table->status === 'approved kadiv' && $table->status === 'approved RT' ? 'Booking disetujui' : ($table->status === 'diproses' ? 'Booking diproses' : ($table->status === 'selesai' ? 'Selesai' : ($table->status === 'ditolak' ? 'Booking ditolak' : $table->status)))) ?></span>
+                                                    <?= $table->status === 'baru' ? 'Booking Baru' : ($table->status === 'approved kadep' && $table->status === 'approved kadiv' ? 'Booking disetujui' : ($table->status === 'diproses' ? 'Booking diproses' : ($table->status === 'selesai' ? 'Selesai' : ($table->status === 'ditolak' ? 'Booking ditolak' : $table->status)))) ?></span>
                                             </td>
-                                            <td>
-                                                <span class="<?= $table->type_pemakaian == 1 ? 'btn-warning' : 'btn-info'; ?>"><?= $table->type_pemakaian == 1 ? 'Urgent' : 'Normal' ?></span>
+                                            <td class="<?= $table->type_pemakaian == 1 ? 'btn-warning' : 'btn-info'; ?>"><?= $table->type_pemakaian == 1 ? 'Urgent' : 'Normal' ?>
                                             </td>
                                             <td><?= $table->kode_booking; ?></td>
-                                            <td><?= $table->hari_pemakaian; ?></td>
                                             <td><?= $table->tanggal_pemakaian; ?></td>
                                             <td><?= $table->cara_pemakaian; ?></td>
                                             <td><?= $table->tujuan; ?></td>
@@ -215,9 +209,24 @@
                     } else {
                         processDone();
                         invalidError(d);
+                        Swal.fire('Tambah data gagal', d['msg'], 'error');
                     }
                 }
             })
         });
-    });
+    })
+
+    function checktime() {
+        var tanggal_pemakaian = $('#tanggal_pemakaian').val(); // Get the date
+        var jam_keberangkatan = $('#jam_keberangkatan').val(); // Get the start time
+        var jam_kembali = $('#jam_kembali').val();
+        if (tanggal_pemakaian != null && jam_keberangkatan != null && jam_kembali != null) {
+            $.getJSON("<?= base_url('validasi_jadwal'); ?>/" + tanggal_pemakaian + "/" + jam_keberangkatan + "/" + jam_kembali, function(d) {
+                if (d['status'] === true) {
+                    $('#time-alert').show();
+                    // alert('Maaf! pada jam tersebut sudah ada yang booking!');
+                }
+            })
+        }
+    }
 </script>

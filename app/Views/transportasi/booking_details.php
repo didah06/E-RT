@@ -75,8 +75,40 @@
                                         </p>
                                         <p class="m-b-0"><strong>Tipe: </strong><span class="<?= $booking->type_pemakaian == 1 ? 'btn-warning' : 'btn-info'; ?>"><?= $booking->type_pemakaian == 1 ? 'Urgent' : 'Normal' ?></span></p>
                                         <p class="pt-3"> <strong>Hari & Tanggal Pemakaian: </strong><br>
-                                            <?= $booking->hari_pemakaian; ?>, <?= $booking->tanggal_pemakaian; ?></p>
+                                            <?= $booking->tanggal_pemakaian; ?></p>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <?php if ($booking->status == 'approved kadiv') : ?>
+                                        <?= form_open(base_url('details_save'), ['class' => 'add-form']); ?>
+                                        <input type="hidden" name="id_booking" value="<?= $booking->id_booking; ?>">
+                                        <div class="row pl-2">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">jumlah kendaraan</label>
+                                                    <input type="text" class="form-control divide" name="jumlah_kendaraan">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Jenis Kendaraan</label>
+                                                    <select class="form-control select-only" name="id_kendaraan" id="id_kendaraan">
+                                                        <option value="" selected disabled>- Pilih Jenis Kendaraan -</option>
+                                                        <?php foreach ($kendaraan as $item) : ?>
+                                                            <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="mb-3">
+                                                    <button type="submit" class="btn btn-success">simpan</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -84,7 +116,6 @@
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
                                                         <th>
                                                             <?php if ($booking->status === 'diproses') : ?>
                                                                 Booking Selesai
@@ -113,6 +144,7 @@
                                                         </th>
                                                         <th>Cara Pemakaian</th>
                                                         <th>Jam Keberangkatan</th>
+                                                        <th>jam kembali</th>
                                                         <th>Jumlah Peserta</th>
                                                         <th>Jumlah Kendaraan</th>
                                                         <th>Jenis Kendaraan</th>
@@ -123,14 +155,13 @@
                                                 <tbody>
                                                     <?php foreach ($booking_list as $list) : ?>
                                                         <tr>
-                                                            <td></td>
                                                             <td>
                                                                 <?php if ($booking->status === 'diproses') : ?>
                                                                     <a href="<?= base_url('booking_selesai'); ?>" class="btn btn-success">Selesai</a>
                                                                 <?php endif; ?>
                                                             </td>
                                                             <td>
-                                                                <?php if (_session('role') == 'Kadep' || _session('jenis') == 'Admin') : ?>
+                                                                <?php if (_session('role') == 'Kadep') : ?>
                                                                     <?php if ($booking->status === 'baru') : ?>
                                                                         <button class="btn btn-light btn-approve">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove">Tolak</button>
@@ -215,23 +246,176 @@
                                                             </td>
                                                             <td>
                                                                 <!-- approve kadiv -->
-                                                                <?php if (_session('role') == 'Kadiv' || _session('jenis') == 'Admin') : ?>
+                                                                <?php if (_session('role') == 'Kadiv') : ?>
                                                                     <?php if ($booking->status === 'approved kadep') : ?>
-                                                                        <button href="<?= base_url('approved_kadiv'); ?>" class="btn btn-light">Approve</button>
-                                                                        <button href="<?= base_url('unapproved_kadiv'); ?>" class="btn btn-danger">Tolak</button>
+                                                                        <button class="btn btn-light btn-approve-kadiv">Approve</button>
+                                                                        <button class="btn btn-danger btn-unapprove-kadiv">Tolak</button>
+                                                                        <div class="hidden-reason" style="display: none;">
+                                                                            <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
+                                                                            <button class="btn btn-danger btn-confirm-rejection">Konfirmasi Penolakan</button>
+                                                                        </div>
                                                                     <?php endif; ?>
+                                                                    <script>
+                                                                        $(document).ready(function() {
+                                                                            $('.btn-approve-kadiv').on('click', function() {
+                                                                                Swal.fire({
+                                                                                    title: 'Apa anda yakin?',
+                                                                                    text: 'kode booking <?= $list->kode_booking; ?> akan di approved',
+                                                                                    icon: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonText: 'Ya, approved',
+                                                                                    confirmButtonColor: '#66b2ff',
+                                                                                    cancelButtonText: 'Batal',
+                                                                                }).then((result) => {
+                                                                                    if (result.value) {
+                                                                                        processStart();
+                                                                                        $.ajax({
+                                                                                            type: 'post',
+                                                                                            dataType: 'json',
+                                                                                            url: "<?= base_url('approved_kadiv/' . $list->id_booking); ?>",
+                                                                                            success: function(d) {
+                                                                                                if (d['success']) {
+                                                                                                    location.reload();
+                                                                                                } else {
+                                                                                                    processDone();
+                                                                                                    invalidError(d);
+                                                                                                    Swal.fire('Approve gagal', d['msg'], 'error');
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            });
+                                                                            $('.btn-unapprove-kadiv').on('click', function() {
+                                                                                $('.hidden-reason').show();
+                                                                            });
+                                                                            $('.btn-confirm-rejection').on('click', function() {
+                                                                                var keterangan = $('textarea[name="ditolak_ket"]').val();
+                                                                                if (!keterangan) {
+                                                                                    return;
+                                                                                }
+                                                                                Swal.fire({
+                                                                                    title: 'Apa anda yakin?',
+                                                                                    text: 'kode booking <?= $list->kode_booking; ?> akan di Tolak',
+                                                                                    icon: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonText: 'Ya, tolak',
+                                                                                    confirmButtonColor: '#FF4949',
+                                                                                    cancelButtonText: 'Batal',
+                                                                                }).then((result) => {
+                                                                                    if (result.value) {
+                                                                                        processStart();
+                                                                                        $.ajax({
+                                                                                            type: 'post',
+                                                                                            dataType: 'json',
+                                                                                            url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
+                                                                                            data: {
+                                                                                                ditolak_ket: keterangan
+                                                                                            },
+                                                                                            success: function(d) {
+                                                                                                if (d['success']) {
+                                                                                                    location.reload();
+                                                                                                } else {
+                                                                                                    processDone();
+                                                                                                    invalidError(d);
+                                                                                                    Swal.fire('unapprove gagal', d['msg'], 'error');
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            })
+                                                                        });
+                                                                    </script>
                                                                 <?php endif; ?>
                                                             </td>
                                                             <td>
-                                                                <?php if (_session('role') == 'RT' || _session('jenis') == 'Admin') : ?>
+                                                                <?php if (_session('role') == 'RT'   || _session('jenis') == 'Admin') : ?>
                                                                     <?php if ($booking->status === 'approved kadiv') : ?>
-                                                                        <a href="<?= base_url('approved_RT/' . $booking->id_booking); ?>" class="btn btn-light">Approve</a>
-                                                                        <a href="<?= base_url('unapproved/' . $booking->id_booking); ?>" class="btn btn-danger">Tolak</a>
+                                                                        <button class="btn btn-light btn-approve-rt">Approve</button>
+                                                                        <button class="btn btn-danger btn-unapprove-rt">Tolak</button>
+                                                                        <div class="hidden-reason" style="display: none;">
+                                                                            <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
+                                                                            <button class="btn btn-danger btn-confirm-rejection">Konfirmasi Penolakan</button>
+                                                                        </div>
                                                                     <?php endif; ?>
+                                                                    <script>
+                                                                        $(document).ready(function() {
+                                                                            $('.btn-approve-rt').on('click', function() {
+                                                                                Swal.fire({
+                                                                                    title: 'Apa anda yakin?',
+                                                                                    text: 'kode booking <?= $list->kode_booking; ?> akan di approved',
+                                                                                    icon: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonText: 'Ya, approved',
+                                                                                    confirmButtonColor: '#66b2ff',
+                                                                                    cancelButtonText: 'Batal',
+                                                                                }).then((result) => {
+                                                                                    if (result.value) {
+                                                                                        processStart();
+                                                                                        $.ajax({
+                                                                                            type: 'post',
+                                                                                            dataType: 'json',
+                                                                                            url: "<?= base_url('approved_RT/' . $list->id_booking); ?>",
+                                                                                            success: function(d) {
+                                                                                                if (d['success']) {
+                                                                                                    location.reload();
+                                                                                                } else {
+                                                                                                    processDone();
+                                                                                                    invalidError(d);
+                                                                                                    Swal.fire('Approve gagal', d['msg'], 'error');
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            });
+                                                                            $('.btn-unapprove-rt').on('click', function() {
+                                                                                $('.hidden-reason').show();
+                                                                            });
+                                                                            $('.btn-confirm-rejection').on('click', function() {
+                                                                                var keterangan = $('textarea[name="ditolak_ket"]').val();
+                                                                                if (!keterangan) {
+                                                                                    return;
+                                                                                }
+                                                                                Swal.fire({
+                                                                                    title: 'Apa anda yakin?',
+                                                                                    text: 'kode booking <?= $list->kode_booking; ?> akan di Tolak',
+                                                                                    icon: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonText: 'Ya, tolak',
+                                                                                    confirmButtonColor: '#FF4949',
+                                                                                    cancelButtonText: 'Batal',
+                                                                                }).then((result) => {
+                                                                                    if (result.value) {
+                                                                                        processStart();
+                                                                                        $.ajax({
+                                                                                            type: 'post',
+                                                                                            dataType: 'json',
+                                                                                            url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
+                                                                                            data: {
+                                                                                                ditolak_ket: keterangan
+                                                                                            },
+                                                                                            success: function(d) {
+                                                                                                if (d['success']) {
+                                                                                                    location.reload();
+                                                                                                } else {
+                                                                                                    processDone();
+                                                                                                    invalidError(d);
+                                                                                                    Swal.fire('unapprove gagal', d['msg'], 'error');
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                });
+                                                                            })
+                                                                        });
+                                                                    </script>
                                                                 <?php endif; ?>
                                                             </td>
                                                             <td><?= $list->cara_pemakaian; ?></td>
                                                             <td><?= $list->jam_keberangkatan; ?></td>
+                                                            <td><?= $list->jam_kembali; ?></td>
                                                             <td><?= $list->jumlah_peserta; ?></td>
                                                             <td><?= $list->jumlah_kendaraan; ?></td>
                                                             <td><?= $list->jenis_kendaraan; ?></td>
@@ -255,3 +439,32 @@
             </div>
         </div>
 </section>
+<script>
+    $('.divide').divide();
+    $(document).ready(function() {
+        $('.add-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success'] > 0) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
+    });
+</script>
