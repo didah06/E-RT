@@ -30,7 +30,7 @@ class Transportasi extends BaseController
         $data['kendaraan']  = selectKendaraan();
         $data['start_time'] = selectJadwalStart();
         $data['end_time'] = selectJadwalEnd();
-        $data['booking'] = $this->model->orderBy('status', 'baru ASC')->get()->getResult();
+        $data['booking'] = $this->model->whereNotIn('status', ['diproses', 'selesai'])->get()->getResult();
         return _tempHTML('transportasi/booking_transport', $data);
     }
     public function validasi_jadwal($tanggal_pemakaian, $jam_keberangkatan, $jam_pulang)
@@ -118,6 +118,7 @@ class Transportasi extends BaseController
     public function booking_details($id_booking)
     {
         $data['kendaraan'] = selectKendaraan();
+        $data['driver']    = selectDriverUser();
         $data['booking'] = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
         $data['booking_list'] = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getResult();
         return _tempHTML('transportasi/booking_details', $data);
@@ -127,28 +128,118 @@ class Transportasi extends BaseController
         $id_booking = _getVar($this->request->getVar('id_booking'));
         $json['input'] = [
             'jumlah_kendaraan' => $this->_validation('jumlah_kendaraan', 'Jumlah Kendaraan', 'required|is_natural'),
+            'saldo_awal_etol'  => $this->_validation('saldo_awal_etol', 'Saldo Awal E-tol', 'required|decimal')
         ];
         $json['select'] = [
             'id_kendaraan' => $this->_validation('id_kendaraan', 'Jenis Kendaraan', 'required'),
+            'user_id'      => $this->_validation('user_id', 'Driver', 'required'),
         ];
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user               = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('user_id'))])->get()->getRow();
             $kendaraan          = getData('ms_kendaraan', ['id_kendaraan' => _getVar($this->request->getVar('id_kendaraan'))])->get()->getRow();
             $jumlah_kendaraan   = _getVar($this->request->getVar('jumlah_kendaraan'));
-            if (!$kendaraan) {
+            $saldo_awal_etol    = _getVar($this->request->getVar('saldo_awal_etol'));
+            if (!$user) {
+                $json['select']['user_id']    = 'Pilihan data tidak ditemukan';
+            } else if (!$kendaraan) {
                 $json['select']['id_kendaraan']    = 'Pilihan data tidak ditemukan';
             } else {
                 $data = [
                     'jumlah_kendaraan' => $jumlah_kendaraan,
                     'id_kendaraan'     => $kendaraan->id_kendaraan,
                     'jenis_kendaraan'  => $kendaraan->jenis_kendaraan,
+                    'driver'           => $user->nama,
+                    'saldo_awal_etol'  => $saldo_awal_etol,
                 ];
-                $add = $this->model->insert($data);
-                if ($add > 0) {
-                    updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
+                $add = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
+                if ($add) {
                     $json['success'] = $add;
                 } else {
                     $json['error'] = 'data gagal ditambahkan';
                 }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        return $this->respond($json);
+    }
+    public function edit($id_booking)
+    {
+        $booking     = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
+        if ($booking) {
+            $data = [
+                'status'    => true,
+                'data'      => $booking
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        return $this->respond($data);
+    }
+    public function update()
+    {
+        $json['input'] = [
+            'e_tanggal_pemakaian' => $this->_validation('e_tanggal_pemakaian', 'Tanggal Pemakaian', 'required|valid_date'),
+            'e_jumlah_peserta'    => $this->_validation('e_jumlah_peserta', 'Jumlah Peserta', 'required'),
+            'e_anggaran'          => $this->_validation('e_anggaran', 'Anggaran', 'required'),
+            'e_tujuan'            => $this->_validation('e_tujuan', 'Tujuan', 'required'),
+            'e_acara_kegiatan'    => $this->_validation('e_acara_kegiatan', 'Acara Kegiatan', 'required'),
+        ];
+        $json['select'] = [
+            'e_jam_keberangkatan' => $this->_validation('e_jam_keberangkatan', 'Jam Keberangkatan', 'required'),
+            'e_jam_kembali'       => $this->_validation('e_jam_kembali', 'Jam Kembali', 'required'),
+            'e_cara_pemakaian'    => $this->_validation('e_cara_pemakaian', 'Cara Pemakaian', 'required'),
+            'e_type_pemakaian'    => $this->_validation('e_type_pemakaian', 'Tipe Pemakaian', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $booking            = getData('tb_booking_transport', ['id_booking' => _getVar($this->request->getVar('e_id_booking'))])->get()->getRow();
+            $tanggal_pemakaian  = _getVar($this->request->getVar('e_tanggal_pemakaian'));
+            $jumlah_peserta     = _getVar($this->request->getVar('e_jumlah_peserta'));
+            $anggaran           = _getVar($this->request->getVar('e_anggaran'));
+            $tujuan             = _getVar($this->request->getVar('e_tujuan'));
+            $acara_kegiatan     = _getVar($this->request->getVar('e_acara_kegiatan'));
+            $jam_keberangkatan = _getVar($this->request->getVar('e_jam_keberangkatan'));
+            $jam_kembali       = _getVar($this->request->getVar('e_jam_kembali'));
+            $cara_pemakaian    = _getVar($this->request->getVar('e_cara_pemakaian'));
+            $type_pemakaian    = _getVar($this->request->getVar('e_type_pemakaian'));
+            $data = [
+                'tanggal_pemakaian' => $tanggal_pemakaian,
+                'jumlah_peserta'    => $jumlah_peserta,
+                'anggaran'          => $anggaran,
+                'tujuan'            => $tujuan,
+                'acara_kegiatan'    => $acara_kegiatan,
+                'jam_keberangkatan' => $jam_keberangkatan,
+                'jam_kembali'       => $jam_kembali,
+                'cara_pemakaian'    => $cara_pemakaian,
+                'type_pemakaian'    => $type_pemakaian,
+            ];
+            if (isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_kembali) > 0) {
+                $json['error'] = 'Maaf! pada Jam tersebut sudah ada yang booking';
+            } else {
+                $update = updateData('tb_booking_transport', $data, ['id_booking' => $booking->id_booking]);
+                if ($update) {
+                    $json['success'] = $update;
+                } else {
+                    $json['error']  = 'data gagal update';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        return $this->respond($json);
+    }
+    public function delete($id_booking)
+    {
+        $booking = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
+        if (!$booking) {
+            $json['msg'] = 'data Booking tidak ditemukan';
+        } else {
+            $delete = $this->model->delete($id_booking);
+            if ($delete) {
+                $json['success']    = 1;
+            } else {
+                $json['msg']        = $delete;
             }
         }
         $json['rscript']    = csrf_hash();
@@ -271,49 +362,69 @@ class Transportasi extends BaseController
     }
     public function jadwal()
     {
-        $data['kode_booking'] = selectKodeBooking();
-        $data['start_time'] = selectJadwalStart();
-        $data['end_time'] = selectJadwalEnd();
-        $data['jadwal_transport'] = $this->modeljadwal->get()->getResult();
+        $data['jadwal_transport'] = $this->model->where('status', 'diproses')->get()->getResult();
         return _tempHTML('transportasi/jadwal_transport', $data);
     }
-    public function set_jadwal()
+    public function details_jadwal($id_booking)
     {
-        $json['select'] = [
-            'kode_booking'   => $this->_validation('kode_booking', 'Kode Booking', 'required'),
-            'jadwal'         => $this->_validation('jadwal', 'Jadwal', 'required'),
+        $data['start_time'] = selectJadwalStart();
+        $data['end_time'] = selectJadwalEnd();
+        $data['booking'] = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
+        return _tempHTML('transportasi/jadwal_details', $data);
+    }
+    public function jadwal_update()
+    {
+        $json['input'] = [
+            'km_berangkat'  => $this->_validation('km_berangkat', 'KM Berangkat', 'required'),
+            'km_kembali'    => $this->_validation('km_kembali', 'KM Kembali', 'required'),
+            'tgl_berangkat' => $this->_validation('tgl_berangkat', 'Tanggal Berangkat', 'required|valid_date'),
+            'biaya_etol'    => $this->_validation('biaya_etol', 'Biaya E-tol', 'required|decimal'),
+            'top_up_etol'   => $this->_validation('top_up_etol', 'Top Up E-tol', 'required|decimal'),
+            'saldo_akhir_etol' => $this->_validation('saldo_akhir_etol', 'Saldo Akhir E-tol', 'required|decimal'),
+            'bensin'        => $this->_validation('bensin', 'Bensin', 'required|decimal'),
         ];
-        if (_validationHasErrors(array_merge($json['select']))) {
-            $kode_booking = _getVar($this->request->getVar('kode_booking'));
-            $jadwal = _getVar($this->request->getVar('jadwal'));
-            if (!$kode_booking) {
-                $json['select'] = [
-                    'kode_booking'             => 'Pilihan data tidak ditemukan',
-                ];
-            } else if (!$jadwal) {
-                $json['select'] = [
-                    'jadwal'       => 'Pilihan data tidak ditemukan',
-                ];
+        $json['select'] = [
+            'jam_berangkat'  => $this->_validation('jam_berangkat', 'Jam Berangkat', 'required'),
+            'jam_pulang'  => $this->_validation('jam_pulang', 'Jam Pulang', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $booking            = getData('tb_booking_transport', ['id_booking' => _getVar($this->request->getVar('e_id_booking'))])->get()->getRow();
+            $status             = getData('ms_status', ['id_status' => 5])->get()->getRow();
+            $jam_berangkat      = _getVar($this->request->getVar('jam_berangkat'));
+            $jam_pulang        = _getVar($this->request->getVar('jam_pulang'));
+            $km_berangkat      = _getVar($this->request->getVar('km_berangkat'));
+            $km_kembali        = _getVar($this->request->getVar('km_kembali'));
+            $tgl_berangkat      = _getVar($this->request->getVar('tgl_berangkat'));
+            $biaya_etol       = _getVar($this->request->getVar('biaya_etol'));
+            $top_up_etol      = _getVar($this->request->getVar('top_up_etol'));
+            $saldo_akhir_etol = _getVar($this->request->getVar('saldo_akhir_etol'));
+            $bensin           = _getVar($this->request->getVar('bensin'));
+            $data = [
+                'jam_berangkat'  => $jam_berangkat,
+                'km_berangkat'   => $km_berangkat,
+                'jam_pulang'     => $jam_pulang,
+                'km_kembali'     => $km_kembali,
+                'tgl_berangkat'  => $tgl_berangkat,
+                'biaya_etol'     => $biaya_etol,
+                'top_up_etol'    => $top_up_etol,
+                'saldo_akhir_etol' => $saldo_akhir_etol,
+                'bensin'         => $bensin,
+                'id_status'      => 5,
+                'status'         => $status->status,
+            ];
+            $update = updateData('tb_booking_transport', ['id_booking' => $booking->id_booking]);
+            if ($update) {
+                $json['success'] = $update;
             } else {
-                $getBooking = $this->model->where('id_booking', $kode_booking)->get()->getRow();
-                $getJadwal = $this->modelmasterjadwal->where('id_jadwal', $jadwal)->get()->getRow();
-                $data = [
-                    'id_booking'   => $getBooking->id_booking,
-                    'kode_booking' => $getBooking->kode_booking,
-                    'id_jadwal'    => $getJadwal->id_jadwal,
-                    'jadwal'       => $getJadwal->jadwal,
-                    'status'       => $getBooking->status,
-                    'is_aktif'     => 1,
-                ];
-                $add = $this->modeljadwal->insert($data);
-                if ($add) {
-                    $json['success'] = $add;
-                } else {
-                    $json['error'] = 'set jadwal gagal';
-                }
+                $json['error'] = 'data gagal update';
             }
             $json['rscript']    = csrf_hash();
             echo json_encode($json);
         }
+    }
+    public function record()
+    {
+        $data['record_perjalanan'] = $this->model->where('status', 'selesai')->get()->getResult();
+        return _tempHTML('transportasi/record_perjalanan', $data);
     }
 }

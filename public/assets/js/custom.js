@@ -24,7 +24,7 @@ function invalidError(d) {
         if (key == 'rscript') {
             $('input[name=' + key + ']').val(value);
         } else if (key == 'error') {
-            $('.error-area').html(`<div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert"><i class="mdi mdi-block-helper label-icon"></i>` + value + `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+            $('.error-area').html(`<div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert"><i class="mdi mdi-block-helper label-icon"></i>` + value);
         } else if (key == 'input') {
             $.each(value, function (k, v) {
                 if (v != '') {

@@ -2,7 +2,7 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Master User
+                <h2>Jadwal Transport
                     <small class="text-muted"><?= appName(); ?></small>
                 </h2>
             </div>
@@ -12,11 +12,11 @@
                 </button>
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i><?= appName(); ?></a></li>
-                    <li class="breadcrumb-item active">Master User</li>
+                    <li class="breadcrumb-item active">Jadwal Transportasi</li>
                 </ul>
             </div>
-            <div class="btn-user pt-3 pl-3">
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="zmdi zmdi-plus-circle"></i>Form Pengajuan Kendaraan</button>
+            <div class=" pt-3 pl-3">
+                <h2>Jadwal Transport</h2>
             </div>
         </div>
     </div>
@@ -29,38 +29,30 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" width="10%">#</th>
-                                        <th>Kode Booking</th>
-                                        <th>Tanggal Pemakaian</th>
-                                        <th>Tujuan</th>
-                                        <th>Acara Kegiatan</th>
-                                        <th>Departemen</th>
-                                        <th>Divisi</th>
-                                        <th>Direktorat</th>
-                                        <th>Status</th>
+                                        <th class="text-center">#</th>
+                                        <th width="10%">Status</th>
+                                        <th width="30%">Jam Berangkat</th>
+                                        <th width="30%">Jam Pulang</th>
+                                        <th width="35%">Kode_booking</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($booking as $table) : ?>
+                                    <?php foreach ($jadwal_transport as $table) : ?>
                                         <tr>
                                             <td>
-                                                <button class="btn btn-warning btn-icon btn-round hidden-sm-down float-right m-l-3 btn-edit" data-id="<?= $table->id_booking; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                    <i class="zmdi zmdi-edit"></i>
-                                                </button>
-                                                <button class="btn btn-danger btn-icon btn-round hidden-sm-down float-right  m-l-3 btn-delete" data-id="<?= $table->id_booking; ?>" type="button">
-                                                    <i class="zmdi zmdi-delete"></i>
-                                                </button>
+                                                <a href="<?= base_url('details_jadwal/' . $table->id_booking); ?>">
+                                                    <button class="btn btn-info btn-icon hidden-sm-down float-right m-l-3" type="button">
+                                                        <i class="zmdi zmdi-assignment"></i>
+                                                    </button>
+                                                </a>
                                             </td>
-                                            <td><?= $table->kode_booking; ?></td>
-                                            <td><?= $table->tgl_pemakaian; ?></td>
-                                            <td><?= $table->tujuan; ?></td>
-                                            <td><?= $table->acara_kegiatan; ?>
-                                            <td><?= $table->departemen ? $table->departemen : '-'; ?></td>
-                                            <td><?= $table->divisi ? $table->divisi : '-'; ?></td>
-                                            <td><?= $table->direktorat ? $table->direktorat : '-'; ?></td>
                                             <td>
-                                                <span class="badge badge-soft-<?= $table->is_aktif == 1 ? 'success' : 'danger'; ?>"><?= $table->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif'; ?></span>
+                                                <span class="<?= $table->status === 'diproses' ? 'badge badge-warning' : '' ?>">
+                                                    <?= $table->status === 'diproses' ? 'Booking diproses' : '' ?></span>
                                             </td>
+                                            <td><?= $table->jam_keberangkatan; ?></td>
+                                            <td><?= $table->jam_kembali; ?></td>
+                                            <td><?= $table->kode_booking; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

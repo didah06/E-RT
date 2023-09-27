@@ -31,9 +31,6 @@
                                     <li><a href="javascript:void(0);">Export to XML</a></li>
                                 </ul>
                             </li>
-                            <li class="remove">
-                                <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                            </li>
                         </ul>
                     </div>
                     <div class="body">
@@ -74,7 +71,7 @@
                                                 <?= $booking->status === 'baru' ? 'Baru' : ($booking->status === 'diproses' ? 'diproses' : ($booking->status === 'selesai' ? 'Selesai' : ($booking->status === 'ditolak' ? 'ditolak' : $booking->status))) ?></span>
                                         </p>
                                         <p class="m-b-0"><strong>Tipe: </strong><span class="<?= $booking->type_pemakaian == 1 ? 'btn-warning' : 'btn-info'; ?>"><?= $booking->type_pemakaian == 1 ? 'Urgent' : 'Normal' ?></span></p>
-                                        <p class="pt-3"> <strong>Hari & Tanggal Pemakaian: </strong><br>
+                                        <p class="pt-3"> <strong>Tanggal Pemakaian: </strong><br>
                                             <?= $booking->tanggal_pemakaian; ?></p>
                                     </div>
                                 </div>
@@ -101,6 +98,25 @@
                                                     <div class="invalid-feedback"></div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Driver</label>
+                                                    <select class="form-control select-only" name="user_id" id="user_id">
+                                                        <option value="" selected disabled>- Pilih Driver -</option>
+                                                        <?php foreach ($driver as $item) : ?>
+                                                            <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Saldo Awal E-Tol</label>
+                                                    <input type="text" class="form-control divide" name="saldo_awal_etol">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
                                             <div class="col-md-2">
                                                 <div class="mb-3">
                                                     <button type="submit" class="btn btn-success">simpan</button>
@@ -117,26 +133,21 @@
                                                 <thead>
                                                     <tr>
                                                         <th>
-                                                            <?php if ($booking->status === 'diproses') : ?>
-                                                                Booking Selesai
-                                                            <?php endif; ?>
-                                                        </th>
-                                                        <th>
-                                                            <?php if (_session('role') == 'Kadep' || _session('jenis') == 'Admin') : ?>
+                                                            <?php if (_session('role') == 'Kadep') : ?>
                                                                 <?php if ($booking->status === 'baru') : ?>
                                                                     Approved Kadep
                                                                 <?php endif; ?>
                                                             <?php endif; ?>
                                                         </th>
                                                         <th>
-                                                            <?php if (_session('role') == 'Kadiv' || _session('jenis') == 'Admin') : ?>
+                                                            <?php if (_session('role') == 'Kadiv') : ?>
                                                                 <?php if ($booking->status === 'approved kadep') : ?>
                                                                     Approved Kadiv
                                                                 <?php endif; ?>
                                                             <?php endif; ?>
                                                         </th>
                                                         <th>
-                                                            <?php if (_session('role') == 'RT' || _session('jenis') == 'Admin') : ?>
+                                                            <?php if (_session('role') == 'RT') : ?>
                                                                 <?php if ($booking->status === 'approved kadiv') : ?>
                                                                     Approved RT
                                                                 <?php endif; ?>
@@ -149,17 +160,18 @@
                                                         <th>Jumlah Kendaraan</th>
                                                         <th>Jenis Kendaraan</th>
                                                         <th>Anggaran</th>
-                                                        <th>Alasan di Tolak</th>
+                                                        <th>Driver</th>
+                                                        <th>Saldo Awal E-Tol</th>
+                                                        <th>
+                                                            <?php if ($booking->status === 'ditolak') : ?>
+                                                                Alasan di Tolak
+                                                            <?php endif; ?>
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach ($booking_list as $list) : ?>
                                                         <tr>
-                                                            <td>
-                                                                <?php if ($booking->status === 'diproses') : ?>
-                                                                    <a href="<?= base_url('booking_selesai'); ?>" class="btn btn-success">Selesai</a>
-                                                                <?php endif; ?>
-                                                            </td>
                                                             <td>
                                                                 <?php if (_session('role') == 'Kadep') : ?>
                                                                     <?php if ($booking->status === 'baru') : ?>
@@ -330,7 +342,7 @@
                                                                 <?php endif; ?>
                                                             </td>
                                                             <td>
-                                                                <?php if (_session('role') == 'RT'   || _session('jenis') == 'Admin') : ?>
+                                                                <?php if (_session('role') == 'RT') : ?>
                                                                     <?php if ($booking->status === 'approved kadiv') : ?>
                                                                         <button class="btn btn-light btn-approve-rt">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove-rt">Tolak</button>
@@ -420,6 +432,8 @@
                                                             <td><?= $list->jumlah_kendaraan; ?></td>
                                                             <td><?= $list->jenis_kendaraan; ?></td>
                                                             <td><?= $list->anggaran; ?></td>
+                                                            <td><?= $list->driver; ?></td>
+                                                            <td><?= $list->saldo_awal_etol; ?></td>
                                                             <td>
                                                                 <?php if ($booking->status === 'ditolak') : ?>
                                                                     <?= $list->ditolak_ket; ?>
@@ -457,7 +471,7 @@
                     });
                 },
                 success: function(d) {
-                    if (d['success'] > 0) {
+                    if (d['success']) {
                         location.reload();
                     } else {
                         processDone();
