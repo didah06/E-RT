@@ -143,35 +143,41 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
+                                                <label class="form-label">Saldo Awal E-tol</label>
+                                                <input type="text" class="form-control divide" name="saldo_awal_etol" value="<?= $booking->saldo_awal_etol; ?>" id="saldo_awal_etol">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
                                                 <label class="form-label">Biaya E-Tol</label>
-                                                <input type="text" class="form-control divide" name="biaya_etol">
+                                                <input type="text" class="form-control divide" name="biaya_etol" id="biaya_etol">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Top Up E-Tol</label>
-                                                <input type="text" class="form-control divide" name="top_up">
+                                                <input type="text" class="form-control divide" name="top_up" id="top_up">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Saldo Akhir E-Tol</label>
-                                                <input type="text" class="form-control divide" name="saldo_akhir_etol">
+                                                <label class="form-label">Saldo Akhir E-tol</label>
+                                                <input type="text" class="form-control divide" name="saldo_akhir_etol" id="saldo_akhir_etol" readonly>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Bensin</label>
-                                                <input type="text" class="form-control divide" name="bensin">
+                                                <input type="text" class="form-control divide" name="bensin" id="bensin">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Total Etol</label>
-                                                <input type="text" class="form-control divide" name="total_etol">
+                                                <label class="form-label">Total Pengeluaran</label>
+                                                <input type="text" class="form-control divide" name="total_pengeluaran" readonly>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -193,4 +199,19 @@
 </section>
 <script>
     $('.divide').divide();
+    $(document).ready(function() {
+        $('#biaya_etol, #top_up').on('change', function() {
+            calculateSaldo();
+        })
+    })
+
+    function calculateSaldo() {
+        var saldo_awal_etol = parseInt($('#saldo_awal_etol').siblings('input').val());
+        var biaya_etol = parseInt($('#biaya_etol').siblings('input').val());
+        var top_up = parseInt($('#top_up').siblings('input').val());
+
+        var saldo_akhir = saldo_awal_etol - biaya_etol + top_up;
+
+        $('#saldo_akhir_etol').val(saldo_akhir).trigger('change');
+    }
 </script>

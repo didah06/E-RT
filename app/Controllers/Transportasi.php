@@ -380,7 +380,6 @@ class Transportasi extends BaseController
             'tgl_berangkat' => $this->_validation('tgl_berangkat', 'Tanggal Berangkat', 'required|valid_date'),
             'biaya_etol'    => $this->_validation('biaya_etol', 'Biaya E-tol', 'required|decimal'),
             'top_up_etol'   => $this->_validation('top_up_etol', 'Top Up E-tol', 'required|decimal'),
-            'saldo_akhir_etol' => $this->_validation('saldo_akhir_etol', 'Saldo Akhir E-tol', 'required|decimal'),
             'bensin'        => $this->_validation('bensin', 'Bensin', 'required|decimal'),
         ];
         $json['select'] = [
@@ -397,20 +396,18 @@ class Transportasi extends BaseController
             $tgl_berangkat      = _getVar($this->request->getVar('tgl_berangkat'));
             $biaya_etol       = _getVar($this->request->getVar('biaya_etol'));
             $top_up_etol      = _getVar($this->request->getVar('top_up_etol'));
-            $saldo_akhir_etol = _getVar($this->request->getVar('saldo_akhir_etol'));
             $bensin           = _getVar($this->request->getVar('bensin'));
             $data = [
-                'jam_berangkat'  => $jam_berangkat,
-                'km_berangkat'   => $km_berangkat,
-                'jam_pulang'     => $jam_pulang,
-                'km_kembali'     => $km_kembali,
-                'tgl_berangkat'  => $tgl_berangkat,
-                'biaya_etol'     => $biaya_etol,
-                'top_up_etol'    => $top_up_etol,
-                'saldo_akhir_etol' => $saldo_akhir_etol,
-                'bensin'         => $bensin,
-                'id_status'      => 5,
-                'status'         => $status->status,
+                'jam_berangkat'   => $jam_berangkat,
+                'km_berangkat'    => $km_berangkat,
+                'jam_pulang'      => $jam_pulang,
+                'km_kembali'      => $km_kembali,
+                'tgl_berangkat'   => $tgl_berangkat,
+                'biaya_etol'      => $biaya_etol,
+                'top_up_etol'     => $top_up_etol,
+                'bensin'          => $bensin,
+                'id_status'       => 5,
+                'status'          => $status->status,
             ];
             $update = updateData('tb_booking_transport', ['id_booking' => $booking->id_booking]);
             if ($update) {
