@@ -84,11 +84,10 @@ $routes->post('booking_selesai_update', 'Transportasi::booking_selesai_update');
 // jadwal
 $routes->get('/jadwal', 'Transportasi::jadwal');
 $routes->get('details_jadwal/(:num)', 'Transportasi::details_jadwal/$1');
-$routes->post('jadwal_update', 'Transportasi::jadwal_update');
+$routes->post('jadwal_save', 'Transportasi::jadwal_save');
 // record perjalanan
 $routes->get('/record', 'Transportasi::record');
 // maintenance transport
-$routes->get('/pemeliharaan_kendaraan', 'Transportasi::maintenance');
 $routes->get('/inventaris', 'Transportasi::inventaris');
 
 

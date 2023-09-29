@@ -29,7 +29,6 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th width="10%">#</th>
                                         <th>Status</th>
                                         <th>Kode_booking</th>
                                         <th>Tujuan</th>
@@ -43,7 +42,6 @@
                                 <tbody>
                                     <?php foreach ($record_perjalanan as $table) : ?>
                                         <tr>
-                                            <td></td>
                                             <td>
                                                 <span class="<?= $table->status === 'selesai' ? 'badge badge-success' : '' ?>">
                                                     <?= $table->status === 'selesai' ? 'Selesai' : '' ?></span>

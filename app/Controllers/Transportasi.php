@@ -372,14 +372,15 @@ class Transportasi extends BaseController
         $data['booking'] = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
         return _tempHTML('transportasi/jadwal_details', $data);
     }
-    public function jadwal_update()
+    public function jadwal_save()
     {
+        $id_booking = _getVar($this->request->getVar('id_booking'));
         $json['input'] = [
             'km_berangkat'  => $this->_validation('km_berangkat', 'KM Berangkat', 'required'),
             'km_kembali'    => $this->_validation('km_kembali', 'KM Kembali', 'required'),
             'tgl_berangkat' => $this->_validation('tgl_berangkat', 'Tanggal Berangkat', 'required|valid_date'),
             'biaya_etol'    => $this->_validation('biaya_etol', 'Biaya E-tol', 'required|decimal'),
-            'top_up_etol'   => $this->_validation('top_up_etol', 'Top Up E-tol', 'required|decimal'),
+            'top_up'        => $this->_validation('top_up', 'Top Up E-tol', 'required|decimal'),
             'bensin'        => $this->_validation('bensin', 'Bensin', 'required|decimal'),
         ];
         $json['select'] = [
@@ -387,41 +388,49 @@ class Transportasi extends BaseController
             'jam_pulang'  => $this->_validation('jam_pulang', 'Jam Pulang', 'required'),
         ];
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
-            $booking            = getData('tb_booking_transport', ['id_booking' => _getVar($this->request->getVar('e_id_booking'))])->get()->getRow();
-            $status             = getData('ms_status', ['id_status' => 5])->get()->getRow();
+            $status  = getData('ms_status', ['id_status' => 6])->get()->getRow();
             $jam_berangkat      = _getVar($this->request->getVar('jam_berangkat'));
-            $jam_pulang        = _getVar($this->request->getVar('jam_pulang'));
-            $km_berangkat      = _getVar($this->request->getVar('km_berangkat'));
-            $km_kembali        = _getVar($this->request->getVar('km_kembali'));
+            $jam_pulang         = _getVar($this->request->getVar('jam_pulang'));
+            $km_berangkat       = _getVar($this->request->getVar('km_berangkat'));
+            $km_kembali         = _getVar($this->request->getVar('km_kembali'));
             $tgl_berangkat      = _getVar($this->request->getVar('tgl_berangkat'));
-            $biaya_etol       = _getVar($this->request->getVar('biaya_etol'));
-            $top_up_etol      = _getVar($this->request->getVar('top_up_etol'));
-            $bensin           = _getVar($this->request->getVar('bensin'));
+            $biaya_etol         = _getVar($this->request->getVar('biaya_etol'));
+            $top_up             = _getVar($this->request->getVar('top_up'));
+            $saldo_akhir_etol   = _getVar($this->request->getVar('saldo_akhir_etol'));
+            $bensin             = _getVar($this->request->getVar('bensin'));
+            $total_pengeluaran  = _getVar($this->request->getVar('total_pengeluaran'));
             $data = [
-                'jam_berangkat'   => $jam_berangkat,
-                'km_berangkat'    => $km_berangkat,
-                'jam_pulang'      => $jam_pulang,
-                'km_kembali'      => $km_kembali,
-                'tgl_berangkat'   => $tgl_berangkat,
-                'biaya_etol'      => $biaya_etol,
-                'top_up_etol'     => $top_up_etol,
-                'bensin'          => $bensin,
-                'id_status'       => 5,
-                'status'          => $status->status,
+                'jam_berangkat'     => $jam_berangkat,
+                'km_berangkat'      => $km_berangkat,
+                'jam_pulang'        => $jam_pulang,
+                'km_kembali'        => $km_kembali,
+                'tgl_berangkat'     => $tgl_berangkat,
+                'biaya_etol'        => $biaya_etol,
+                'top_up'            => $top_up,
+                'saldo_akhir_etol'  => $saldo_akhir_etol,
+                'bensin'            => $bensin,
+                'total_pengeluaran' => $total_pengeluaran,
+                'id_status'         => 6,
+                'status'            => $status->status,
             ];
-            $update = updateData('tb_booking_transport', ['id_booking' => $booking->id_booking]);
-            if ($update) {
-                $json['success'] = $update;
+            $add = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);;
+            if ($add) {
+                $json['success'] = $add;
             } else {
-                $json['error'] = 'data gagal update';
+                $json['error'] = 'data gagal ditambah';
             }
-            $json['rscript']    = csrf_hash();
-            echo json_encode($json);
         }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
     }
     public function record()
     {
         $data['record_perjalanan'] = $this->model->where('status', 'selesai')->get()->getResult();
         return _tempHTML('transportasi/record_perjalanan', $data);
+    }
+    public function inventaris()
+    {
+        $data['inventaris_transport'] = getData('tb_pemeliharaan_transport')->get()->getResult();
+        return _tempHTML('transportasi/inventaris', $data);
     }
 }

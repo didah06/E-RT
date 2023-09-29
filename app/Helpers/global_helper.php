@@ -27,9 +27,11 @@ function _tempHTML($view, $data = [])
                 return view('partials/template', $data_tmp);
             }
         } else {
+            $data_tmp['jadwal_transport'] = getJadwalTranport(['status' => 'diproses']);
             return view('login/index', $data_tmp);
         }
     } else {
+        $data_tmp['jadwal_transport'] = getJadwalTranport(['status' => 'diproses']);
         return view('login/index', $data_tmp);
     }
 }
@@ -59,6 +61,13 @@ function getData($table, $where = [], $order = '', $select = '*')
     $builder->where($where);
     $builder->orderBy($order);
     return $builder;
+}
+function getJadwalTranport($where = [])
+{
+    $db = connectdb('tb_booking_transport');
+    $db->select('status, jam_keberangkatan, jam_kembali, kode_booking');
+    $db->where($where);
+    return $db->get()->getResult();
 }
 function getAccess()
 {

@@ -92,9 +92,8 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="error-area"></div>
-                                    <?= form_open(base_url('jadwal_update'), ['class' => 'update-form']); ?>
-                                    <input type="hidden" name="_method" value="PUT" />
-                                    <input type="hidden" name="e_id_booking">
+                                    <?= form_open(base_url('jadwal_save'), ['class' => 'add-form']); ?>
+                                    <input type="hidden" name="id_booking" value="<?= $booking->id_booking; ?>">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
@@ -177,7 +176,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Total Pengeluaran</label>
-                                                <input type="text" class="form-control divide" name="total_pengeluaran" readonly>
+                                                <input type="text" class="form-control divide" name="total_pengeluaran" id="total_pengeluaran" readonly>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -203,6 +202,33 @@
         $('#biaya_etol, #top_up').on('change', function() {
             calculateSaldo();
         })
+        $('#biaya_etol, #bensin').on('change', function() {
+            calculateTotal();
+        })
+        $('.add-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        window.location.href = '<?= base_url('jadwal') ?>';
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
     })
 
     function calculateSaldo() {
@@ -212,6 +238,16 @@
 
         var saldo_akhir = saldo_awal_etol - biaya_etol + top_up;
 
-        $('#saldo_akhir_etol').val(saldo_akhir).trigger('change');
+        $('#saldo_akhir_etol').siblings('input').val(saldo_akhir).trigger('change');
+        $('#saldo_akhir_etol').val(saldo_akhir);
+    }
+
+    function calculateTotal() {
+        var biaya_etol = parseInt($('#biaya_etol').siblings('input').val());
+        var bensin = parseInt($('#bensin').siblings('input').val());
+
+        var total = biaya_etol + bensin;
+        $('#total_pengeluaran').siblings('input').val(total).trigger('change');
+        $('#total_pengeluaran').val(total);
     }
 </script>
