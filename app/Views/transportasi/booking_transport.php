@@ -127,7 +127,7 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th width="10%">#</th>
+                                        <th width="12%">#</th>
                                         <th>Status</th>
                                         <th>Tipe</th>
                                         <th>Kode Booking</th>
@@ -146,21 +146,21 @@
                                         <tr>
                                             <td class="text-center">
                                                 <a href=" <?= base_url('details/' . $table->id_booking); ?>">
-                                                    <!-- <span class="badge badge-info" style="align-items: center; justify-content: center; width: 40px; height: 35px;">
+                                                    <span class="badge badge-info" style="align-items: center; justify-content: center; width: 40px; height: 35px;">
                                                         <span class="zmdi zmdi-assignment" style="font-size: 18px;"></span>
-                                                    </span> -->
-                                                    <button class="btn btn-info btn-icon hidden-sm-down float-right m-l-3" type="button">
+                                                    </span>
+                                                    <!-- <button class="btn btn-info btn-icon hidden-sm-down float-right m-l-3" type="button">
                                                         <i class="zmdi zmdi-assignment"></i>
-                                                    </button>
+                                                    </button> -->
                                                 </a>
                                                 <?php if ($table->status === 'ditolak' || $table->status === 'baru') : ?>
-                                                    <button class="btn btn-warning btn-icon hidden-sm-down float-right m-l-3 btn-edit" data-id="<?= $table->id_booking; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                        <i class="zmdi zmdi-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-icon hidden-sm-down float-right m-l-3 btn-delete" data-id="<?= $table->id_booking; ?>" type="button">
-                                                        <i class="zmdi zmdi-delete"></i>
-                                                    </button>
-                                                <?php endif; ?>
+                                                    <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                        <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
+                                                    </span>
+                                                    <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" type="button">
+                                                        <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
+                                                        </button>
+                                                    <?php endif; ?>
                                             </td>
                                             <td>
                                                 <span class="<?= $table->status === 'baru' ? 'badge badge-primary' : ($table->status === 'diproses' ? 'badge badge-warning' : ($table->status === 'selesai' ? 'badge badge-success' : ($table->status === 'ditolak' ? 'badge badge-danger' : 'badge badge-info'))) ?>">
@@ -338,7 +338,7 @@
             $.getJSON("<?= base_url('booking_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_booking]').val(d['data'].id_booking);
-                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian).trigger('change');
+                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
                     $('select[name=e_jam_keberangkatan]').val(d['data'].jam_keberangkatan).trigger('change');
                     $('select[name=e_jam_kembali]').val(d['data'].jam_kembali).trigger('change');
                     $('select[name=e_cara_pemakaian').val(d['data'].cara_pemakaian).trigger('change');
@@ -346,7 +346,7 @@
                     $('input[name=e_jumlah_peserta]').val(d['data'].jumlah_peserta);
                     $('input[name=e_anggaran]').val(d['data'].anggaran);
                     $('input[name=e_tujuan]').val(d['data'].tujuan);
-                    $('input[name=e_acara_kegiatan]').val(d['data'].acara_kegiatan).trigger('change');
+                    $('input[name=e_acara_kegiatan]').val(d['data'].acara_kegiatan);
                 }
             });
         });

@@ -79,16 +79,30 @@ $routes->post('approved_kadep/(:num)', 'Transportasi::approved_kadep/$1');
 $routes->post('approved_kadiv/(:num)', 'Transportasi::approved_kadiv/$1');
 $routes->post('approved_RT/(:num)', 'Transportasi::approved_RT/$1');
 $routes->post('unapproved/(:num)', 'Transportasi::unapproved/$1');
-$routes->get('booking_selesai/(:num)', 'Transportasi::booking_selesai/$1');
-$routes->post('booking_selesai_update', 'Transportasi::booking_selesai_update');
 // jadwal
 $routes->get('/jadwal', 'Transportasi::jadwal');
 $routes->get('details_jadwal/(:num)', 'Transportasi::details_jadwal/$1');
 $routes->post('jadwal_save', 'Transportasi::jadwal_save');
 // record perjalanan
 $routes->get('/record', 'Transportasi::record');
-// maintenance transport
+// inventaris transport
 $routes->get('/inventaris', 'Transportasi::inventaris');
+$routes->post('inventaris_save', 'Transportasi::inventaris_save');
+$routes->get('inventaris_edit/(:num)', 'Transportasi::inventaris_edit/$1');
+$routes->put('/inventaris', 'Transportasi::inventaris_update');
+$routes->get('pemeliharaan/(:num)', 'Transportasi::pemeliharaan/$1');
+$routes->post('asuransi_save', 'Transportasi::asuransi_save');
+$routes->get('asuransi_edit/(:num)', 'Transportasi::asuransi_edit/$1');
+$routes->put('asuransi_update', 'Transportasi::asuransi_update');
+$routes->post('pajak_save', 'Transportasi::pajak_save');
+$routes->get('pajak_edit/(:num)', 'Transportasi::pajak_edit/$1');
+$routes->put('pajak_update', 'Transportasi::pajak_update');
+$routes->post('steam_save', 'Transportasi::steam_save');
+$routes->get('steam_edit/(:num)', 'Transportasi::steam_edit/$1');
+$routes->put('steam_update', 'Transportasi::steam_update');
+$routes->post('service_save', 'Transportasi::service_save');
+$routes->get('service_edit/(:num)', 'Transportasi::service_edit/$1');
+$routes->put('service_update', 'Transportasi::service_update');
 
 
 // keamanan

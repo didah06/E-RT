@@ -76,6 +76,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="error-area"></div>
                                     <?php if ($booking->status == 'approved kadiv') : ?>
                                         <?= form_open(base_url('details_save'), ['class' => 'add-form']); ?>
                                         <input type="hidden" name="id_booking" value="<?= $booking->id_booking; ?>">
@@ -84,6 +85,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">jumlah kendaraan</label>
                                                     <input type="text" class="form-control divide" name="jumlah_kendaraan">
+                                                    <div class="invalid-feedback"></div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
