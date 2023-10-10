@@ -19,6 +19,7 @@ class TransportModel extends Model
         'id_dept',
         'departemen',
         'nama',
+        'pemohon_ttd',
         'type_pemakaian',
         'hari_pemakaian',
         'tanggal_pemakaian',

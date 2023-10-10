@@ -63,6 +63,7 @@ class Transportasi extends BaseController
             'jumlah_peserta'    => $this->_validation('jumlah_peserta', 'Jumlah Peserta', 'required|decimal'),
             // 'jumlah_kendaraan'  => $this->_validation('jumlah_kendaraan', 'Jumlah Kendaraan', 'required|decimal'),
             'anggaran'          => $this->_validation('anggaran', 'Anggaran', 'required|decimal'),
+            'signature'    => $this->_validation('signature', 'Signature tidak boleh kosong', 'required'),
         ];
         $json['select'] = [
             'jam_keberangkatan' => $this->_validation('jam_keberangkatan', 'Jam Keberangkatan', 'required'),
@@ -71,6 +72,16 @@ class Transportasi extends BaseController
             'type_pemakaian'    => $this->_validation('type_pemakaian', 'Tipe Pemakaian', 'required'),
             // 'id_kendaraan'      => $this->_validation('id_kendaraan', 'Jenis Kendaraan', 'required'),
         ];
+        if (!empty($this->request->getVar('signature'))) {
+            $user                   = getUser(['id' => _session('id')])->getRow();
+            $data_signature         = _getVar($this->request->getVar('signature'));
+            $exp                    = explode(';base64,', $data_signature);
+            $image_type             = str_replace('data:image/', '', $exp[0]);
+            $signature_base64       = $exp[1];
+            if ($signature_base64 == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
+                $json['input']['signature']    = 'Signature masih kosong';
+            }
+        }
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             // $kendaraan          = getData('ms_kendaraan', ['id_kendaraan' => _getVar($this->request->getVar('id_kendaraan'))])->get()->getRow();
             $jam_keberangkatan  = getData('ms_jadwal', ['start_time' => _getVar($this->request->getVar('jam_keberangkatan'))])->get()->getRow();
@@ -85,6 +96,7 @@ class Transportasi extends BaseController
             $acara_kegiatan     = _getVar($this->request->getVar('acara_kegiatan'));
             $jumlah_peserta     = _getVar($this->request->getVar('jumlah_peserta'));
             $anggaran           = _getVar($this->request->getVar('anggaran'));
+            $old_check          = _getVar($this->request->getVar('old_check'));
             if (!$user) {
                 $json['select']['id_direktorat']    = 'Pilihan data tidak ditemukan';
             } else if (!$jam_keberangkatan) {
@@ -92,6 +104,14 @@ class Transportasi extends BaseController
             } else if (!$jam_kembali) {
                 $json['select']['end_time']    = 'Pilihan data tidak ditemukan';
             } else {
+                if ($old_check == 1) {
+                    $ttd = $user->ttd;
+                } else {
+                    $signature    = base64_decode($signature_base64);
+                    $ttd          = time() . rand(1, 10000) . '.' . $image_type;
+                    file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
+                    updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
+                }
                 $data = [
                     'kode_booking'      => $kode_booking,
                     'id_direktorat'     => $user->id_direktorat,
@@ -101,6 +121,7 @@ class Transportasi extends BaseController
                     'id_dept'           => $user->id_dept,
                     'departemen'        => $user->departemen,
                     'nama'              => $user->nama,
+                    'pemohon_ttd'       => $ttd,
                     'tanggal_pemakaian' => $tanggal_pemakaian,
                     'jam_keberangkatan' => $jam_keberangkatan->start_time,
                     'jam_kembali'       => $jam_kembali->end_time,
@@ -487,17 +508,28 @@ class Transportasi extends BaseController
     {
         $id_booking = _getVar($this->request->getVar('id_booking'));
         $json['input'] = [
-            'km_berangkat'  => $this->_validation('km_berangkat', 'KM Berangkat', 'required'),
-            'km_kembali'    => $this->_validation('km_kembali', 'KM Kembali', 'required'),
-            'tgl_berangkat' => $this->_validation('tgl_berangkat', 'Tanggal Berangkat', 'required|valid_date'),
-            'biaya_etol'    => $this->_validation('biaya_etol', 'Biaya E-tol', 'required|decimal'),
-            'top_up'        => $this->_validation('top_up', 'Top Up E-tol', 'required|decimal'),
-            'bensin'        => $this->_validation('bensin', 'Bensin', 'required|decimal'),
+            'km_berangkat'       => $this->_validation('km_berangkat', 'KM Berangkat', 'required'),
+            'km_kembali'         => $this->_validation('km_kembali', 'KM Kembali', 'required'),
+            'tgl_berangkat'      => $this->_validation('tgl_berangkat', 'Tanggal Berangkat', 'required|valid_date'),
+            'biaya_etol'         => $this->_validation('biaya_etol', 'Biaya E-tol', 'required|decimal'),
+            'top_up'             => $this->_validation('top_up', 'Top Up E-tol', 'required|decimal'),
+            'bensin'             => $this->_validation('bensin', 'Bensin', 'required|decimal'),
+            'signature'          => $this->_validation('signature', 'signature', 'required'),
         ];
         $json['select'] = [
             'jam_berangkat'  => $this->_validation('jam_berangkat', 'Jam Berangkat', 'required'),
             'jam_pulang'  => $this->_validation('jam_pulang', 'Jam Pulang', 'required'),
         ];
+        if (!empty($this->request->getVar('signature'))) {
+            $user                   = getUser(['id' => _session('id')])->getRow();
+            $data_signature         = _getVar($this->request->getVar('signature'));
+            $exp                    = explode(';base64,', $data_signature);
+            $image_type             = str_replace('data:image/', '', $exp[0]);
+            $signature_base64       = $exp[1];
+            if ($signature_base64 == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
+                $json['input']['signature']    = 'Signature masih kosong';
+            }
+        }
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             $status  = getData('ms_status', ['id_status' => 6])->get()->getRow();
             $jam_berangkat      = _getVar($this->request->getVar('jam_berangkat'));
@@ -510,6 +542,15 @@ class Transportasi extends BaseController
             $saldo_akhir_etol   = _getVar($this->request->getVar('saldo_akhir_etol'));
             $bensin             = _getVar($this->request->getVar('bensin'));
             $total_pengeluaran  = _getVar($this->request->getVar('total_pengeluaran'));
+            $old_check  = _getVar($this->request->getVar('old_check'));
+            if ($old_check == 1) {
+                $ttd    = $user->ttd;
+            } else {
+                $signature    = base64_decode($signature_base64);
+                $ttd          = time() . rand(1, 10000) . '.' . $image_type;
+                file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
+                updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
+            }
             $data = [
                 'jam_berangkat'     => $jam_berangkat,
                 'km_berangkat'      => $km_berangkat,
@@ -521,6 +562,7 @@ class Transportasi extends BaseController
                 'saldo_akhir_etol'  => $saldo_akhir_etol,
                 'bensin'            => $bensin,
                 'total_pengeluaran' => $total_pengeluaran,
+                'ttd_form_pengeluaran' => $ttd,
                 'id_status'         => 6,
                 'status'            => $status->status,
             ];

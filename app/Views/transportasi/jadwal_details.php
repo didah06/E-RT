@@ -75,9 +75,9 @@
                                 <?= $booking->anggaran; ?>
                             </div>
                         </div>
-                        <div class="row" style="display: flex; justify-content: center; align-items: center; ">
+                        <div class="row" style="padding-left: 1400px;">
                             <?php if ($booking->status === 'diproses') : ?>
-                                <a href="<?= base_url('booking_selesai'); ?>" data-id="<?= $booking->id_booking; ?>" data-toggle="modal" data-target="#Modaladd" class="btn btn-warning">Booking Transport Selesai</a>
+                                <a href="<?= base_url('booking_selesai'); ?>" data-id="<?= $booking->id_booking; ?>" data-toggle="modal" data-target="#Modaladd" class="btn btn-success">Booking Selesai</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -182,6 +182,49 @@
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-6" style="padding-top: 1rem;">
+                                                <div class="col-md-12">
+                                                    <div class="mr-auto">Ditugaskan Oleh</div>
+                                                    <div class="mr-auto"><b>Plt. Kadept. Rumah Tangga</b>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="card signature-old-kadep" style="width: 250px; height: 150px">
+                                                        <div class="card-body">
+                                                            <img class="img-sign" name="old_check_kadep" src="<?= base_url('public/assets/images/ttd/' . $booking->approved_rt_ttd); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6" style="padding-top: 2.5rem; padding-left: 7rem;">
+                                                <div class="col-md-12">
+                                                    <div class="mr-auto"><b>Digital Signature</b>
+                                                        <span class="signature-clear" style="color: red;" type="button">
+                                                            <span class="zmdi zmdi-delete" style="font-size: 20px; padding-left: 50px;"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="signature-wrapper signature-new text-start">
+                                                        <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                                    </div>
+                                                    <div class="card signature-old" hidden style="width: 250px; height: 150px">
+                                                        <div class="card-body">
+                                                            <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-check mt-0 pl-4">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                    <label class="form-check-label" for="formCheck1">
+                                                        Gunakan signature tersimpan
+                                                    </label>
+                                                </div>
+                                                <input type="hidden" name="signature">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-12">
                                             <div class="text-center mb-3">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -201,15 +244,38 @@
 <script>
     $('.divide').divide();
     $(document).ready(function() {
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
         $('#biaya_etol, #top_up').on('change', function() {
             calculateSaldo();
         })
         $('#biaya_etol, #bensin').on('change', function() {
             calculateTotal();
         })
+        $('#tb-notif').DataTable({
+            responsive: true,
+            ordering: false,
+            scrollX: true,
+            dom: "<'row'<'col-sm-12 col-md-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 text-center col-md-12'p>>"
+        });
+        $('.signature-clear').on('click', function(event) {
+            signaturePad.clear();
+        });
+        $('input[name=old_check]').change(function() {
+            signaturePad.clear();
+            if (this.checked) {
+                $('.signature-new').attr('hidden', 'hidden');
+                $('.signature-old').removeAttr('hidden');
+            } else {
+                $('.signature-old').attr('hidden', 'hidden');
+                $('.signature-new').removeAttr('hidden');
+            }
+        });
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
+            var signature = signaturePad.toDataURL();
+            // Set the signature data in the hidden input field
+            $('input[name=signature').val(signature);
             $.ajax({
                 url: e.target.action,
                 type: 'post',
@@ -223,10 +289,13 @@
                 },
                 success: function(d) {
                     if (d['success']) {
-                        window.location.href = '<?= base_url('jadwal') ?>';
+                        $('input[name=rscript]').val(d['rscript']);
+                        $('#ModalFormPengajuan').modal('hide');
+                        window.location.href = '<?= base_url('/record'); ?>';
                     } else {
                         processDone();
                         invalidError(d);
+                        Swal.fire('Tambah data gagal', d['msg'], 'error');
                     }
                 }
             })

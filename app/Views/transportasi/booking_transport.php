@@ -24,105 +24,152 @@
         <div class="row clearfix">
             <div class="col-md-12">
                 <div class="card patients-list">
-                    <div class="body">
-                        <div class="alert alert-danger alert-dismissible" id="time-alert" role="alert" style="display:none">
-                            <strong>Maaf !</strong> pada jam tersebut sudah ada yang booking!.
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <!-- Booking Tambah -->
+                    <!-- modal -->
+                    <div class="modal fade" id="ModalFormPengajuan" data-backdrop="false" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Form Pengajuan Kendaraan</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger alert-dismissible" id="time-alert" role="alert" style="display:none">
+                                        <strong>Maaf !</strong> pada jam tersebut sudah ada yang booking!.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="error-area"></div>
+                                    <?= form_open(base_url('transportasi'), ['class' => 'add-form']); ?>
+                                    <div class="row clearfix">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tanggal Pemakaian</label>
+                                                <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="tanggal_pemakaian" id="tanggal_pemakaian" onchange="checktime()">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Jam Keberangkatan</label>
+                                                <select class="form-control select-only" name="jam_keberangkatan" id="jam_keberangkatan" onchange="checktime()">
+                                                    <option value="" selected disabled>- Pilih Jam Keberangkatan -</option>
+                                                    <?php foreach ($start_time as $item) : ?>
+                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Jam Kembali</label>
+                                                <select class="form-control select-only" name="jam_kembali" id="jam_kembali" onchange="checktime()">
+                                                    <option value="" selected disabled>- Pilih Jam Kembali -</option>
+                                                    <?php foreach ($start_time as $item) : ?>
+                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Cara Pemakaian</label>
+                                                <select class="form-control select-only" name="cara_pemakaian">
+                                                    <option value="" selected disabled>--Pilih Cara Pemakaian--</option>
+                                                    <option value="Antar">Antar</option>
+                                                    <option value="Jemput">Jemput</option>
+                                                    <option value="Antar Jemput Ditunggu">Antar Jemput Ditunggu</option>
+                                                    <option value="Antar Jemput Ditinggal">Antar Jemput Ditinggal</option>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tipe Pemakaian</label>
+                                                <select class="form-control select-only" name="type_pemakaian">
+                                                    <option value="" selected disabled>--Pilih Tipe Pemakaian--</option>
+                                                    <option value="1">Urgent</option>
+                                                    <option value="2">Normal</option>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Jumlah Peserta</label>
+                                                <input type="number" class="form-control divide" name="jumlah_peserta">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Anggaran</label>
+                                                <input type="text" class="form-control divide" name="anggaran">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tujuan</label>
+                                                <input type="text" class="form-control" name="tujuan">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Acara Kegiatan</label>
+                                                <input type="text" class="form-control" name="acara_kegiatan">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mr-auto">Depok,</div>
+                                            <div class="pl-5"><b>Pemohon</b>
+                                                <span class="signature-clear pl-5" style="color: red;" type="button">
+                                                    <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="signature-wrapper signature-new text-start">
+                                                <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                            </div>
+                                            <div class="card signature-old" hidden style="width: 250px; height: 150px">
+                                                <div class="card-body">
+                                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-check mt-0 pl-4">
+                                            <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                            <label class="form-check-label" for="formCheck1">
+                                                Gunakan signature tersimpan
+                                            </label>
+                                        </div>
+                                        <input type="hidden" name="signature">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <?= form_open(base_url('transportasi'), ['class' => 'add-form']); ?>
-                        <div class="row clearfix">
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Tanggal Pemakaian</label>
-                                    <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="tanggal_pemakaian" id="tanggal_pemakaian" onchange="checktime()">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Jam Keberangkatan</label>
-                                    <select class="form-control select-only" name="jam_keberangkatan" id="jam_keberangkatan" onchange="checktime()">
-                                        <option value="" selected disabled>- Pilih Jam Keberangkatan -</option>
-                                        <?php foreach ($start_time as $item) : ?>
-                                            <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Jam Kembali</label>
-                                    <select class="form-control select-only" name="jam_kembali" id="jam_kembali" onchange="checktime()">
-                                        <option value="" selected disabled>- Pilih Jam Kembali -</option>
-                                        <?php foreach ($start_time as $item) : ?>
-                                            <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Cara Pemakaian</label>
-                                    <select class="form-control select-only" name="cara_pemakaian">
-                                        <option value="" selected disabled>--Pilih Cara Pemakaian--</option>
-                                        <option value="Antar">Antar</option>
-                                        <option value="Jemput">Jemput</option>
-                                        <option value="Antar Jemput Ditunggu">Antar Jemput Ditunggu</option>
-                                        <option value="Antar Jemput Ditinggal">Antar Jemput Ditinggal</option>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="mb-3">
-                                    <label class="form-label">Tipe Pemakaian</label>
-                                    <select class="form-control select-only" name="type_pemakaian">
-                                        <option value="" selected disabled>--Pilih Tipe Pemakaian--</option>
-                                        <option value="1">Urgent</option>
-                                        <option value="2">Normal</option>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="mb-3">
-                                    <label class="form-label">Jumlah Peserta</label>
-                                    <input type="number" class="form-control divide" name="jumlah_peserta">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="mb-3">
-                                    <label class="form-label">Anggaran</label>
-                                    <input type="text" class="form-control divide" name="anggaran">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Tujuan</label>
-                                    <input type="text" class="form-control" name="tujuan">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Acara Kegiatan</label>
-                                    <input type="text" class="form-control" name="acara_kegiatan">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
-                        </div>
-                        </form>
                     </div>
+                    <!-- end modal -->
                     <div class="body">
+                        <div class="row mb-5">
+                            <button class="btn btn-info" data-toggle="modal" data-target="#ModalFormPengajuan"><i class="zmdi zmdi-plus">Form Pengajuan Kendaraan
+                                </i></button>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
@@ -308,9 +355,32 @@
 <script>
     $('.divide').divide();
     $(document).ready(function() {
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        $('#tb-notif').DataTable({
+            responsive: true,
+            ordering: false,
+            scrollX: true,
+            dom: "<'row'<'col-sm-12 col-md-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 text-center col-md-12'p>>"
+        });
+        $('.signature-clear').on('click', function(event) {
+            signaturePad.clear();
+        });
+        $('input[name=old_check]').change(function() {
+            signaturePad.clear();
+            if (this.checked) {
+                $('.signature-new').attr('hidden', 'hidden');
+                $('.signature-old').removeAttr('hidden');
+            } else {
+                $('.signature-old').attr('hidden', 'hidden');
+                $('.signature-new').removeAttr('hidden');
+            }
+        });
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
+            var signatureData = signaturePad.toDataURL();
+            // Set the signature data in the hidden input field
+            $('input[name=signature').val(signatureData);
             $.ajax({
                 url: e.target.action,
                 type: 'post',
@@ -324,8 +394,9 @@
                 },
                 success: function(d) {
                     if (d['success']) {
-                        var urlToReload = '<?= base_url('booking'); ?>';
-                        window.location.href = urlToReload;
+                        $('input[name=rscript]').val(d['rscript']);
+                        $('#ModalFormPengajuan').modal('hide');
+                        location.reload();
                     } else {
                         processDone();
                         invalidError(d);
