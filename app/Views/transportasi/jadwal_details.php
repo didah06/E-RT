@@ -35,10 +35,7 @@
                     </div>
                     <div class="body">
                         <div class="row pl-2 mb-5">
-                            <a href="<?= base_url('jadwal'); ?>" type="button" class="btn btn-warning">Kembali</a>
-                            <?php if ($booking->status === 'diproses') : ?>
-                                <a href="<?= base_url('booking_selesai'); ?>" data-id="<?= $booking->id_booking; ?>" data-toggle="modal" data-target="#Modaladd" class="btn btn-success">Selesai</a>
-                            <?php endif; ?>
+                            <a href="<?= base_url('jadwal'); ?>" type="button" class="btn btn-danger">Kembali</a>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -77,6 +74,11 @@
                                 <strong>Anggaran : </strong>
                                 <?= $booking->anggaran; ?>
                             </div>
+                        </div>
+                        <div class="row" style="display: flex; justify-content: center; align-items: center; ">
+                            <?php if ($booking->status === 'diproses') : ?>
+                                <a href="<?= base_url('booking_selesai'); ?>" data-id="<?= $booking->id_booking; ?>" data-toggle="modal" data-target="#Modaladd" class="btn btn-warning">Booking Transport Selesai</a>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <!-- Booking Edit -->

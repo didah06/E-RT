@@ -341,6 +341,56 @@ class User extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
+    public function signature()
+    {
+        $data_signature = $this->request->getVar('signature');
+
+        // Check if the signature data is not empty
+        if (!empty($data_signature)) {
+            $exp = explode(';base64,', $data_signature);
+
+            // Check if there are at least two elements in the $exp array
+            if (count($exp) == 2) {
+                $image_type = str_replace('data:image/', '', $exp[0]);
+                $signature_base64 = $exp[1];
+
+                if ($signature_base64 == _signatureKosong()) {
+                    $json['error'] = 'Signature masih kosong';
+                } else {
+                    $user = getUser(['id' => _session('id')])->getRow();
+                    $signature = base64_decode($signature_base64);
+                    $filename = time() . rand(1, 10000) . '.' . $image_type;
+                    $file_path = FCPATH . 'public/assets/images/ttd/' . $filename;
+
+                    // Save the signature as a file
+                    if (file_put_contents($file_path, $signature)) {
+                        $data = [
+                            'ttd' => $filename,
+                        ];
+
+                        $update = $this->model->update($user->id, $data);
+
+                        if ($update) {
+                            $json['signature'] = $data_signature;
+                            $json['success'] = $update;
+                        } else {
+                            $json['error'] = 'Tidak ada data yang berubah';
+                        }
+                    } else {
+                        $json['error'] = 'Failed to save the signature';
+                    }
+                }
+            } else {
+                // Handle the case where the string doesn't have the expected structure
+                $json['error'] = 'Invalid data format: ' . $data_signature;
+            }
+        } else {
+            $json['error'] = 'Signature data is empty';
+        }
+
+        $json['rscript'] = csrf_hash();
+        echo json_encode($json);
+    }
     //security
     public function security()
     {

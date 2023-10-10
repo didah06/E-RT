@@ -157,25 +157,72 @@
         <div class="col-lg-8 col-md-12">
             <div class="card">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#timeline">Notifications</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Signature</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#timeline">Signature</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Notifications</a></li>
                 </ul>
             </div>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="timeline">
-                    <div class="card">
+                    <!-- <div class="card" style="width: 20rem; border: 1;">
                         <div class="header">
-                            <strong>Notification</strong>
+                            <strong>Signature</strong>
+                        </div>
+                        <div class="card" style="width: 18rem;">
+                            <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                        </div>
+                        <div class="card-footer text-center p-2">
+                            <button class="btn btn-rounded btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".modal-sign">Edit Signature</button>
+                        </div>
+                    </div> -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Signature</h5>
+
+                            <div class="card">
+                                <div class="card-body p-1">
+                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                </div>
+                                <div class="card-footer text-center p-2">
+                                    <button class="btn btn-rounded btn-success waves-effect waves-light" data-toggle="modal" data-target="#ModalSignature">Edit Signature</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Signature Edit -->
+                        <!-- modal -->
+                        <div class="modal fade" id="ModalSignature" data-backdrop="false" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Edit Signature</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="error-area"></div>
+                                        <?= form_open(base_url('signature'), ['class' => 'signature-form']); ?>
+                                        <div class="mb-3 text-center">
+                                            <div class="signature-wrapper">
+                                                <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 text-center">
+                                            <button class="btn btn-light waves-effect waves-light me-1" data-dismiss="modal" type="button">Batal</button>
+                                            <button class="btn btn-danger waves-effect waves-light signature-clear me-1" type="button">Hapus</button>
+                                            <button class="btn btn-primary waves-effect waves-light load-click" type="submit">Simpan</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end modal -->
                         </div>
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="usersettings">
                     <div class="card">
-                        <div class="header text-center">
-                            <strong>Signature</strong>
-                        </div>
-                        <div class="body text-center">
-                            <button class="btn btn-info btn-round">Edit Signature</button>
+                        <div class="header">
+                            <strong>Notifications</strong>
                         </div>
                     </div>
                 </div>
@@ -186,6 +233,53 @@
 </section>
 <script>
     $(document).ready(function() {
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        $('#tb-notif').DataTable({
+            responsive: true,
+            ordering: false,
+            scrollX: true,
+            dom: "<'row'<'col-sm-12 col-md-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 text-center col-md-12'p>>"
+        });
+        $('.signature-clear').on('click', function(event) {
+            signaturePad.clear();
+        });
+
+        $('#ModalSignature').on('hidden.modal', function(e) {
+            signaturePad.clear();
+            $('.alert').remove();
+        });
+        $('.signature-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            var f_data = new FormData(this);
+            f_data.append('signature', signaturePad.toDataURL());
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: f_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    processDone();
+                    if (d['success'] > 0) {
+                        $('input[name=rscript]').val(d['rscript']);
+                        $('#ModalSignature').modal('hide');
+                        $('.img-sign').attr('src', d['signature']);
+                        notification('Signature berhasil diubah');
+                    } else {
+                        invalidError(d);
+                    }
+                }
+            })
+        });
         $('.form_update').on('submit', function(e) {
             e.preventDefault();
             processStart();

@@ -260,22 +260,47 @@ class Transportasi extends BaseController
     }
     public function approved_kadep($id_booking)
     {
-        $getBooking = $this->model->find($id_booking);
-        $status  = getData('ms_status', ['id_status' => 3])->get()->getRow();
-        if (!$getBooking) {
-            $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
-        } else {
-            $data = [
-                'approved_kadep_by'    => _session('nama'),
-                'approved_kadep_at'    => time(),
-                'id_status'           => 3,
-                'status'              => $status->status,
-            ];
-            $update = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
-            if ($update) {
-                $json['success'] = $update;
+        $getBooking          = $this->model->find($id_booking);
+        $json['input']    = [
+            'signature'    => $this->_validation('signature', 'Signature tidak boleh kosong', 'required'),
+        ];
+        if (!empty($this->request->getVar('signature'))) {
+            $user                   = getUser(['id' => _session('id')])->getRow();
+            $data_signature         = _getVar($this->request->getVar('signature'));
+            $exp                    = explode(';base64,', $data_signature);
+            $image_type             = str_replace('data:image/', '', $exp[0]);
+            $signature_base64       = $exp[1];
+            if ($signature_base64 == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
+                $json['input']['signature']    = 'Signature masih kosong';
+            }
+        }
+        if (_validationHasErrors($json['input'])) {
+            $old_check            = _getVar($this->request->getVar('old_check'));
+            $status              = getData('ms_status', ['id_status' => 3])->get()->getRow();
+            if (!$getBooking) {
+                $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
             } else {
-                $json['error'] = 'update gagal';
+                if ($old_check == 1) {
+                    $ttd = $user->ttd;
+                } else {
+                    $signature    = base64_decode($signature_base64);
+                    $ttd          = time() . rand(1, 10000) . '.' . $image_type;
+                    file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
+                    updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
+                }
+                $data = [
+                    'approved_kadep_by'    => _session('nama'),
+                    'approved_kadep_at'    => time(),
+                    'approved_kadep_ttd'   => $ttd,
+                    'id_status'            => 3,
+                    'status'               => $status->status,
+                ];
+                $update = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
+                if ($update) {
+                    $json['success'] = $update;
+                } else {
+                    $json['error'] = 'update gagal';
+                }
             }
         }
         $json['rscript']    = csrf_hash();
@@ -284,21 +309,46 @@ class Transportasi extends BaseController
     public function approved_kadiv($id_booking)
     {
         $getBooking = $this->model->find($id_booking);
-        $status  = getData('ms_status', ['id_status' => 2])->get()->getRow();
-        if (!$getBooking) {
-            $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
-        } else {
-            $data = [
-                'approved_kadiv_by'    => _session('nama'),
-                'approved_kadiv_at'    => time(),
-                'id_status'            => 2,
-                'status'               => $status->status,
-            ];
-            $update = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
-            if ($update) {
-                $json['success'] = $update;
+        $json['input']    = [
+            'signature'    => $this->_validation('signature', 'Signature', 'required'),
+        ];
+        if (!empty($this->request->getVar('signature'))) {
+            $user                   = getUser(['id' => _session('id')])->getRow();
+            $data_signature         = _getVar($this->request->getVar('signature'));
+            $exp                    = explode(';base64,', $data_signature);
+            $image_type             = str_replace('data:image/', '', $exp[0]);
+            $signature_base64       = $exp[1];
+            if ($signature_base64 == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
+                $json['input']['signature']    = 'Signature masih kosong';
+            }
+        }
+        if (_validationHasErrors($json['input'])) {
+            $status  = getData('ms_status', ['id_status' => 2])->get()->getRow();
+            $old_check            = _getVar($this->request->getVar('old_check'));
+            if (!$getBooking) {
+                $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
             } else {
-                $json['error'] = 'update gagal';
+                if ($old_check == 1) {
+                    $ttd    = $user->ttd;
+                } else {
+                    $signature    = base64_decode($signature_base64);
+                    $ttd        = time() . rand(1, 10000) . '.' . $image_type;
+                    file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
+                    updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
+                }
+                $data = [
+                    'approved_kadiv_by'    => _session('nama'),
+                    'approved_kadiv_at'    => time(),
+                    'approved_kadiv_ttd'   => $ttd,
+                    'id_status'            => 2,
+                    'status'               => $status->status,
+                ];
+                $update = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
+                if ($update) {
+                    $json['success'] = $update;
+                } else {
+                    $json['error'] = 'update gagal';
+                }
             }
         }
         $json['rscript']    = csrf_hash();
@@ -307,21 +357,46 @@ class Transportasi extends BaseController
     public function approved_RT($id_booking)
     {
         $getBooking = $this->model->find($id_booking);
-        $status  = getData('ms_status', ['id_status' => 4])->get()->getRow();
-        if (!$getBooking) {
-            $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
-        } else {
-            $data = [
-                'approved_rt_by'      => _session('nama'),
-                'approved_rt_at'      => time(),
-                'id_status'           => 4,
-                'status'              => $status->status,
-            ];
-            $update = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
-            if ($update) {
-                $json['success'] = $update;
+        $json['input']    = [
+            'signature'    => $this->_validation('signature', 'Signature tidak boleh kosong', 'required'),
+        ];
+        if (!empty($this->request->getVar('signature'))) {
+            $user                   = getUser(['id' => _session('id')])->getRow();
+            $data_signature         = _getVar($this->request->getVar('signature'));
+            $exp                    = explode(';base64,', $data_signature);
+            $image_type             = str_replace('data:image/', '', $exp[0]);
+            $signature_base64       = $exp[1];
+            if ($signature_base64 == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
+                $json['input']['signature']    = 'Signature masih kosong';
+            }
+        }
+        if (_validationHasErrors($json['input'])) {
+            $status  = getData('ms_status', ['id_status' => 4])->get()->getRow();
+            $old_check            = _getVar($this->request->getVar('old_check'));
+            if (!$getBooking) {
+                $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
             } else {
-                $json['error'] = 'update gagal';
+                if ($old_check == 1) {
+                    $ttd    = $user->ttd;
+                } else {
+                    $signature    = base64_decode($signature_base64);
+                    $ttd        = time() . rand(1, 10000) . '.' . $image_type;
+                    file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
+                    updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
+                }
+                $data = [
+                    'approved_rt_by'      => _session('nama'),
+                    'approved_rt_at'      => time(),
+                    'approved_rt_ttd'     => $ttd,
+                    'id_status'           => 4,
+                    'status'              => $status->status,
+                ];
+                $update = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);
+                if ($update) {
+                    $json['success'] = $update;
+                } else {
+                    $json['error'] = 'update gagal';
+                }
             }
         }
         $json['rscript']    = csrf_hash();
@@ -329,18 +404,41 @@ class Transportasi extends BaseController
     }
     public function unapproved($id_booking)
     {
-        $json['input']['ditolak_ket'] = $this->_validation('ditolak_ket', 'Keterangan', 'required');
+        $json['input'] = [
+            'ditolak_ket'  => $this->_validation('ditolak_ket', 'Keterangan', 'required'),
+            'signature'    => $this->_validation('signature', 'Signature tidak boleh kosong', 'required'),
+        ];
+        if (!empty($this->request->getVar('signature'))) {
+            $user                   = getUser(['id' => _session('id')])->getRow();
+            $data_signature         = _getVar($this->request->getVar('signature'));
+            $exp                    = explode(';base64,', $data_signature);
+            $image_type             = str_replace('data:image/', '', $exp[0]);
+            $signature_base64       = $exp[1];
+            if ($signature_base64 == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
+                $json['input']['signature']    = 'Signature masih kosong';
+            }
+        }
         if (_validationHasErrors(array_merge($json['input']))) {
             $reason = _getVar($this->request->getVar('ditolak_ket'));
-            $getBooking = $this->model->find($id_booking);
-            $status  = getData('ms_status', ['id_status' => 5])->get()->getRow();
+            $getBooking      = $this->model->find($id_booking);
+            $old_check       = _getVar($this->request->getVar('old_check'));
+            $status          = getData('ms_status', ['id_status' => 5])->get()->getRow();
             if (!$getBooking) {
                 $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
             } else {
+                if ($old_check == 1) {
+                    $ttd    = $user->ttd;
+                } else {
+                    $signature    = base64_decode($signature_base64);
+                    $ttd        = time() . rand(1, 10000) . '.' . $image_type;
+                    file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
+                    updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
+                }
                 $data = [
                     'ditolak_by'         => _session('nama'),
                     'ditolak_at'          => time(),
                     'ditolak_ket'         => $reason,
+                    'ditolak_ttd'         => $ttd,
                     'id_status'           => 5,
                     'status'              => $status->status,
                 ];

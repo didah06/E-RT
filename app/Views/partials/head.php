@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <!-- calendar -->
+    <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/fullcalendar/fullcalendar.min.css">
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -38,8 +40,7 @@
     <script src="<?= base_url(); ?>/public/assets/plugins/jquery-number/jquery.number.js"></script>
     <!-- Number Devider -->
     <script src="<?= base_url(); ?>/public/assets/plugins/number-divider/number-divider.js"></script>
-    <!-- <script src="<?= base_url(); ?>/public/assets/plugins/bootstrap-select/js/bootstrap-select.min.js"></script> -->
-
+    <script src="<?= base_url(); ?>/public/assets/plugins/signature-pad/signature_pad.js"></script>
 
 </head>
 

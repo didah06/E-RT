@@ -6,6 +6,7 @@ class Home extends BaseController
 {
     public function index()
     {
-        return _tempHTML('dashboard/index');
+        $data['booking'] = getData('tb_booking_transport')->get()->getResult();
+        return _tempHTML('dashboard/index', $data);
     }
 }

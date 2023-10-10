@@ -7,6 +7,11 @@
 <script src="<?= base_url(); ?>/public/assets/plugins/dropzone/dropzone.js"></script> <!-- Dropzone Plugin Js -->
 <script src="<?= base_url(); ?>/public/assets/bundles/mainscripts.bundle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="<?= base_url(); ?>/public/assets/bundles/fullcalendarscripts.bundle.js"></script>
+<!--/ calender javascripts -->
+
+<!-- <script src="/public/assets/bundles/mainscripts.bundle.js"></script> -->
+<script src="<?= base_url(); ?>/public/assets/js/pages/calendar/calendar.js"></script>
 
 <script>
     $(document).ready(function() {

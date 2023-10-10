@@ -12,7 +12,7 @@
                 <div class="card patients-list">
                     <div class="body">
                         <div class="row">
-                            <a href="<?= base_url('inventaris'); ?>" class="btn btn-warning" type="button">kembali</a>
+                            <a href="<?= base_url('inventaris'); ?>" class="btn btn-danger" type="button">kembali</a>
                         </div>
                         <div class="row pt-5">
                             <div class="col-md-12">

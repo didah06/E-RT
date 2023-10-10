@@ -296,6 +296,7 @@ function generateKodeBooking()
 {
     $prefix = 'RT'; // Prefix for the booking code
     $length = 6; // Length of the random part
+    $currentdate = date('Ymd');
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Characters to use
 
     $randomPart = '';
@@ -303,7 +304,7 @@ function generateKodeBooking()
         $randomPart .= $characters[rand(0, strlen($characters) - 1)];
     }
 
-    $kode_booking = $prefix . '-' . $randomPart;
+    $kode_booking = $prefix . '-' . $currentdate . $randomPart;
 
     return $kode_booking;
 }
@@ -339,7 +340,14 @@ function isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_k
     // $count = $db->countAllResults();
     // return $count;
     $query = $db->query("SELECT COUNT(*) AS counttime FROM `tb_booking_transport` WHERE `tanggal_pemakaian` = '$tanggal_pemakaian'
-    AND (`jam_keberangkatan` <= '$jam_keberangkatan' AND `jam_kembali` >= '$jam_keberangkatan') 
-    OR (`jam_keberangkatan` <= '$jam_kembali' AND `jam_kembali` >= '$jam_kembali')");
+    AND (
+      (`jam_keberangkatan` <= '$jam_keberangkatan' AND `jam_kembali` >= '$jam_keberangkatan') 
+      OR (`jam_keberangkatan` <= '$jam_kembali' AND `jam_kembali` >= '$jam_kembali')
+      OR (`jam_keberangkatan` >= '$jam_keberangkatan' AND `jam_kembali` <= '$jam_kembali')
+    )");
     return $query->getRow()->counttime;
+}
+function _signatureKosong()
+{
+    return 'iVBORw0KGgoAAAANSUhEUgAAAPoAAACWCAYAAAD32pUcAAAAAXNSR0IArs4c6QAAA6ZJREFUeF7t0wEBAAAIwjDtX9oefjZgyI4jQOC9wL5PKCABAmPonoBAQMDQAyWLSMDQ/QCBgIChB0oWkYCh+wECAQFDD5QsIgFD9wMEAgKGHihZRAKG7gcIBAQMPVCyiAQM3Q8QCAgYeqBkEQkYuh8gEBAw9EDJIhIwdD9AICBg6IGSRSRg6H6AQEDA0AMli0jA0P0AgYCAoQdKFpGAofsBAgEBQw+ULCIBQ/cDBAIChh4oWUQChu4HCAQEDD1QsogEDN0PEAgIGHqgZBEJGLofIBAQMPRAySISMHQ/QCAgYOiBkkUkYOh+gEBAwNADJYtIwND9AIGAgKEHShaRgKH7AQIBAUMPlCwiAUP3AwQCAoYeKFlEAobuBwgEBAw9ULKIBAzdDxAICBh6oGQRCRi6HyAQEDD0QMkiEjB0P0AgIGDogZJFJGDofoBAQMDQAyWLSMDQ/QCBgIChB0oWkYCh+wECAQFDD5QsIgFD9wMEAgKGHihZRAKG7gcIBAQMPVCyiAQM3Q8QCAgYeqBkEQkYuh8gEBAw9EDJIhIwdD9AICBg6IGSRSRg6H6AQEDA0AMli0jA0P0AgYCAoQdKFpGAofsBAgEBQw+ULCIBQ/cDBAIChh4oWUQChu4HCAQEDD1QsogEDN0PEAgIGHqgZBEJGLofIBAQMPRAySISMHQ/QCAgYOiBkkUkYOh+gEBAwNADJYtIwND9AIGAgKEHShaRgKH7AQIBAUMPlCwiAUP3AwQCAoYeKFlEAobuBwgEBAw9ULKIBAzdDxAICBh6oGQRCRi6HyAQEDD0QMkiEjB0P0AgIGDogZJFJGDofoBAQMDQAyWLSMDQ/QCBgIChB0oWkYCh+wECAQFDD5QsIgFD9wMEAgKGHihZRAKG7gcIBAQMPVCyiAQM3Q8QCAgYeqBkEQkYuh8gEBAw9EDJIhIwdD9AICBg6IGSRSRg6H6AQEDA0AMli0jA0P0AgYCAoQdKFpGAofsBAgEBQw+ULCIBQ/cDBAIChh4oWUQChu4HCAQEDD1QsogEDN0PEAgIGHqgZBEJGLofIBAQMPRAySISMHQ/QCAgYOiBkkUkYOh+gEBAwNADJYtIwND9AIGAgKEHShaRgKH7AQIBAUMPlCwiAUP3AwQCAoYeKFlEAobuBwgEBAw9ULKIBAzdDxAICBh6oGQRCRi6HyAQEDD0QMkiEjB0P0AgIGDogZJFJGDofoBAQMDQAyWLSMDQ/QCBgIChB0oWkcABT0wAl2KoFgwAAAAASUVORK5CYII=';
 }

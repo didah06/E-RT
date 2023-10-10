@@ -19973,7 +19973,7 @@ section.content {
 .card {
     background: #fff;
     transition: .5s;
-    border: 0;
+    border: 1;
     border-radius: .1875rem;
     position: relative;
     width: 100%;

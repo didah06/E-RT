@@ -43,6 +43,7 @@ $routes->get('/profile', 'User::profile');
 $routes->get('/profile_edit', 'User::profile_edit');
 $routes->post('/profile_update', 'User::profile_update');
 $routes->post('/change_password', 'User::change_password');
+$routes->post('signature', 'User::signature');
 
 // user pengguna
 $routes->get('/user', 'User::index');
@@ -74,7 +75,7 @@ $routes->post('transportasi/booking_update', 'Transportasi::update');
 $routes->post('transportasi/delete/(:num)', 'Transportasi::delete/$1');
 $routes->get('validasi_jadwal/(:segment)/(:segment)/(:segment)', 'Transportasi::validasi_jadwal/$1/$2/$3');
 $routes->get('/details/(:num)', 'Transportasi::booking_details/$1');
-$routes->post('/details_save', 'Transportasi::details_save');
+$routes->post('/details', 'Transportasi::details_save');
 $routes->post('approved_kadep/(:num)', 'Transportasi::approved_kadep/$1');
 $routes->post('approved_kadiv/(:num)', 'Transportasi::approved_kadiv/$1');
 $routes->post('approved_RT/(:num)', 'Transportasi::approved_RT/$1');

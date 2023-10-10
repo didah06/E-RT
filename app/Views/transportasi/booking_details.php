@@ -45,7 +45,7 @@
                         <div class="card" id="details">
                             <div class="body">
                                 <div class="row pl-2">
-                                    <a href="<?= base_url('booking'); ?>" type="button" class="btn btn-warning">Kembali</a>
+                                    <a href="<?= base_url('booking'); ?>" type="button" class="btn btn-danger">Kembali</a>
                                 </div>
                                 <div class="row pt-5">
                                     <div class="col-md-6 col-sm-6">
@@ -78,7 +78,7 @@
                                 <div class="row">
                                     <div class="error-area"></div>
                                     <?php if ($booking->status == 'approved kadiv') : ?>
-                                        <?= form_open(base_url('details_save'), ['class' => 'add-form']); ?>
+                                        <?= form_open(base_url('details'), ['class' => 'add-form']); ?>
                                         <input type="hidden" name="id_booking" value="<?= $booking->id_booking; ?>">
                                         <div class="row pl-2">
                                             <div class="col-md-6">
@@ -135,21 +135,21 @@
                                                 <thead>
                                                     <tr>
                                                         <th>
-                                                            <?php if (_session('role') == 'Kadep') : ?>
+                                                            <?php if (_session('role') == 'Kadep' || _session('role') == 'Developer') : ?>
                                                                 <?php if ($booking->status === 'baru') : ?>
                                                                     Approved Kadep
                                                                 <?php endif; ?>
                                                             <?php endif; ?>
                                                         </th>
                                                         <th>
-                                                            <?php if (_session('role') == 'Kadiv') : ?>
+                                                            <?php if (_session('role') == 'Kadiv' || _session('role') == 'Developer') : ?>
                                                                 <?php if ($booking->status === 'approved kadep') : ?>
                                                                     Approved Kadiv
                                                                 <?php endif; ?>
                                                             <?php endif; ?>
                                                         </th>
                                                         <th>
-                                                            <?php if (_session('role') == 'RT') : ?>
+                                                            <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
                                                                 <?php if ($booking->status === 'approved kadiv') : ?>
                                                                     Approved RT
                                                                 <?php endif; ?>
@@ -175,18 +175,109 @@
                                                     <?php foreach ($booking_list as $list) : ?>
                                                         <tr>
                                                             <td>
-                                                                <?php if (_session('role') == 'Kadep') : ?>
+                                                                <?php if (_session('role') == 'Kadep' || _session('role') == 'Developer') : ?>
                                                                     <?php if ($booking->status === 'baru') : ?>
-                                                                        <button class="btn btn-light btn-approve">Approve</button>
+                                                                        <button class="btn btn-light" data-toggle="modal" data-target="#ModalSignatureEdit">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove">Tolak</button>
                                                                         <div class="hidden-reason" style="display: none;">
                                                                             <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
-                                                                            <button class="btn btn-danger btn-confirm-rejection">Konfirmasi Penolakan</button>
+                                                                            <button class="btn btn-danger " data-toggle="modal" data-target="#ModalSignatureditolak">Konfirmasi Penolakan</button>
+                                                                        </div>
+                                                                        <!-- Signature Edit -->
+                                                                        <!-- modal -->
+                                                                        <div class="modal fade" id="ModalSignatureEdit" data-backdrop="false" role="dialog">
+                                                                            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <div class="error-area"></div>
+                                                                                        <form id="approved-kadep">
+                                                                                            <div class="d-flex">
+                                                                                                <div class="mr-auto p-2">Digital Signature</div>
+                                                                                                <div class="p-2">
+                                                                                                    <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                                                                        <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="signature-wrapper signature-new text-start">
+                                                                                                <canvas id="signature-pad-kadep" class="signature-pad border" width="250" height=150></canvas>
+                                                                                            </div>
+                                                                                            <div class="card signature-old m-0" hidden>
+                                                                                                <div class="card-body p-1">
+                                                                                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-check mt-0">
+                                                                                                <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                                                                <label class="form-check-label" for="formCheck1">
+                                                                                                    Gunakan signature tersimpan
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <input type="hidden" name="signature">
+                                                                                            <div class="invalid-feedback"></div>
+                                                                                            <button class="btn btn-light" type="submit">Lanjut Approve</button>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     <?php endif; ?>
+                                                                    <!-- Signature Edit -->
+                                                                    <!-- modal -->
+                                                                    <div class="modal fade" id="ModalSignatureditolak" data-backdrop="false" role="dialog">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="error-area"></div>
+                                                                                    <form id="approved-ditolak">
+                                                                                        <div class="d-flex">
+                                                                                            <div class="mr-auto p-2">Digital Signature</div>
+                                                                                            <div class="p-2">
+                                                                                                <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                                                                    <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="signature-wrapper signature-new text-start">
+                                                                                            <canvas id="signature-pad-ditolak" class="signature-pad border" width="250" height=150></canvas>
+                                                                                        </div>
+                                                                                        <div class="card signature-old m-0" hidden>
+                                                                                            <div class="card-body p-1">
+                                                                                                <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-check mt-0">
+                                                                                            <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                                                            <label class="form-check-label" for="formCheck1">
+                                                                                                Gunakan signature tersimpan
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <input type="hidden" name="signature">
+                                                                                        <div class="invalid-feedback"></div>
+                                                                                        <button class="btn btn-light" type="submit">Lanjut Penolakan</button>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                     <script>
                                                                         $(document).ready(function() {
-                                                                            $('.btn-approve').on('click', function() {
+                                                                            var signaturePadapprove = new SignaturePad(document.getElementById('signature-pad-kadep'));
+                                                                            var signaturePadditolak = new SignaturePad(document.getElementById('signature-pad-ditolak'));
+                                                                            $('#approved-kadep').submit(function(e) {
+                                                                                e.preventDefault();
                                                                                 Swal.fire({
                                                                                     title: 'Apa anda yakin?',
                                                                                     text: 'kode booking <?= $list->kode_booking; ?> akan di approved',
@@ -198,18 +289,28 @@
                                                                                 }).then((result) => {
                                                                                     if (result.value) {
                                                                                         processStart();
+                                                                                        $('input[name=signature]').val(signaturePadapprove.toDataURL());
+                                                                                        var formData = $(this).serialize();
                                                                                         $.ajax({
                                                                                             type: 'post',
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('approved_kadep/' . $list->id_booking); ?>",
+                                                                                            data: formData,
                                                                                             success: function(d) {
+                                                                                                processDone();
                                                                                                 if (d['success']) {
+                                                                                                    $('input[name=rscript]').val(d['rscript']);
+                                                                                                    $('#ModalSignatureEdit').modal('hide');
                                                                                                     location.reload();
+                                                                                                    Swal.fire('Approve Sukses', d['msg'], 'success')
                                                                                                 } else {
-                                                                                                    processDone();
                                                                                                     invalidError(d);
-                                                                                                    Swal.fire('Approve gagal', d['msg'], 'error');
+                                                                                                    Swal.fire('Approve gagal', d['msg'], 'error')
                                                                                                 }
+                                                                                            },
+                                                                                            error: function(xhr, status, error) {
+                                                                                                processDone();
+                                                                                                Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
                                                                                             }
                                                                                         });
                                                                                     }
@@ -218,7 +319,9 @@
                                                                             $('.btn-unapprove').on('click', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
-                                                                            $('.btn-confirm-rejection').on('click', function() {
+                                                                            $('#approved-ditolak').submit(function(e) {
+                                                                                e.preventDefault();
+                                                                                var signature_ttd = signaturePadditolak.toDataURL();
                                                                                 var keterangan = $('textarea[name="ditolak_ket"]').val();
                                                                                 if (!keterangan) {
                                                                                     return;
@@ -239,16 +342,23 @@
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
                                                                                             data: {
-                                                                                                ditolak_ket: keterangan
+                                                                                                ditolak_ket: keterangan,
+                                                                                                signature: signature_ttd,
                                                                                             },
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
+                                                                                                    $('input[name=rscript]').val(d['rscript']);
+                                                                                                    $('#ModalSignatureditolak').modal('hide');
                                                                                                     location.reload();
+                                                                                                    Swal.fire('Booking Ditolak', d['msg'], 'success')
                                                                                                 } else {
-                                                                                                    processDone();
                                                                                                     invalidError(d);
                                                                                                     Swal.fire('unapprove gagal', d['msg'], 'error');
                                                                                                 }
+                                                                                            },
+                                                                                            error: function(xhr, status, error) {
+                                                                                                processDone();
+                                                                                                Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
                                                                                             }
                                                                                         });
                                                                                     }
@@ -260,18 +370,109 @@
                                                             </td>
                                                             <td>
                                                                 <!-- approve kadiv -->
-                                                                <?php if (_session('role') == 'Kadiv') : ?>
+                                                                <?php if (_session('role') == 'Kadiv' || _session('role') == 'Developer') : ?>
                                                                     <?php if ($booking->status === 'approved kadep') : ?>
-                                                                        <button class="btn btn-light btn-approve-kadiv">Approve</button>
+                                                                        <button class="btn btn-light" data-toggle="modal" data-target="#ModalSignatureEditKadiv">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove-kadiv">Tolak</button>
                                                                         <div class="hidden-reason" style="display: none;">
                                                                             <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
-                                                                            <button class="btn btn-danger btn-confirm-rejection">Konfirmasi Penolakan</button>
+                                                                            <button class="btn btn-danger" data-toggle="modal" data-target="#ModalSignatureditolakkadiv">Konfirmasi Penolakan</button>
+                                                                        </div>
+                                                                        <!-- Signature Edit -->
+                                                                        <!-- modal -->
+                                                                        <div class="modal fade" id="ModalSignatureEditKadiv" data-backdrop="false" role="dialog">
+                                                                            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <div class="error-area"></div>
+                                                                                        <form id="approved-kadiv">
+                                                                                            <div class="d-flex">
+                                                                                                <div class="mr-auto p-2">Digital Signature</div>
+                                                                                                <div class="p-2">
+                                                                                                    <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                                                                        <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="signature-wrapper signature-new text-start">
+                                                                                                <canvas id="signature-pad-kadiv" class="signature-pad border" width="250" height=150></canvas>
+                                                                                            </div>
+                                                                                            <div class="card signature-old m-0" hidden>
+                                                                                                <div class="card-body p-1">
+                                                                                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-check mt-0">
+                                                                                                <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                                                                <label class="form-check-label" for="formCheck1">
+                                                                                                    Gunakan signature tersimpan
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <input type="hidden" name="signature">
+                                                                                            <div class="invalid-feedback"></div>
+                                                                                            <button class="btn btn-light" type="submit">Lanjut Approve</button>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     <?php endif; ?>
+                                                                    <!-- Signature Edit -->
+                                                                    <!-- modal -->
+                                                                    <div class="modal fade" id="ModalSignatureEditditolakkadiv" data-backdrop="false" role="dialog">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="error-area"></div>
+                                                                                    <form id="ditolak-kadiv">
+                                                                                        <div class="d-flex">
+                                                                                            <div class="mr-auto p-2">Digital Signature</div>
+                                                                                            <div class="p-2">
+                                                                                                <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                                                                    <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="signature-wrapper signature-new text-start">
+                                                                                            <canvas id="signature-pad-ditolak-kadiv" class="signature-pad border" width="250" height=150></canvas>
+                                                                                        </div>
+                                                                                        <div class="card signature-old m-0" hidden>
+                                                                                            <div class="card-body p-1">
+                                                                                                <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-check mt-0">
+                                                                                            <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                                                            <label class="form-check-label" for="formCheck1">
+                                                                                                Gunakan signature tersimpan
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <input type="hidden" name="signature">
+                                                                                        <div class="invalid-feedback"></div>
+                                                                                        <button class="btn btn-light" type="submit">Lanjut Penolakan</button>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                     <script>
                                                                         $(document).ready(function() {
-                                                                            $('.btn-approve-kadiv').on('click', function() {
+                                                                            var signaturePadapprove = new SignaturePad(document.getElementById('signature-pad-kadiv'));
+                                                                            var signaturePadditolak = new SignaturePad(document.getElementById('signature-pad-ditolak-kadiv'));
+                                                                            $('#approved-kadiv').submit(function(e) {
+                                                                                e.preventDefault();
                                                                                 Swal.fire({
                                                                                     title: 'Apa anda yakin?',
                                                                                     text: 'kode booking <?= $list->kode_booking; ?> akan di approved',
@@ -283,18 +484,27 @@
                                                                                 }).then((result) => {
                                                                                     if (result.value) {
                                                                                         processStart();
+                                                                                        $('input[name=signature]').val(signaturePadapprove.toDataURL());
+                                                                                        var formData = $(this).serialize();
                                                                                         $.ajax({
                                                                                             type: 'post',
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('approved_kadiv/' . $list->id_booking); ?>",
+                                                                                            data: formData,
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
+                                                                                                    $('input[name=rscript]').val(d['rscript']);
+                                                                                                    $('#ModalSignatureEditKadiv').modal('hide')
                                                                                                     location.reload();
+                                                                                                    Swal.fire('Approve Sukses', d['msg'], 'success')
                                                                                                 } else {
-                                                                                                    processDone();
                                                                                                     invalidError(d);
                                                                                                     Swal.fire('Approve gagal', d['msg'], 'error');
                                                                                                 }
+                                                                                            },
+                                                                                            error: function(xhr, status, error) {
+                                                                                                processDone();
+                                                                                                Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
                                                                                             }
                                                                                         });
                                                                                     }
@@ -303,7 +513,9 @@
                                                                             $('.btn-unapprove-kadiv').on('click', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
-                                                                            $('.btn-confirm-rejection').on('click', function() {
+                                                                            $('#ditolak_kadiv').submit(function(e) {
+                                                                                e.preventDefault();
+                                                                                var signature_ttd = signaturePadditolak.toDataURL();
                                                                                 var keterangan = $('textarea[name="ditolak_ket"]').val();
                                                                                 if (!keterangan) {
                                                                                     return;
@@ -324,16 +536,23 @@
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
                                                                                             data: {
-                                                                                                ditolak_ket: keterangan
+                                                                                                ditolak_ket: keterangan,
+                                                                                                signature: signature_ttd,
                                                                                             },
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
+                                                                                                    $('input[name=rscript]').val(d['rscript']);
+                                                                                                    $('#ModalSignatureEditditolakkadiv').modal('hide')
                                                                                                     location.reload();
+                                                                                                    Swal.fire('Booking Ditolak', d['msg'], 'success')
                                                                                                 } else {
-                                                                                                    processDone();
                                                                                                     invalidError(d);
                                                                                                     Swal.fire('unapprove gagal', d['msg'], 'error');
                                                                                                 }
+                                                                                            },
+                                                                                            error: function(xhr, status, error) {
+                                                                                                processDone();
+                                                                                                Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
                                                                                             }
                                                                                         });
                                                                                     }
@@ -344,18 +563,109 @@
                                                                 <?php endif; ?>
                                                             </td>
                                                             <td>
-                                                                <?php if (_session('role') == 'RT') : ?>
+                                                                <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
                                                                     <?php if ($booking->status === 'approved kadiv') : ?>
-                                                                        <button class="btn btn-light btn-approve-rt">Approve</button>
+                                                                        <button class="btn btn-light" data-toggle="modal" data-target="#ModalSignatureEditRT">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove-rt">Tolak</button>
                                                                         <div class="hidden-reason" style="display: none;">
                                                                             <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
-                                                                            <button class="btn btn-danger btn-confirm-rejection">Konfirmasi Penolakan</button>
+                                                                            <button class="btn btn-danger" data-toggle="modal" data-target="#ModalSignatureditolakRT">Konfirmasi Penolakan</button>
+                                                                        </div>
+                                                                        <!-- Signature Edit -->
+                                                                        <!-- modal -->
+                                                                        <div class="modal fade" id="ModalSignatureEditRT" data-backdrop="false" role="dialog">
+                                                                            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <div class="error-area"></div>
+                                                                                        <form id="approved-rt">
+                                                                                            <div class="d-flex">
+                                                                                                <div class="mr-auto p-2">Digital Signature</div>
+                                                                                                <div class="p-2">
+                                                                                                    <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                                                                        <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="signature-wrapper signature-new text-start">
+                                                                                                <canvas id="signature-pad-rt" class="signature-pad border" width="250" height=150></canvas>
+                                                                                            </div>
+                                                                                            <div class="card signature-old m-0" hidden>
+                                                                                                <div class="card-body p-1">
+                                                                                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-check mt-0">
+                                                                                                <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                                                                <label class="form-check-label" for="formCheck1">
+                                                                                                    Gunakan signature tersimpan
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <input type="hidden" name="signature">
+                                                                                            <div class="invalid-feedback"></div>
+                                                                                            <button class="btn btn-light" type="submit">Lanjut Approve</button>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     <?php endif; ?>
+                                                                    <!-- Signature Edit -->
+                                                                    <!-- modal -->
+                                                                    <div class="modal fade" id="ModalSignatureditolakRT" data-backdrop="false" role="dialog">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="error-area"></div>
+                                                                                    <form id="ditolak-RT">
+                                                                                        <div class="d-flex">
+                                                                                            <div class="mr-auto p-2">Digital Signature</div>
+                                                                                            <div class="p-2">
+                                                                                                <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                                                                    <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="signature-wrapper signature-new text-start">
+                                                                                            <canvas id="signature-pad-ditolak-rt" class="signature-pad border" width="250" height=150></canvas>
+                                                                                        </div>
+                                                                                        <div class="card signature-old m-0" hidden>
+                                                                                            <div class="card-body p-1">
+                                                                                                <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-check mt-0">
+                                                                                            <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                                                            <label class="form-check-label" for="formCheck1">
+                                                                                                Gunakan signature tersimpan
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <input type="hidden" name="signature">
+                                                                                        <div class="invalid-feedback"></div>
+                                                                                        <button class="btn btn-light" type="submit">Lanjut Approve</button>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                     <script>
                                                                         $(document).ready(function() {
-                                                                            $('.btn-approve-rt').on('click', function() {
+                                                                            var signaturePadapprove = new SignaturePad(document.getElementById('signature-pad-rt'));
+                                                                            var signaturePadditolak = new SignaturePad(document.getElementById('signature-pad-ditolak-rt'));
+                                                                            $('#approved-rt').submit(function(e) {
+                                                                                e.preventDefault();
                                                                                 Swal.fire({
                                                                                     title: 'Apa anda yakin?',
                                                                                     text: 'kode booking <?= $list->kode_booking; ?> akan di approved',
@@ -367,18 +677,28 @@
                                                                                 }).then((result) => {
                                                                                     if (result.value) {
                                                                                         processStart();
+                                                                                        $('input[name=signature]').val(signaturePad.toDataURL());
+                                                                                        var formData = $(this).serialize();
                                                                                         $.ajax({
                                                                                             type: 'post',
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('approved_RT/' . $list->id_booking); ?>",
+                                                                                            data: formData,
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
+                                                                                                    $('input[name=rscript]').val(d['rscript']);
+                                                                                                    $('#ModalSignatureEditRT').modal('hide')
                                                                                                     location.reload();
+                                                                                                    Swal.fire('Approve Sukses', d['msg'], 'success')
                                                                                                 } else {
                                                                                                     processDone();
                                                                                                     invalidError(d);
                                                                                                     Swal.fire('Approve gagal', d['msg'], 'error');
                                                                                                 }
+                                                                                            },
+                                                                                            error: function(xhr, status, error) {
+                                                                                                processDone();
+                                                                                                Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
                                                                                             }
                                                                                         });
                                                                                     }
@@ -387,7 +707,8 @@
                                                                             $('.btn-unapprove-rt').on('click', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
-                                                                            $('.btn-confirm-rejection').on('click', function() {
+                                                                            $('#ditolak-RT').submit(function() {
+                                                                                var signature_ttd = signaturePadditolak.toDataURL();
                                                                                 var keterangan = $('textarea[name="ditolak_ket"]').val();
                                                                                 if (!keterangan) {
                                                                                     return;
@@ -408,16 +729,23 @@
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
                                                                                             data: {
-                                                                                                ditolak_ket: keterangan
+                                                                                                ditolak_ket: keterangan,
+                                                                                                signature: signature_ttd,
                                                                                             },
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
+                                                                                                    $('input[name=rscript]').val(d['rscript']);
+                                                                                                    $('#ModalSignatureditolakRT').modal('hide')
                                                                                                     location.reload();
+                                                                                                    Swal.fire('Booking ditolak', d['msg'], 'success')
                                                                                                 } else {
-                                                                                                    processDone();
                                                                                                     invalidError(d);
                                                                                                     Swal.fire('unapprove gagal', d['msg'], 'error');
                                                                                                 }
+                                                                                            },
+                                                                                            error: function(xhr, status, error) {
+                                                                                                processDone();
+                                                                                                Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
                                                                                             }
                                                                                         });
                                                                                     }
@@ -458,6 +786,7 @@
 <script>
     $('.divide').divide();
     $(document).ready(function() {
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
@@ -482,5 +811,31 @@
                 }
             })
         });
+        $('#tb-notif').DataTable({
+            responsive: true,
+            ordering: false,
+            scrollX: true,
+            dom: "<'row'<'col-sm-12 col-md-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 text-center col-md-12'p>>"
+        });
+        $('.signature-clear').on('click', function(event) {
+            signaturePad.clear();
+        });
+
+        $('#ModalSignatureEdit').on('hidden.modal', function(e) {
+            signaturePad.clear();
+            $('.alert').remove();
+        });
+        $('input[name=old_check]').change(function() {
+            signaturePad.clear();
+            if (this.checked) {
+                $('.signature-new').attr('hidden', 'hidden');
+                $('.signature-old').removeAttr('hidden');
+            } else {
+                $('.signature-old').attr('hidden', 'hidden');
+                $('.signature-new').removeAttr('hidden');
+            }
+        });
+
+
     });
 </script>
