@@ -23,16 +23,16 @@
                     <div class="body">
                         <div class="row">
                             <div class="col-7">
-                                <h5 class="m-t-0">Traffic</h5>
-                                <p class="text-small">4% higher than last month</p>
+                                <h5 class="m-t-0">Baru</h5>
+                                <p class="text-small">Total Booking Baru</p>
                             </div>
                             <div class="col-5 text-right">
-                                <h2 class="">20</h2>
-                                <small class="info">of 1Tb</small>
+                                <h2 class="baru-value"><?= $baru; ?></h2>
+                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
-                                    <div class="progress-bar l-amber" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;"></div>
+                                    <div class="progress-bar l-amber" id="baru" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -42,16 +42,16 @@
                     <div class="body">
                         <div class="row">
                             <div class="col-7">
-                                <h5 class="m-t-0">Sales</h5>
-                                <p class="text-small">6% higher than last month</p>
+                                <h5 class="m-t-0">Diproses</h5>
+                                <p class="text-small">Total Booking Diproses</p>
                             </div>
                             <div class="col-5 text-right">
-                                <h2 class="">12%</h2>
-                                <small class="info">of 100</small>
+                                <h2 class="proses-value"><?= $diproses; ?></h2>
+                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
-                                    <div class="progress-bar l-blue" role="progressbar" aria-valuenow="38" aria-valuemin="0" aria-valuemax="100" style="width: 38%;"></div>
+                                    <div class="progress-bar l-parpl" id="diproses" role="progressbar" aria-valuenow="39" aria-valuemin="0" aria-valuemax="100" style="width: 39%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -61,16 +61,16 @@
                     <div class="body">
                         <div class="row">
                             <div class="col-7">
-                                <h5 class="m-t-0">Email</h5>
-                                <p class="text-small">Total Registered email</p>
+                                <h5 class="m-t-0">Selesai</h5>
+                                <p class="text-small">Total Booking Selesai</p>
                             </div>
                             <div class="col-5 text-right">
-                                <h2 class="">39</h2>
-                                <small class="info">of 100</small>
+                                <h2 class="selesai-value"><?= $selesai; ?></h2>
+                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
-                                    <div class="progress-bar l-parpl" role="progressbar" aria-valuenow="39" aria-valuemin="0" aria-valuemax="100" style="width: 39%;"></div>
+                                    <div class="progress-bar l-turquoise" id="selesai" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100" style="width: 89%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -80,16 +80,16 @@
                     <div class="body">
                         <div class="row">
                             <div class="col-7">
-                                <h5 class="m-t-0">Domians</h5>
-                                <p class="text-small">Total registered Domain</p>
+                                <h5 class="m-t-0">Ditolak</h5>
+                                <p class="text-small">Total Booking Ditolak</p>
                             </div>
                             <div class="col-5 text-right">
-                                <h2 class="">8</h2>
-                                <small class="info">of 10</small>
+                                <h2 class="ditolak-value"><?= $ditolak; ?></h2>
+                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
-                                    <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100" style="width: 89%;"></div>
+                                    <div class="progress-bar l-turquoise" id="ditolak" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100" style="width: 89%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -199,5 +199,18 @@
             eventLimit: true, // allow "more" link when too many events
             events: dataBooking
         });
+        var baruValue = parseFloat($('.baru-value').text());
+        var prosesValue = parseFloat($('.proses-value').text());
+        var selesaiValue = parseFloat($('.selesai-value').text());
+        var ditolakValue = parseFloat($('.ditolak-value').text());
+
+        var percentagebaru = (baruValue / 30) * 100;
+        var percentageproses = (prosesValue / 30) * 100;
+        var percentageselesai = (selesaiValue / 30) * 100;
+        var percentageditolak = (ditolakValue / 30) * 100;
+        $('#baru').css('width', percentagebaru + '%');
+        $('#diproses').css('width', percentageproses + '%');
+        $('#selesai').css('width', percentageselesai + '%');
+        $('#ditolak').css('width', percentageditolak + '%');
     });
 </script>
