@@ -98,11 +98,14 @@
             </ul>
         </div>
         <div class="container-fluid">
-            <div class="card">
-                <div class="row">
-                    <div class="col-md-12 col-lg-6 col-xl-6">
+            <div class="row clearfix">
+                <div class="col-md-12 col-lg-12">
+                    <div class="card visitors-map">
+                        <div class="header">
+                            <h2><strong>Timeline</strong> Booking</h2>
+                        </div>
                         <div class="body">
-                            <div id="calendar" class="m-t-20"></div>
+                            <div id="calendar"></div>
                         </div>
                     </div>
                 </div>

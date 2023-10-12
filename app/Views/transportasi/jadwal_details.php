@@ -75,7 +75,7 @@
                                 <?= $booking->anggaran; ?>
                             </div>
                         </div>
-                        <div class="row" style="padding-left: 1400px;">
+                        <div class="row pl-2">
                             <?php if ($booking->status === 'diproses') : ?>
                                 <a href="<?= base_url('booking_selesai'); ?>" data-id="<?= $booking->id_booking; ?>" data-toggle="modal" data-target="#Modaladd" class="btn btn-success">Booking Selesai</a>
                             <?php endif; ?>
@@ -83,7 +83,7 @@
                     </div>
                     <!-- Booking Edit -->
                     <!-- modal -->
-                    <div class="modal fade" id="Modaladd" data-backdrop="false" role="dialog">
+                    <div class="modal fade" id="Modaladd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" role="dialog">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -183,49 +183,51 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6" style="padding-top: 1rem;">
-                                                <div class="col-md-12">
-                                                    <div class="mr-auto">Ditugaskan Oleh</div>
-                                                    <div class="mr-auto"><b>Plt. Kadept. Rumah Tangga</b>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="col-md-6">
+                                                    <div class="col-md-12">
+                                                        <div class="mr-auto">Ditugaskan Oleh</div>
+                                                        <div class="mr-auto"><b>Plt. Kadept. Rumah Tangga</b>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="card signature-old-kadep" style="width: 250px; height: 150px">
-                                                        <div class="card-body">
-                                                            <img class="img-sign" name="old_check_kadep" src="<?= base_url('public/assets/images/ttd/' . $booking->approved_rt_ttd); ?>">
+                                                    <div class="col-md-12">
+                                                        <div class="card signature-old-kadep" style="width: 250px; height: 150px">
+                                                            <div class="card-body">
+                                                                <img class="img-sign" name="old_check_kadep" src="<?= base_url('public/assets/images/ttd/' . $booking->approved_rt_ttd); ?>">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6" style="padding-top: 2.5rem; padding-left: 7rem;">
-                                                <div class="col-md-12">
-                                                    <div class="mr-auto"><b>Digital Signature</b>
-                                                        <span class="signature-clear" style="color: red;" type="button">
-                                                            <span class="zmdi zmdi-delete" style="font-size: 20px; padding-left: 50px;"></span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="signature-wrapper signature-new text-start">
-                                                        <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
-                                                    </div>
-                                                    <div class="card signature-old" hidden style="width: 250px; height: 150px">
-                                                        <div class="card-body">
-                                                            <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>">
+                                                <div class="col-md-6">
+                                                    <div class="col-md-12 pt-4">
+                                                        <div class="mr-auto"><b>Digital Signature</b>
+                                                            <span class="signature-clear" style="color: red;" type="button">
+                                                                <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                            </span>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-6">
+                                                        <div class="signature-wrapper signature-new text-start">
+                                                            <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                                        </div>
+                                                        <div class="card signature-old" hidden style="width: 250px; height: 150px">
+                                                            <div class="card-body">
+                                                                <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-check mt-0 pl-4">
+                                                        <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                        <label class="form-check-label" for="formCheck1">
+                                                            Gunakan signature tersimpan
+                                                        </label>
+                                                    </div>
+                                                    <input type="hidden" name="signature">
+                                                    <div class="invalid-feedback"></div>
                                                 </div>
-                                                <div class="form-check mt-0 pl-4">
-                                                    <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
-                                                    <label class="form-check-label" for="formCheck1">
-                                                        Gunakan signature tersimpan
-                                                    </label>
-                                                </div>
-                                                <input type="hidden" name="signature">
-                                                <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-12 pt-2">
                                             <div class="text-center mb-3">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                                 <button type="submit" class="btn btn-primary">Simpan</button>

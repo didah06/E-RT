@@ -25,11 +25,11 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <div class="body">
-                        <div class="table-responsive" id="datatables">
-                            <table class="table m-b-0 table-hover">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" width="8%">#</th>
+                                        <th>#</th>
                                         <th>Nama</th>
                                         <th>Username</th>
                                         <th>Jenis Kelamin</th>
@@ -45,11 +45,8 @@
                                     <?php foreach ($user as $table) : ?>
                                         <tr>
                                             <td>
-                                                <button class="btn btn-warning btn-icon btn-round hidden-sm-down float-right m-l-3 btn-edit" data-id="<?= $table->user_id; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                <button class="btn btn-warning btn-icon hidden-sm-down float-right m-l-3 btn-edit" data-id="<?= $table->user_id; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
                                                     <i class="zmdi zmdi-edit"></i>
-                                                </button>
-                                                <button class="btn btn-danger btn-icon btn-round hidden-sm-down float-right  m-l-3 btn-delete" data-id="<?= $table->user_id; ?>" type="button">
-                                                    <i class="zmdi zmdi-delete"></i>
                                                 </button>
                                             </td>
                                             <td><?= $table->nama; ?></td>
@@ -73,7 +70,7 @@
             </div>
         </div>
     </div>
-    <!-- direktur add -->
+    <!-- driver add -->
     <!-- modal -->
     <div class="modal fade" id="myModal" data-backdrop="false" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -347,7 +344,7 @@
                     $.ajax({
                         type: 'post',
                         dataType: 'json',
-                        url: "<?= base_url('user/delete'); ?>",
+                        url: "<?= base_url('driver/delete'); ?>",
                         data: {
                             user_id: userId
                         },

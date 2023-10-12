@@ -61,9 +61,10 @@ $routes->get('/user_edit/(:num)', 'User::user_edit/$1');
 $routes->get('/driver', 'User::driver');
 $routes->post('/driver', 'User::driver_save');
 $routes->put('/driver', 'User::driver_update');
-$routes->delete('/driver/delete', 'User::driver_delete');
 // security
-$routes->get('/security', 'User::security');
+$routes->get('security', 'User::security');
+$routes->post('security', 'User::security_save');
+$routes->put('security', 'User::security_update');
 // user akses
 $routes->get('/user_akses', 'User::akses');
 
@@ -108,6 +109,8 @@ $routes->put('service_update', 'Transportasi::service_update');
 
 
 // keamanan
+
+$routes->get('keamanan', 'Keamanan:index');
 // Dapur
 // Seragam
 // Fotokopi

@@ -252,15 +252,15 @@
                                     <?= form_open(base_url('transportasi/booking_update'), ['class' => 'update-form']); ?>
                                     <input type="hidden" name="_method" value="PUT" />
                                     <input type="hidden" name="e_id_booking">
-                                    <div class="row">
-                                        <div class="col-md-3">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Tanggal Pemakaian</label>
                                                 <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="e_tanggal_pemakaian" id="tanggal_pemakaian" onchange="checktime()">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Jam Keberangkatan</label>
                                                 <select class="form-control select-only" name="e_jam_keberangkatan" id="jam_keberangkatan" onchange="checktime()">
@@ -272,7 +272,7 @@
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Jam Kembali</label>
                                                 <select class="form-control select-only" name="e_jam_kembali" id="jam_kembali" onchange="checktime()">
@@ -284,7 +284,7 @@
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Cara Pemakaian</label>
                                                 <select class="form-control select-only" name="e_cara_pemakaian">
@@ -297,7 +297,7 @@
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label">Tipe Pemakaian</label>
                                                 <select class="form-control select-only" name="e_type_pemakaian">
@@ -308,28 +308,28 @@
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label">Jumlah Peserta</label>
                                                 <input type="number" class="form-control" name="e_jumlah_peserta">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label">Anggaran</label>
                                                 <input type="text" class="form-control" name="e_anggaran">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Tujuan</label>
                                                 <input type="text" class="form-control" name="e_tujuan">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Acara Kegiatan</label>
                                                 <input type="text" class="form-control" name="e_acara_kegiatan">

@@ -360,3 +360,12 @@ function count_status($where = [])
     $result = $builder->countAllResults();
     return $result;
 }
+function selectSecurityUser()
+{
+    $db = connectDb('db_master.ms_user');
+    $db->select("user_id AS id, CONCAT(nama, ' - (', jabatan, ')') AS text");
+    $db->where('user_as', 'PTK');
+    $db->whereIn('jabatan', ['Satpam']);
+    $db->orderBy('nama', 'ASC');
+    return $db->get()->getResult();
+}

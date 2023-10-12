@@ -394,15 +394,73 @@ class User extends BaseController
     //security
     public function security()
     {
+        $data['ms_user']    = selectSecurityUser();
+        $data['direktorat'] = selectDirektorat();
+        $data['divisi']     = selectDivisi();
+        $data['departemen'] = selectDepartemen();
         $data['security'] = getUser(['ms_user.role' => "Satpam", 'is_aktif' => 1])->getResult();
         return _tempHTML('user/security', $data);
     }
-    public function security_add()
-    {
-        return _tempHTML('user/security_add');
-    }
     public function security_save()
     {
+        $json['input'] = [
+            'nama'              => $this->_validation('nama', 'Nama', 'required|min_length[5]'),
+            'jabatan'           => $this->_validation('jabatan', 'Jabatan', 'required|min_length[2]'),
+            'tmpt_lahir'        => $this->_validation('tmpt_lahir', 'Tempat Lahir', 'required'),
+            'tgl_lahir'         => $this->_validation('tgl_lahir', 'Tanggal Lahir', 'required|valid_date[Y-m-d]'),
+        ];
+        $json['select'] = [
+            'user_id'           => $this->_validation('user_id', 'User', 'required|is_natural|is_unique[ms_user.master_id]'),
+            'id_dept'           => $this->_validation('id_dept', 'Departemen', 'required|is_natural'),
+            'jk'                => $this->_validation('jk', 'Jenis Kelamin', 'required'),
+        ];
+        if (!empty($this->request->getVar('hp'))) {
+            $json['input']['hp']    = $this->_validation('hp', 'No. Handphone', 'min_length[8]|is_natural');
+        }
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('user_id'))])->get()->getRow();
+            $departemen    = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('id_dept'))])->get()->getRow();
+            if (!$user) {
+                $json['select'] = [
+                    'user_id'       => 'Pilihan data tidak ditemukan',
+                ];
+            } else if (!$departemen) {
+                $json['select'] = [
+                    'id_dept' => 'Pilihan data tidak ditemukan',
+                ];
+            } else {
+                $data = [
+                    'master_id'         => $user->user_id,
+                    'id_direktorat'     => $departemen->id_direktorat,
+                    'id_divisi'         => $departemen->id_divisi,
+                    'id_dept'           => $departemen->id_dept,
+                    'role'              => 'Satpam',
+                ];
+                $add = $this->model->insert($data);
+                if ($add > 0) {
+                    $nama           = _getVar($this->request->getVar('nama'));
+                    $jabatan        = _getVar($this->request->getVar('jabatan'));
+                    $jk             = _getVar($this->request->getVar('jk'));
+                    $hp             = !empty($this->request->getVar('hp')) ? _noHP(_getVar($this->request->getVar('hp'))) : '';
+                    $tmpt_lahir     = _getVar($this->request->getVar('tmpt_lahir'));
+                    $tgl_lahir      = _getVar($this->request->getVar('tgl_lahir'));
+                    $data           = [
+                        'nama'              => $nama,
+                        'jabatan'           => $jabatan,
+                        'jk'                => $jk,
+                        'hp'                => $hp,
+                        'tmpt_lahir'        => $tmpt_lahir,
+                        'tgl_lahir'         => $tgl_lahir,
+                    ];
+                    updateData('db_master.ms_user', $data, ['user_id'     => $user->user_id]);
+                    $json['success']    = $add;
+                } else {
+                    $json['error']        = 'Tambah user gagal';
+                }
+            }
+            $json['rscript']    = csrf_hash();
+            echo json_encode($json);
+        }
     }
     //Driver
     public function driver()

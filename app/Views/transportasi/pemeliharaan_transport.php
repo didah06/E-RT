@@ -23,8 +23,8 @@
                                                 <th>Jenis Kendaraan</th>
                                                 <th>Merk</th>
                                                 <th>Warna</th>
-                                                <th>Tahun Kendaraan</th>
                                                 <th>No Polisi</th>
+                                                <th>Tahun Kendaraan</th>
                                                 <th>Tanggal STNK</th>
                                                 <th>No Asuransi</th>
                                                 <th>Tanggal Pajak</th>
@@ -179,7 +179,7 @@
                                         <?= form_open(base_url('asuransi_update'), ['class' => 'update-form']); ?>
                                         <input type="hidden" name="_method" value="PUT" />
                                         <input type="hidden" name="e_id_asuransi">
-                                        <input type="hidden" name="id_kendaraan" value="<?= $asuransi_tp->id_kendaraan; ?>">
+                                        <input type="hidden" name="id_kendaraan" value="<?= $ms_transport->id_kendaraan; ?>">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="form-label">No Asuransi</label>
@@ -257,7 +257,7 @@
                                         <?= form_open(base_url('pajak_update'), ['class' => 'update-multipart']); ?>
                                         <input type="hidden" name="_method" value="PUT" />
                                         <input type="hidden" name="e_id_pajak">
-                                        <input type="hidden" name="id_kendaraan" value="<?= $pajak_tp->id_kendaraan; ?>">
+                                        <input type="hidden" name="id_kendaraan" value="<?= $ms_transport->id_kendaraan; ?>">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="form-label">Tanggal Pajak</label>
@@ -408,7 +408,7 @@
                                         <?= form_open(base_url('service_update'), ['class' => 'update-multipart']); ?>
                                         <input type="hidden" name="_method" value="PUT" />
                                         <input type="hidden" name="e_id_service">
-                                        <input type="hidden" name="id_kendaraan" value="<?= $service_tp->id_kendaraan; ?>">
+                                        <input type="hidden" name="id_kendaraan" value="<?= $ms_transport->id_kendaraan; ?>">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="form-label">Tanggal Service Terakhir</label>
@@ -490,7 +490,7 @@
                                         <?= form_open(base_url('steam_update'), ['class' => 'update-multipart']); ?>
                                         <input type="hidden" name="_method" value="PUT" />
                                         <input type="hidden" name="e_id_steam">
-                                        <input type="hidden" name="id_kendaraan" value="<?= $steam_tp->id_kendaraan; ?>">
+                                        <input type="hidden" name="id_kendaraan" value="<?= $ms_transport->id_kendaraan; ?>">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="form-label">Tanggal Steam Terakhir</label>

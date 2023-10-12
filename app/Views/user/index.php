@@ -45,11 +45,8 @@
                                     <?php foreach ($user as $table) : ?>
                                         <tr>
                                             <td>
-                                                <button class="btn btn-warning btn-icon btn-round hidden-sm-down float-right m-l-3 btn-edit" data-id="<?= $table->user_id; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                <button class="btn btn-warning btn-icon hidden-sm-down float-right m-l-3 btn-edit" data-id="<?= $table->user_id; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
                                                     <i class="zmdi zmdi-edit"></i>
-                                                </button>
-                                                <button class="btn btn-danger btn-icon btn-round hidden-sm-down float-right  m-l-3 btn-delete" data-id="<?= $table->user_id; ?>" type="button">
-                                                    <i class="zmdi zmdi-delete"></i>
                                                 </button>
                                             </td>
                                             <td><?= $table->nama; ?></td>
