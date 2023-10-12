@@ -133,6 +133,7 @@ class Transportasi extends BaseController
                     'anggaran'          => $anggaran,
                     'id_status'         => $status->id_status,
                     'status'            => $status->status,
+                    'created_at'        => time(),
                 ];
                 if (isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan->start_time, $jam_kembali->end_time) > 0) {
                     $json['error'] = 'Maaf! pada Jam tersebut sudah ada yang booking';
@@ -565,6 +566,8 @@ class Transportasi extends BaseController
                 'ttd_form_pengeluaran' => $ttd,
                 'id_status'         => 6,
                 'status'            => $status->status,
+                'selesai_by'        => _session('nama'),
+                'selesai_at'        => time(),
             ];
             $add = updateData('tb_booking_transport', $data, ['id_booking' => $id_booking]);;
             if ($add) {

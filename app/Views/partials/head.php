@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
     <!-- calendar -->
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/fullcalendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/timeline.css">
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

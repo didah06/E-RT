@@ -13,4 +13,9 @@ class Home extends BaseController
         $data['booking']       = getData('tb_booking_transport')->get()->getResult();
         return _tempHTML('dashboard/index', $data);
     }
+    public function details($id_booking)
+    {
+        $data['booking']  = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
+        return _tempHTML('dashboard/timeline', $data);
+    }
 }

@@ -105,33 +105,21 @@
                             <div id="calendar" class="m-t-20"></div>
                         </div>
                     </div>
-                    <div class="col-md-12 col-lg-6 col-xl-6">
-                        <div class="body">
-                            <div class="collapse-xs collapse-sm collapse" id="open-events">
-                                <hr>
-                                <div class="event-name b-primary row">
-                                    <div class="col-2 text-center">
-                                        <h4>11<span>Dec</span><span>2017</span></h4>
-                                    </div>
-                                    <div class="col-10">
-                                        <h6>Conference</h6>
-                                        <p>It is a long established fact that a reader will be distracted</p>
-                                        <address><i class="zmdi zmdi-pin"></i> 123 6th St. Melbourne, FL 32904</address>
-                                    </div>
-                                </div>
-                                <div class="event-name b-primary row">
-                                    <div class="col-2 text-center">
-                                        <h4>13<span>Dec</span><span>2017</span></h4>
-                                    </div>
-                                    <div class="col-10">
-                                        <h6>Birthday</h6>
-                                        <p>It is a long established fact that a reader will be distracted</p>
-                                        <address><i class="zmdi zmdi-pin"></i> 123 6th St. Melbourne, FL 32904</address>
-                                    </div>
-                                </div>
-                                <hr>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal for displaying event details -->
+        <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="eventDetails">
+                        <!-- Event details will be displayed here -->
                     </div>
                 </div>
             </div>
@@ -176,7 +164,7 @@
                     title: '<?= $schedule->acara_kegiatan; ?>',
                     start: '<?= $schedule->tanggal_pemakaian; ?>',
                     className: '<?= $schedule->status === "baru" ? "bg-info text-light" : ($schedule->status === "diproses" ? "bg-warning text-light" : ($schedule->status === 'selesai' ? "bg-success text-light" : "bg-primary text-light")) ?>',
-                    url: '<?= base_url('details/' . $schedule->id_booking); ?>',
+                    url: '<?= base_url('details_timeline/' . $schedule->id_booking); ?>',
                 },
             <?php endforeach; ?>
 
@@ -197,7 +185,7 @@
                 }
             },
             eventLimit: true, // allow "more" link when too many events
-            events: dataBooking
+            events: dataBooking,
         });
         var baruValue = parseFloat($('.baru-value').text());
         var prosesValue = parseFloat($('.proses-value').text());
