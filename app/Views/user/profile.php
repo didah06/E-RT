@@ -122,34 +122,58 @@
             </div>
             <!-- end modal -->
 
-            <div class="card">
+            <div class="card" style="width: 100%;">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#about">Profile Details</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#friends">Rekan Departemen</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#signature">Signature</a></li> -->
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#signature">Signature</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#friends">Rekan Departemen</a></li> -->
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane body active" id="about">
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->jk ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->tmpt_lahir; ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->tgl_lahir; ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->jabatan; ?></p>
-                        <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->role; ?></p>
-                    </div>
-                    <div class="tab-pane body" id="friends">
-                        <?php if (count($rekan) == 0) : ?>
-                            <p class="card-title-desc text-center">--Tidak ada--</p>
-                        <?php endif; ?>
-                        <?php foreach ($rekan as $team) : ?>
-                            <div class="row">
-                                <div class="column pl-2 pr-3">
-                                    <img src="<?= _siteURL('master/assets/img/profile/thumb/' . $team->foto); ?>" alt="" class="img-thumbnail rounded-circle">
-                                </div>
-                                <div class="column">
-                                    <p><?= strlen($team->nama) > 20 ? trim(substr($team->nama, 0, 20)) . '...' : $team->nama; ?></p>
-                                    <small><?= $team->jabatan; ?></small>
+                    <div class="tab-pane body active" id="signature">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Signature</h5>
+
+                                <div class="card">
+                                    <div class="card-body p-1 text-center">
+                                        <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                    </div>
+                                    <div class="card-footer text-center p-2">
+                                        <button class="btn btn-rounded btn-success waves-effect waves-light" data-toggle="modal" data-target="#ModalSignature">Edit Signature</button>
+                                    </div>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
+                            <!-- Signature Edit -->
+                            <!-- modal -->
+                            <div class="modal fade" id="ModalSignature" data-backdrop="false" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h6 class="modal-title" id="exampleModalLongTitle">Edit Signature</h6>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="error-area"></div>
+                                            <?= form_open(base_url('signature'), ['class' => 'signature-form']); ?>
+                                            <div class="mb-3 text-center">
+                                                <div class="signature-wrapper">
+                                                    <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 text-center">
+                                                <button class="btn btn-light waves-effect waves-light me-1" data-dismiss="modal" type="button">Batal</button>
+                                                <button class="btn btn-danger waves-effect waves-light signature-clear me-1" type="button">Hapus</button>
+                                                <button class="btn btn-primary waves-effect waves-light load-click" type="submit">Simpan</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end modal -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -157,75 +181,29 @@
         <div class="col-lg-8 col-md-12">
             <div class="card">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#timeline">Signature</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Notifications</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#user">Profile Details</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usersettings">Notifications</a></li> -->
                 </ul>
             </div>
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="timeline">
-                    <!-- <div class="card" style="width: 20rem; border: 1;">
-                        <div class="header">
-                            <strong>Signature</strong>
-                        </div>
-                        <div class="card" style="width: 18rem;">
-                            <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
-                        </div>
-                        <div class="card-footer text-center p-2">
-                            <button class="btn btn-rounded btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".modal-sign">Edit Signature</button>
-                        </div>
-                    </div> -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">Signature</h5>
-
-                            <div class="card">
-                                <div class="card-body p-1">
-                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
-                                </div>
-                                <div class="card-footer text-center p-2">
-                                    <button class="btn btn-rounded btn-success waves-effect waves-light" data-toggle="modal" data-target="#ModalSignature">Edit Signature</button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Signature Edit -->
-                        <!-- modal -->
-                        <div class="modal fade" id="ModalSignature" data-backdrop="false" role="dialog">
-                            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h6 class="modal-title" id="exampleModalLongTitle">Edit Signature</h6>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="error-area"></div>
-                                        <?= form_open(base_url('signature'), ['class' => 'signature-form']); ?>
-                                        <div class="mb-3 text-center">
-                                            <div class="signature-wrapper">
-                                                <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 text-center">
-                                            <button class="btn btn-light waves-effect waves-light me-1" data-dismiss="modal" type="button">Batal</button>
-                                            <button class="btn btn-danger waves-effect waves-light signature-clear me-1" type="button">Hapus</button>
-                                            <button class="btn btn-primary waves-effect waves-light load-click" type="submit">Simpan</button>
-                                        </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end modal -->
+                <div role="tabpanel" class="tab-pane active" id="user">
+                    <div class="card" style="height: 100%;">
+                        <div class="header" style="padding-bottom: 63%;">
+                            <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->jk ?></p>
+                            <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->tmpt_lahir; ?></p>
+                            <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->tgl_lahir; ?></p>
+                            <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->jabatan; ?></p>
+                            <p><i class="zmdi zmdi-caret-right"></i>&nbsp;<?= $user_login->role; ?></p>
                         </div>
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="usersettings">
+                <!-- <div role="tabpanel" class="tab-pane" id="usersettings">
                     <div class="card">
                         <div class="header">
                             <strong>Notifications</strong>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
