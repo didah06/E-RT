@@ -11,6 +11,7 @@ class Home extends BaseController
         $data['selesai']      = count_status(['status' => 'selesai']);
         $data['ditolak']      = count_status(['status' => 'ditolak']);
         $data['booking']       = getData('tb_booking_transport')->get()->getResult();
+        $data['informasi']     = getData('tb_informasi')->get()->getResult();
         return _tempHTML('dashboard/index', $data);
     }
     public function details($id_booking)

@@ -112,7 +112,13 @@
                                                             </button>
                                                     </td>
                                                     <td><?= $table->tgl_pajak; ?></td>
-                                                    <td><?= $table->foto_pajak; ?></td>
+                                                    <td>
+                                                        <?php if ($table->foto_pajak != null) : ?>
+                                                            <a href="<?= base_url('public/assets/images/transportasi/pajak/' . $table->foto_pajak) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                                        <?php else : ?>
+                                                            <?php echo '-'; ?>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td>
                                                         <span class="<?= $table->is_aktif == 1 ? 'badge badge-success' : 'badge badge-danger'; ?>"><?= $table->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif'; ?></span>
                                                     </td>
@@ -305,7 +311,13 @@
                                                             </button>
                                                     </td>
                                                     <td><?= $table->tgl_service_terakhir; ?></td>
-                                                    <td><?= $table->nota_service; ?></td>
+                                                    <td>
+                                                        <?php if ($table->nota_service != null) : ?>
+                                                            <a href="<?= base_url('public/assets/images/transportasi/nota_service/' . $table->nota_service) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                                        <?php else : ?>
+                                                            <?php echo '-'; ?>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td><?= $table->tempat_service; ?></td>
                                                     <td>
                                                         <span class="<?= $table->is_aktif == 1 ? 'badge badge-success' : 'badge badge-danger'; ?>"><?= $table->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif'; ?></span>
@@ -341,7 +353,13 @@
                                                             </button>
                                                     </td>
                                                     <td><?= $table->tgl_terakhir_steam; ?></td>
-                                                    <td><?= $table->nota_steam; ?></td>
+                                                    <td>
+                                                        <?php if ($table->nota_steam != null) : ?>
+                                                            <a href="<?= base_url('public/assets/images/transportasi/nota_steam/' . $table->nota_steam) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                                        <?php else : ?>
+                                                            <?php echo '-'; ?>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td><?= $table->tempat_steam; ?></td>
                                                     <td>
                                                         <span class="<?= $table->is_aktif == 1 ? 'badge badge-success' : 'badge badge-danger'; ?>"><?= $table->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif'; ?></span>

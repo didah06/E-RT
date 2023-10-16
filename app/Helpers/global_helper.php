@@ -369,3 +369,26 @@ function selectSecurityUser()
     $db->orderBy('nama', 'ASC');
     return $db->get()->getResult();
 }
+function selectArea()
+{
+    $db = connectDb('ms_area');
+    $db->select("id_area AS id, area AS text");
+    $db->orderBy('area', 'ASC');
+    return $db->get()->getResult();
+}
+function selectShift()
+{
+    $db = connectDb('ms_shift');
+    $db->select("id_shift AS id, shift AS text");
+    $db->orderBy('shift', 'ASC');
+    return $db->get()->getResult();
+}
+function generateKodeKejadian()
+{
+    $prefix = 'KE'; // Prefix for the booking code
+    $currentdate = date('Ymd');
+
+    $kode_booking = $prefix . '-' . $currentdate;
+
+    return $kode_booking;
+}

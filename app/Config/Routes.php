@@ -110,7 +110,19 @@ $routes->put('service_update', 'Transportasi::service_update');
 
 // keamanan
 
-$routes->get('keamanan', 'Keamanan:index');
+$routes->get('laporan', 'Keamanan::index');
+$routes->post('laporan', 'Keamanan::laporan_save');
+$routes->get('laporan_edit/(:num)', 'Keamanan::laporan_edit/$1');
+$routes->put('laporan', 'Keamanan::laporan_update');
+$routes->get('pengawasan', 'Keamanan::pengawasan');
+$routes->post('pengawasan', 'Keamanan::pengawasan_save');
+$routes->get('pengawasan_edit/(:num)', 'Keamanan::pengawasan_edit/$1');
+$routes->put('pengawasan', 'Keamanan::pengawasan_update');
+$routes->get('informasi', 'Keamanan::informasi');
+$routes->post('informasi', 'Keamanan::informasi_save');
+$routes->get('informasi_edit/(:num)', 'Keamanan::informasi_edit/$1');
+$routes->put('informasi', 'Keamanan::informasi_update');
+$routes->delete('informasi', 'Keamanan::informasi_delete');
 // Dapur
 // Seragam
 // Fotokopi

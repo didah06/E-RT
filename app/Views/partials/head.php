@@ -28,6 +28,7 @@
     <!-- calendar -->
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/fullcalendar/fullcalendar.min.css">
     <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/css/timeline.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>/public/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css" />
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

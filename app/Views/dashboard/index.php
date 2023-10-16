@@ -97,16 +97,80 @@
                 </li>
             </ul>
         </div>
-        <div class="container-fluid">
-            <div class="row clearfix">
-                <div class="col-md-12 col-lg-12">
-                    <div class="card visitors-map">
-                        <div class="header">
-                            <h2><strong>Timeline</strong> Booking</h2>
+        <div class="row clearfix">
+            <div class="col-md-12 col-lg-8">
+                <div class="card visitors-map">
+                    <div class="header">
+                        <h2><strong>Jadwal</strong> Booking</h2>
+                    </div>
+                    <div class="body">
+                        <!-- <div id="world-map-markers" class="jvector-map m-b-5"></div> -->
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-sm-10">
+                                <div id="calendar"></div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6">
+                                <h5>Keterangan</h5>
+                                <div class="progress-container">
+                                    <span class="progress-badge">booking baru</span>
+                                    <div class="progress" style="height: 15px;">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="progress-badge">booking Approved</span>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="progress-badge">booking Proses</span>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="progress-badge">booking Selesai</span>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="body">
-                            <div id="calendar"></div>
-                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Infomasi Kegiatan</strong> Security</h2>
+                    </div>
+                    <div class="body">
+                        <!-- <div id="donut_chart" class="dashboard-donut-chart"></div> -->
+                        <table class="table m-b-0">
+                            <tbody>
+                                <h6>Informasi</h6>
+                                <?php
+                                $currentDate = date('Y-m-d');
+                                $foundInformation = false; // Flag to check if matching information was found
+
+                                foreach ($informasi as $table) :
+                                    if ($table->tgl_kegiatan == $currentDate) :
+                                        $foundInformation = true;
+                                ?>
+                                        <tr>
+                                            <td><?= $table->nama_kegiatan; ?></td>
+                                            <td><?= $table->waktu_kegiatan; ?></td>
+                                            <td><?= $table->tempat_kegiatan; ?></td>
+                                        </tr>
+                                    <?php
+                                    endif;
+                                endforeach;
+
+                                if (!$foundInformation) :
+                                    ?>
+                                    <tr>
+                                        <td>Tidak ada Informasi</td>
+                                    </tr>
+                                <?php
+                                endif;
+                                ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -129,37 +193,7 @@
         </div>
 </section>
 
-<!-- Default Size -->
-<div class="modal fade" id="addevent" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="title" id="defaultModalLabel">Add Event</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <div class="form-line">
-                        <input type="number" class="form-control" placeholder="Event Date">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-line">
-                        <input type="text" class="form-control" placeholder="Event Title">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-line">
-                        <textarea class="form-control no-resize" placeholder="Event Description..."></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-round waves-effect">Add</button>
-                <button type="button" class="btn btn-simple btn-round waves-effect" data-dismiss="modal">CLOSE</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script>
     $(document).ready(function() {
         var dataBooking = [
