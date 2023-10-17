@@ -23,7 +23,7 @@
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card patients-list">
                     <!-- modal -->
                     <div class="modal fade" id="FormPelaporan" data-backdrop="false" role="dialog">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -93,126 +93,126 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- end modal -->
-                <div class="body">
-                    <div class="row mb-5">
-                        <button class="btn btn-info" data-toggle="modal" data-target="#FormPelaporan"><i class="zmdi zmdi-plus">Kejadian
-                            </i></button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                            <thead>
-                                <tr>
-                                    <th width="12%">#</th>
-                                    <th>kode kejadian</th>
-                                    <th>kejadian</th>
-                                    <th>kronologi</th>
-                                    <th>Tanggal Kejadian</th>
-                                    <th>Waktu Kejadian</th>
-                                    <th>Area</th>
-                                    <th>foto</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($keamanan as $table) : ?>
+                    <!-- end modal -->
+                    <div class="body">
+                        <div class="row mb-5">
+                            <button class="btn btn-info" data-toggle="modal" data-target="#FormPelaporan"><i class="zmdi zmdi-plus">Kejadian
+                                </i></button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
                                     <tr>
-                                        <td class="text-center">
-                                            <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_keamanan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
-                                            </span>
-                                        </td>
-                                        <td><?= $table->kode_kejadian; ?></td>
-                                        <td><?= $table->kejadian; ?></td>
-                                        <td><?= $table->kronologi; ?></td>
-                                        <td><?= $table->tgl_kejadian; ?></td>
-                                        <td><?= $table->waktu_kejadian; ?></td>
-                                        <td><?= $table->area; ?></td>
-                                        <td>
-                                            <?php if ($table->foto != null) : ?>
-                                                <a href="<?= base_url('public/assets/images/keamanan/foto_kejadian/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
-                                            <?php else : ?>
-                                                <?php echo '-'; ?>
-                                            <?php endif; ?>
-                                        </td>
+                                        <th width="12%">#</th>
+                                        <th>kode kejadian</th>
+                                        <th>kejadian</th>
+                                        <th>kronologi</th>
+                                        <th>Tanggal Kejadian</th>
+                                        <th>Waktu Kejadian</th>
+                                        <th>Area</th>
+                                        <th>foto</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($keamanan as $table) : ?>
+                                        <tr>
+                                            <td class="text-center">
+                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_keamanan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                    <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
+                                                </span>
+                                            </td>
+                                            <td><?= $table->kode_kejadian; ?></td>
+                                            <td><?= $table->kejadian; ?></td>
+                                            <td><?= $table->kronologi; ?></td>
+                                            <td><?= $table->tgl_kejadian; ?></td>
+                                            <td><?= $table->waktu_kejadian; ?></td>
+                                            <td><?= $table->area; ?></td>
+                                            <td>
+                                                <?php if ($table->foto != null) : ?>
+                                                    <a href="<?= base_url('public/assets/images/keamanan/foto_kejadian/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                                <?php else : ?>
+                                                    <?php echo '-'; ?>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <!-- modal -->
-                <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h6 class="modal-title" id="exampleModalLongTitle">Edit Pelaporan Kejadian</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="error-area"></div>
-                                <?= form_open(base_url('laporan'), ['class' => 'update-form']); ?>
-                                <input type="hidden" name="_method" value="PUT" />
-                                <input type="hidden" name="e_id_keamanan">
-                                <div class="row clearfix">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Kejadian</label>
-                                            <input type="text" class="form-control" name="e_kejadian" id="kejadian">
-                                            <div class="invalid-feedback"></div>
+                    <!-- modal -->
+                    <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Edit Pelaporan Kejadian</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="error-area"></div>
+                                    <?= form_open(base_url('laporan'), ['class' => 'update-form']); ?>
+                                    <input type="hidden" name="_method" value="PUT" />
+                                    <input type="hidden" name="e_id_keamanan">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Kejadian</label>
+                                                <input type="text" class="form-control" name="e_kejadian" id="kejadian">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Kronologi</label>
-                                            <input type="text" class="form-control" name="e_kronologi" id="kronlogi">
-                                            <div class="invalid-feedback"></div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Kronologi</label>
+                                                <input type="text" class="form-control" name="e_kronologi" id="kronlogi">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Tanggal Kejadian</label>
-                                            <input type="date" class="form-control" name="e_tgl_kejadian" id="tgl_kejadian">
-                                            <div class="invalid-feedback"></div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tanggal Kejadian</label>
+                                                <input type="date" class="form-control" name="e_tgl_kejadian" id="tgl_kejadian">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Waktu Kejadian</label>
-                                            <input type="time" class="form-control" name="e_waktu_kejadian" id="waktu_kejadian">
-                                            <div class="invalid-feedback"></div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Waktu Kejadian</label>
+                                                <input type="time" class="form-control" name="e_waktu_kejadian" id="waktu_kejadian">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Area</label>
-                                            <select class="form-control select-only" name="e_id_area" id="id_area">
-                                                <option value="" selected disabled>- Pilih Area-</option>
-                                                <?php foreach ($area as $item) : ?>
-                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <div class="invalid-feedback"></div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Area</label>
+                                                <select class="form-control select-only" name="e_id_area" id="id_area">
+                                                    <option value="" selected disabled>- Pilih Area-</option>
+                                                    <?php foreach ($area as $item) : ?>
+                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Foto</label>
-                                            <input type="file" class="form-control" name="e_foto" accept="image/png, image/jpeg, image/jpg">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Foto</label>
+                                                <input type="file" class="form-control" name="e_foto" accept="image/png, image/jpeg, image/jpg">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="text-center pt-3 pb-3">
+                                    <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                </div>
+                                </form>
                             </div>
-                            <div class="text-center pt-3 pb-3">
-                                <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
-                            </div>
-                            </form>
                         </div>
                     </div>
+                    <!-- end modal -->
                 </div>
-                <!-- end modal -->
             </div>
         </div>
     </div>

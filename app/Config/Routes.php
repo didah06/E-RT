@@ -107,10 +107,8 @@ $routes->post('service_save', 'Transportasi::service_save');
 $routes->get('service_edit/(:num)', 'Transportasi::service_edit/$1');
 $routes->put('service_update', 'Transportasi::service_update');
 
-
 // keamanan
-
-$routes->get('laporan', 'Keamanan::index');
+$routes->get('laporan', 'Keamanan::laporan');
 $routes->post('laporan', 'Keamanan::laporan_save');
 $routes->get('laporan_edit/(:num)', 'Keamanan::laporan_edit/$1');
 $routes->put('laporan', 'Keamanan::laporan_update');
@@ -118,12 +116,21 @@ $routes->get('pengawasan', 'Keamanan::pengawasan');
 $routes->post('pengawasan', 'Keamanan::pengawasan_save');
 $routes->get('pengawasan_edit/(:num)', 'Keamanan::pengawasan_edit/$1');
 $routes->put('pengawasan', 'Keamanan::pengawasan_update');
-$routes->get('informasi', 'Keamanan::informasi');
-$routes->post('informasi', 'Keamanan::informasi_save');
+$routes->resource('keamanan'); // api
+$routes->get('informasi_keamanan', 'Keamanan::informasi');
 $routes->get('informasi_edit/(:num)', 'Keamanan::informasi_edit/$1');
-$routes->put('informasi', 'Keamanan::informasi_update');
-$routes->delete('informasi', 'Keamanan::informasi_delete');
+$routes->get('inventaris_keamanan', 'Keamanan::inventaris');
+$routes->post('inventaris_keamanan', 'Keamanan::inventaris_save');
+$routes->get('inventaris_keamanan_edit/(:num)', 'Keamanan::inventaris_edit/$1');
+$routes->put('inventaris_keamanan', 'Keamanan::inventaris_update');
+$routes->delete('inventaris_keamanan', 'Keamanan::inventaris_delete');
+
 // Dapur
+$routes->get('menu', 'Dapur::index');
+$routes->post('menu', 'Dapur::menu_save');
+$routes->get('menu_edit/(:num)', 'Dapur::menu_edit/$1');
+$routes->put('menu', 'Dapur::menu_update');
+$routes->delete('menu_delete', 'Dapur::menu_delete');
 // Seragam
 // Fotokopi
 

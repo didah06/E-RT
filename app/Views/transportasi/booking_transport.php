@@ -206,8 +206,8 @@
                                                     </span>
                                                     <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" type="button">
                                                         <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
-                                                        </button>
-                                                    <?php endif; ?>
+                                                    </span>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
                                                 <span class="<?= $table->status === 'baru' ? 'badge badge-primary' : ($table->status === 'diproses' ? 'badge badge-warning' : ($table->status === 'selesai' ? 'badge badge-success' : ($table->status === 'ditolak' ? 'badge badge-danger' : 'badge badge-info'))) ?>">

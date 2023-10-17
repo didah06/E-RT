@@ -23,7 +23,7 @@
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card patients-list">
                     <!-- modal -->
                     <div class="modal fade" id="FormPengawasan" data-backdrop="false" role="dialog">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -89,115 +89,115 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- end modal -->
-                <div class="body">
-                    <div class="row mb-5">
-                        <button class="btn btn-info" data-toggle="modal" data-target="#FormPengawasan"><i class="zmdi zmdi-plus">Pengawasan Personal
-                            </i></button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                            <thead>
-                                <tr>
-                                    <th width="12%">#</th>
-                                    <th>nama</th>
-                                    <th>shift</th>
-                                    <th>area</th>
-                                    <th>foto</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($pengawasan as $table) : ?>
+                    <!-- end modal -->
+                    <div class="body">
+                        <div class="row mb-5">
+                            <button class="btn btn-info" data-toggle="modal" data-target="#FormPengawasan"><i class="zmdi zmdi-plus">Pengawasan Personal
+                                </i></button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
                                     <tr>
-                                        <td class="text-center">
-                                            <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pengawasan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
-                                            </span>
-                                        </td>
-                                        <td><?= $table->nama; ?></td>
-                                        <td><?= $table->shift; ?></td>
-                                        <td><?= $table->area; ?></td>
-                                        <td>
-                                            <?php if ($table->foto != null) : ?>
-                                                <a href="<?= base_url('public/assets/images/keamanan/pengawasan_personal/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
-                                            <?php else : ?>
-                                                <?php echo '-'; ?>
-                                            <?php endif; ?>
-                                        </td>
+                                        <th width="12%">#</th>
+                                        <th>nama</th>
+                                        <th>shift</th>
+                                        <th>area</th>
+                                        <th>foto</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- modal -->
-                <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h6 class="modal-title" id="exampleModalLongTitle">Edit Pelaporan Kejadian</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="error-area"></div>
-                                <?= form_open(base_url('pengawasan'), ['class' => 'update-form']); ?>
-                                <input type="hidden" name="_method" value="PUT" />
-                                <input type="hidden" name="e_id_pengawasan">
-                                <div class="row clearfix">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">User</label>
-                                            <select class="form-control select-only" name="e_user_id">
-                                                <option value="" selected disabled>- Pilih User -</option>
-                                                <?php foreach ($ms_user as $item) : ?>
-                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <div class="invalid-feedback"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Shift</label>
-                                            <select class="form-control select-only" name="e_id_shift">
-                                                <option value="" selected disabled>- Pilih Shift -</option>
-                                                <?php foreach ($shift as $item) : ?>
-                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <div class="invalid-feedback"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Area</label>
-                                            <select class="form-control select-only" name="e_id_area">
-                                                <option value="" selected disabled>- Pilih Area -</option>
-                                                <?php foreach ($area as $item) : ?>
-                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <div class="invalid-feedback"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Foto</label>
-                                            <input type="file" class="form-control" name="e_foto" accept="image/png, image/jpeg, image/jpg">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
-                                </div>
-                                </form>
-                            </div>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($pengawasan as $table) : ?>
+                                        <tr>
+                                            <td class="text-center">
+                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pengawasan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                    <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
+                                                </span>
+                                            </td>
+                                            <td><?= $table->nama; ?></td>
+                                            <td><?= $table->shift; ?></td>
+                                            <td><?= $table->area; ?></td>
+                                            <td>
+                                                <?php if ($table->foto != null) : ?>
+                                                    <a href="<?= base_url('public/assets/images/keamanan/pengawasan_personal/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                                <?php else : ?>
+                                                    <?php echo '-'; ?>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <!-- end modal -->
+                    <!-- modal -->
+                    <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Edit Pelaporan Kejadian</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="error-area"></div>
+                                    <?= form_open(base_url('pengawasan'), ['class' => 'update-form']); ?>
+                                    <input type="hidden" name="_method" value="PUT" />
+                                    <input type="hidden" name="e_id_pengawasan">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">User</label>
+                                                <select class="form-control select-only" name="e_user_id">
+                                                    <option value="" selected disabled>- Pilih User -</option>
+                                                    <?php foreach ($ms_user as $item) : ?>
+                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Shift</label>
+                                                <select class="form-control select-only" name="e_id_shift">
+                                                    <option value="" selected disabled>- Pilih Shift -</option>
+                                                    <?php foreach ($shift as $item) : ?>
+                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Area</label>
+                                                <select class="form-control select-only" name="e_id_area">
+                                                    <option value="" selected disabled>- Pilih Area -</option>
+                                                    <?php foreach ($area as $item) : ?>
+                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Foto</label>
+                                                <input type="file" class="form-control" name="e_foto" accept="image/png, image/jpeg, image/jpg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end modal -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -245,6 +245,35 @@
                     $('select[name=e_id_area').val(d['data'].id_area).trigger('change');
                 }
             });
+        });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            var formData = new FormData(this);
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: formData,
+                enctype: 'multipart/form-data',
+                cache: false,
+                contentType: false,
+                processData: false,
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
         });
     })
 </script>

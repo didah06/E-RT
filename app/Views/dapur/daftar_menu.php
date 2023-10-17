@@ -25,55 +25,63 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <!-- modal -->
-                    <div class="modal fade" id="FormInformasi" data-backdrop="false" role="dialog">
+                    <div class="modal fade" id="Modaladd" data-backdrop="false" role="dialog">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h6 class="modal-title" id="exampleModalLongTitle">Form Informasi</h6>
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Daftar Menu</h6>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="error-area"></div>
-                                    <?= form_open(base_url('keamanan'), ['class' => 'add-form']); ?>
+                                    <?= form_open(base_url('menu'), ['class' => 'add-form']); ?>
                                     <div class="row clearfix">
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label">Nama Kegiatan</label>
-                                                <input type="text" class="form-control" name="nama_kegiatan">
+                                                <label class="form-label">Tanggal Menu</label>
+                                                <input type="date" class="form-control" name="tgl_menu">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label">Tipe Kegiatan</label>
-                                                <select class="form-control select-only" name="type_kegiatan">
-                                                    <option value="" selected disabled>- Pilih Tipe Kegiatan -</option>
-                                                    <option value="internal">Internal</option>
-                                                    <option value="eksternal">Eksternal</option>
+                                                <label class="form-label">Menu 1</label>
+                                                <input type="text" class="form-control" name="menu_1">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Menu 2</label>
+                                                <input type="text" class="form-control" name="menu_2">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Menu 3</label>
+                                                <input type="text" class="form-control" name="menu_3">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Menu 4</label>
+                                                <input type="text" class="form-control" name="menu_4">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Sesi Menu</label>
+                                                <select class="form-control select-only" name="sesi_menu">
+                                                    <option value="" selected disabled>- Pilih Sesi Menu -</option>
+                                                    <option value="pagi">Pagi</option>
+                                                    <option value="siang">Siang</option>
+                                                    <option value="malam">Malam</option>
                                                 </select>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Tanggal Kegiatan</label>
-                                                <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="tgl_kegiatan">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Waktu Kegiatan</label>
-                                                <input type="time" class="form-control" name="waktu_kegiatan">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Tempat Kegiatan</label>
-                                                <input type="text" class="form-control" name="tempat_kegiatan">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -89,37 +97,40 @@
                     <!-- end modal -->
                     <div class="body">
                         <div class="row mb-5">
-                            <button class="btn btn-info" data-toggle="modal" data-target="#FormInformasi"><i class="zmdi zmdi-plus">Informasi
+                            <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Daftar Menu
                                 </i></button>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <!-- delete old menu if menu is not menu current date -->
+                                <!-- <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" type="button">
+                                    <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
+                                </span> -->
                                 <thead>
                                     <tr>
                                         <th width="12%">#</th>
-                                        <th>Nama Kegiatan</th>
-                                        <th>Tipe Kegiatan</th>
-                                        <th>Tanggal Kegiatan</th>
-                                        <th>Waktu Kegiatan</th>
-                                        <th>Tempat Kegiatan</th>
+                                        <th>Tanggal Menu</th>
+                                        <th>Menu 1</th>
+                                        <th>Menu 2</th>
+                                        <th>Menu 3</th>
+                                        <th>Menu 4</th>
+                                        <th>Sesi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($informasi as $table) : ?>
+                                    <?php foreach ($daftar_menu as $table) : ?>
                                         <tr>
                                             <td class="text-center">
-                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_informasi; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
                                                     <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
                                                 </span>
-                                                <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_informasi; ?>" type="button">
-                                                    <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
-                                                </span>
                                             </td>
-                                            <td><?= $table->nama_kegiatan; ?></td>
-                                            <td><?= $table->type_kegiatan; ?></td>
-                                            <td><?= $table->tgl_kegiatan; ?></td>
-                                            <td><?= $table->waktu_kegiatan; ?></td>
-                                            <td><?= $table->tempat_kegiatan; ?></td>
+                                            <td><?= $table->tgl_menu; ?></td>
+                                            <td><?= $table->menu_1; ?></td>
+                                            <td><?= $table->menu_2; ?></td>
+                                            <td><?= $table->menu_3; ?></td>
+                                            <td><?= $table->menu_4; ?></td>
+                                            <td><?= $table->sesi_menu; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -138,46 +149,54 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="error-area"></div>
-                                    <?= form_open(base_url('keamanan'), ['class' => 'update-form']); ?>
+                                    <?= form_open(base_url('menu'), ['class' => 'update-form']); ?>
                                     <input type="hidden" name="_method" value="PUT" />
-                                    <input type="hidden" name="e_id_informasi">
+                                    <input type="hidden" name="e_id_menu">
                                     <div class="row clearfix">
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label">Nama Kegiatan</label>
-                                                <input type="text" class="form-control" name="e_nama_kegiatan">
+                                                <label class="form-label">Tanggal Menu</label>
+                                                <input type="date" class="form-control" name="e_tgl_menu">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label">Tipe Kegiatan</label>
-                                                <select class="form-control select-only" name="e_type_kegiatan">
-                                                    <option value="" selected disabled>- Pilih Tipe Kegiatan -</option>
-                                                    <option value="internal">Internal</option>
-                                                    <option value="eksternal">Eksternal</option>
+                                                <label class="form-label">Menu 1</label>
+                                                <input type="text" class="form-control" name="e_menu_1">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Menu 2</label>
+                                                <input type="text" class="form-control" name="e_menu_2">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Menu 3</label>
+                                                <input type="text" class="form-control" name="e_menu_3">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Menu 4</label>
+                                                <input type="text" class="form-control" name="e_menu_4">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Sesi Menu</label>
+                                                <select class="form-control select-only" name="e_sesi_menu">
+                                                    <option value="" selected disabled>- Pilih Sesi Menu -</option>
+                                                    <option value="pagi">Pagi</option>
+                                                    <option value="siang">Siang</option>
+                                                    <option value="malam">Malam</option>
                                                 </select>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Tanggal Kegiatan</label>
-                                                <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="e_tgl_kegiatan">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Waktu Kegiatan</label>
-                                                <input type="time" class="form-control" name="e_waktu_kegiatan">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Tempat Kegiatan</label>
-                                                <input type="text" class="form-control" name="e_tempat_kegiatan">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -224,14 +243,14 @@
             })
         })
         $('.btn-edit').on('click', function() {
-            $.getJSON("<?= base_url('informasi_edit/'); ?>/" + $(this).data('id'), function(d) {
+            $.getJSON("<?= base_url('menu_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
-                    $('input[name=e_id_informasi]').val(d['data'].id_informasi);
-                    $('input[name=e_nama_kegiatan]').val(d['data'].nama_kegiatan);
-                    $('input[name=e_tgl_kegiatan]').val(d['data'].tgl_kegiatan);
-                    $('input[name=e_waktu_kegiatan]').val(d['data'].waktu_kegiatan);
-                    $('input[name=e_tempat_kegiatan]').val(d['data'].tempat_kegiatan);
-                    $('select[name=e_type_kegiatan').val(d['data'].type_kegiatan).trigger('change');
+                    $('input[name=e_tgl_menu]').val(d['data'].tgl_menu);
+                    $('input[name=e_menu_1]').val(d['data'].menu_1);
+                    $('input[name=e_menu_2]').val(d['data'].menu_2);
+                    $('input[name=e_menu_3]').val(d['data'].menu_3);
+                    $('input[name=e_menu_4]').val(d['data'].menu_4);
+                    $('select[name=e_sesi_menu').val(d['data'].sesi_menu).trigger('change');
                 }
             });
         });
@@ -259,39 +278,38 @@
                 }
             })
         });
-        $('.btn-delete').on('click', function() {
-            var informasiId = $(this).data('id');
-            Swal.fire({
-                title: 'Apa anda yakin?',
-                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus',
-                confirmButtonColor: '#fd625e',
-                cancelButtonText: 'Batal',
-            }).then(function(result) {
-                if (result.value) {
-                    processStart();
-                    $.ajax({
-                        type: 'post',
-                        dataType: 'json',
-                        url: "<?= base_url('keamanan'); ?>/" + informasiId,
-                        error: function(xhr) {
-                            processDone();
-                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
-                        },
-                        success: function(d) {
-                            if (d['success'] > 0) {
-                                location.reload();
-                            } else {
-                                processDone();
-                                invalidError(d);
-                                Swal.fire('Hapus gagal', d['msg'], 'error');
-                            }
-                        }
-                    })
-                }
-            });
-        });
+        // $('.btn-delete').on('click', function() {
+        //     Swal.fire({
+        //         title: 'Apa anda yakin?',
+        //         text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Ya, hapus',
+        //         confirmButtonColor: '#fd625e',
+        //         cancelButtonText: 'Batal',
+        //     }).then(function(result) {
+        //         if (result.value) {
+        //             processStart();
+        //             $.ajax({
+        //                 method: 'DELETE',
+        //                 dataType: 'json',
+        //                 url: "<?= base_url('menu_delete'); ?>",
+        //                 error: function(xhr) {
+        //                     processDone();
+        //                     Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+        //                 },
+        //                 success: function(d) {
+        //                     if (d['success'] > 0) {
+        //                         location.reload();
+        //                     } else {
+        //                         processDone();
+        //                         invalidError(d);
+        //                         Swal.fire('Hapus gagal', d['msg'], 'error');
+        //                     }
+        //                 }
+        //             })
+        //         }
+        //     });
+        // });
     })
 </script>

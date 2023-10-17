@@ -28,7 +28,6 @@
                             </div>
                             <div class="col-5 text-right">
                                 <h2 class="baru-value"><?= $baru; ?></h2>
-                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
@@ -47,7 +46,6 @@
                             </div>
                             <div class="col-5 text-right">
                                 <h2 class="proses-value"><?= $diproses; ?></h2>
-                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
@@ -66,7 +64,6 @@
                             </div>
                             <div class="col-5 text-right">
                                 <h2 class="selesai-value"><?= $selesai; ?></h2>
-                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
@@ -85,7 +82,6 @@
                             </div>
                             <div class="col-5 text-right">
                                 <h2 class="ditolak-value"><?= $ditolak; ?></h2>
-                                <small class="info">1 bln</small>
                             </div>
                             <div class="col-12">
                                 <div class="progress m-t-20">
@@ -101,7 +97,7 @@
             <div class="col-md-12 col-lg-8">
                 <div class="card visitors-map">
                     <div class="header">
-                        <h2><strong>Jadwal</strong> Booking</h2>
+                        <h2><strong>Jadwal</strong> Booking Transportasi</h2>
                     </div>
                     <div class="body">
                         <!-- <div id="world-map-markers" class="jvector-map m-b-5"></div> -->
@@ -175,6 +171,57 @@
                 </div>
             </div>
         </div>
+        <div class="row-clearfix">
+            <div class="col-lg-6 col-md-6">
+                <div class="card activities">
+                    <div class="header">
+                        <h2><strong>Daftar Menu</strong> <small>Masakan Dapur</small></h2>
+                    </div>
+                    <div class="body">
+                        <?php
+                        $currentDate = date('Y-m-d');
+                        $currentDay = date('l');
+
+                        echo "Menu Hari Ini $currentDay, $currentDate";
+                        ?>
+                        <ul class="list-unstyled activity mt-3">
+                            <?php
+                            $currentDate = date('Y-m-d');
+                            $foundmenu = false; // Flag to check if matching information was found
+
+                            foreach ($daftar_menu as $table) :
+                                if ($table->tgl_menu == $currentDate && $table->sesi_menu == 'pagi' || $table->sesi_menu == 'siang' || $table->sesi_menu == 'malam') :
+                                    $foundmenu = true;
+                            ?>
+                                    <li class="mb-3">
+                                        <a href="javascript:void(0)">
+                                            <i class="zmdi zmdi-cutlery bg-info"></i>
+                                            <div class="info">
+                                                <h4><?= $table->sesi_menu; ?></h4>
+                                                <small><?= $table->menu_1 ?></small>
+                                                <small><?= $table->menu_2 ?></small>
+                                                <small><?= $table->menu_3 ?></small>
+                                                <small><?= $table->menu_4 ?></small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <?php
+                                endif;
+                            endforeach;
+
+                            if (!$foundmenu) :
+                                ?>
+                                <tr>
+                                    <td>menu makan belum tersedia</td>
+                                </tr>
+                            <?php
+                            endif;
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Modal for displaying event details -->
         <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -191,9 +238,8 @@
                 </div>
             </div>
         </div>
+    </div>
 </section>
-
-
 <script>
     $(document).ready(function() {
         var dataBooking = [

@@ -392,3 +392,17 @@ function generateKodeKejadian()
 
     return $kode_booking;
 }
+function selectBarangSecurity()
+{
+    $db = connectDb('ms_barang_security');
+    $db->select("id_barang AS id, nama_barang AS text");
+    $db->orderBy('nama_barang', 'ASC');
+    return $db->get()->getResult();
+}
+function selectKondisiBarang()
+{
+    $db = connectDb('ms_barang_kondisi');
+    $db->select("id_kondisi AS id, kondisi AS text");
+    $db->orderBy('kondisi', 'ASC');
+    return $db->get()->getResult();
+}

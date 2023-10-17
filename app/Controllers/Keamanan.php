@@ -6,8 +6,12 @@ use App\Models\ModelKeamanan;
 
 use App\Controllers\BaseController;
 
+
+use CodeIgniter\API\ResponseTrait;
+
 class Keamanan extends BaseController
 {
+    use ResponseTrait;
     protected $model;
 
     public function __construct()
@@ -15,7 +19,7 @@ class Keamanan extends BaseController
         $this->model = new ModelKeamanan();
     }
     // pelaporan
-    public function index()
+    public function laporan()
     {
         $data['area']     = selectArea();
         $data['keamanan'] = $this->model->get()->getResult();
@@ -282,12 +286,17 @@ class Keamanan extends BaseController
         echo json_encode($json);
     }
     // informasi
+    public function index()
+    {
+        $data['informasi'] = getData('tb_informasi')->get()->getResult();
+        return $this->respond($data);
+    }
     public function informasi()
     {
         $data['informasi'] = getData('tb_informasi')->get()->getResult();
         return _tempHTML('keamanan/informasi', $data);
     }
-    public function informasi_save()
+    public function create()
     {
         $json['input'] = [
             'nama_kegiatan'     => $this->_validation('nama_kegiatan', 'Nama Kegiatan', 'required'),
@@ -319,7 +328,7 @@ class Keamanan extends BaseController
             }
         }
         $json['rscript']    = csrf_hash();
-        echo json_encode($json);
+        return $this->respond($json);
     }
     public function informasi_edit($id_informasi)
     {
@@ -337,10 +346,186 @@ class Keamanan extends BaseController
         }
         echo json_encode($data);
     }
-    public function informasi_update()
+    public function update()
     {
+        $id_informasi = _getVar($this->request->getVar('e_id_informasi'));
+        $json['input'] = [
+            'e_nama_kegiatan'     => $this->_validation('e_nama_kegiatan', 'Nama Kegiatan', 'required'),
+            'e_tgl_kegiatan'      => $this->_validation('e_tgl_kegiatan', 'Tanggal Kegiatan', 'required'),
+            'e_waktu_kegiatan'    => $this->_validation('e_waktu_kegiatan', 'Waktu Kegiatan', 'required'),
+            'e_tempat_kegiatan'    => $this->_validation('e_tempat_kegiatan', 'Tempat Kegiatan', 'required'),
+        ];
+        $json['select'] = [
+            'e_type_kegiatan'     => $this->_validation('e_type_kegiatan', 'Type Kegiatan', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $nama_kegiatan  = _getVar($this->request->getVar('e_nama_kegiatan'));
+            $tgl_kegiatan   = _getVar($this->request->getVar('e_tgl_kegiatan'));
+            $waktu_kegiatan = _getVar($this->request->getVar('e_waktu_kegiatan'));
+            $type_kegiatan  = _getVar($this->request->getVar('e_type_kegiatan'));
+            $tempat_kegiatan  = _getVar($this->request->getVar('e_tempat_kegiatan'));
+            $data = [
+                'e_nama_kegiatan'  => $nama_kegiatan,
+                'e_type_kegiatan'  => $type_kegiatan,
+                'e_tgl_kegiatan'   => $tgl_kegiatan,
+                'e_waktu_kegiatan' => $waktu_kegiatan,
+                'e_tempat_kegiatan' => $tempat_kegiatan,
+            ];
+            $update = updateData('tb_informasi', $data, ['id_informasi' => $id_informasi]);
+            if ($update) {
+                $json['success'] = $update;
+            } else {
+                $json['error'] = 'data gagal ditambahkan';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        return $this->respond($json);
     }
-    public function informasi_delete()
+    public function delete($id_informasi)
     {
+        $informasi = getData('tb_informasi', ['id_informasi' => $id_informasi])->get()->getRow();
+        if (!$informasi) {
+            $json['msg'] = 'data Booking tidak ditemukan';
+        } else {
+            $delete = $this->model->delete($id_informasi);
+            if ($delete) {
+                $json['success']    = 1;
+            } else {
+                $json['msg']        = $delete;
+            }
+        }
+        return $this->respond($json);
+    }
+    public function inventaris()
+    {
+        $data['barang']     = selectBarangSecurity();
+        $data['kondisi']    = selectKondisiBarang();
+        $data['inventaris'] = getData('tb_inventaris')->get()->getResult();
+        return _tempHTML('keamanan/inventaris', $data);
+    }
+    public function inventaris_save()
+    {
+        $json['input'] = [
+            'tgl_pengadaan_barang'      => $this->_validation('tgl_pengadaan_barang', 'Tanggal Pengadaan Barang', 'required|valid_date'),
+            'tempat_barang_disimpan'    => $this->_validation('tempat_barang_disimpan', 'Tempat Barang Disimpan', 'required'),
+            'keterangan'                => $this->_validation('keterangan', 'Keterangan', 'required'),
+        ];
+        $json['select'] = [
+            'id_barang'     => $this->_validation('id_barang', 'Nama Barang', 'required'),
+            'id_kondisi'    => $this->_validation('id_kondisi', 'Kondisi', 'required'),
+            // 'posisi_barang' => $this->_validation('posisi_barang', 'Posisi Barang', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $tgl = _getVar($this->request->getVar('tgl_pengadaan_barang'));
+            $tempat = _getVar($this->request->getVar('tempat_barang_disimpan'));
+            $ket    = _getVar($this->request->getVar('keterangan'));
+            $barang = getData('ms_barang_security', ['id_barang' => _getVar($this->request->getVar('id_barang'))])->get()->getRow();
+            $kondisi = getData('ms_barang_kondisi', ['id_kondisi' => _getVar($this->request->getVar('id_kondisi'))])->get()->getRow();
+            $posisi = _getVar($this->request->getVar('posisi_barang'));
+            if (!$barang) {
+                $json['select']['id_barang'] = 'barang tidak ditemukan';
+            } else if (!$kondisi) {
+                $json['select']['id_kondisi'] = 'kondisi tidak ditemukan';
+            } else {
+                $data = [
+                    'id_barang'                 => $barang->id_barang,
+                    'nama_barang'               => $barang->nama_barang,
+                    'tgl_pengadaan_barang'      => $tgl,
+                    'id_kondisi'                => $kondisi->id_kondisi,
+                    'kondisi'                   => $kondisi->kondisi,
+                    'tempat_barang_disimpan'    => $tempat,
+                    'posisi_barang'             => $posisi,
+                    'keterangan'                => $ket,
+                    'created_by'                => _session('nama'),
+                    'created_at'                => time(),
+                ];
+                $add = addData('tb_inventaris', $data);
+                if ($add) {
+                    $json['success'] = $add;
+                } else {
+                    $json['error'] = 'data gagal ditambahkan';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function inventaris_edit($id_inventaris)
+    {
+        $inventaris = getData('tb_inventaris', ['id_inventaris' => $id_inventaris])->get()->getRow();
+        if ($inventaris) {
+            $data = [
+                'status'    => true,
+                'data'      => $inventaris
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function inventaris_update()
+    {
+        $id_inventaris = _getVar($this->request->getVar('e_id_inventaris'));
+        $json['input'] = [
+            'e_tgl_pengadaan_barang'      => $this->_validation('e_tgl_pengadaan_barang', 'Tanggal Pengadaan Barang', 'required|valid_date'),
+            'e_tempat_barang_disimpan'    => $this->_validation('e_tempat_barang_disimpan', 'Tempat Barang Disimpan', 'required'),
+            'e_keterangan'                => $this->_validation('e_keterangan', 'Keterangan', 'required'),
+        ];
+        $json['select'] = [
+            'e_id_barang'     => $this->_validation('e_id_barang', 'Nama Barang', 'required'),
+            'e_id_kondisi'    => $this->_validation('e_id_kondisi', 'Kondisi', 'required'),
+            'e_posisi_barang' => $this->_validation('e_posisi_barang', 'Posisi Barang', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $tgl = _getVar($this->request->getVar('e_tgl_pengadaan_barang'));
+            $tempat = _getVar($this->request->getVar('e_tempat_barang_disimpan'));
+            $ket    = _getVar($this->request->getVar('e_keterangan'));
+            $barang = getData('ms_barang_security', ['id_barang' => _getVar($this->request->getVar('e_id_barang'))])->get()->getRow();
+            $kondisi = getData('ms_barang_kondisi', ['id_kondisi' => _getVar($this->request->getVar('e_id_kondisi'))])->get()->getRow();
+            $posisi = _getVar($this->request->getVar('e_posisi_barang'));
+            if (!$barang) {
+                $json['select']['e_id_barang'] = 'barang tidak ditemukan';
+            } else if (!$kondisi) {
+                $json['select']['e_id_kondisi'] = 'kondisi tidak ditemukan';
+            } else {
+                $data = [
+                    'id_barang'                 => $barang->id_barang,
+                    'nama_barang'               => $barang->nama_barang,
+                    'tgl_pengadaan_barang'      => $tgl,
+                    'id_kondisi'                => $kondisi->id_kondisi,
+                    'kondisi'                   => $kondisi->kondisi,
+                    'tempat_barang_disimpan'    => $tempat,
+                    'posisi_barang'             => $posisi,
+                    'keterangan'                => $ket,
+                    'created_by'                => _session('nama'),
+                    'created_at'                => time(),
+                ];
+                $update = updateData('tb_inventaris', $data, ['id_inventaris' => $id_inventaris]);
+                if ($update) {
+                    $json['success'] = $update;
+                } else {
+                    $json['error'] = 'data gagal ditambahkan';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function inventaris_delete($id_inventaris)
+    {
+        $inventaris = getData('tb_inventaris', ['id_inventaris' => $id_inventaris])->get()->getRow();
+        if (!$inventaris) {
+            $json['msg'] = 'data Booking tidak ditemukan';
+        } else {
+            $delete = $this->model->delete($inventaris);
+            if ($delete) {
+                $json['success']    = 1;
+            } else {
+                $json['msg']        = $delete;
+            }
+        }
     }
 }
