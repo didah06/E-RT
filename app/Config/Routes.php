@@ -130,7 +130,7 @@ $routes->get('menu', 'Dapur::index');
 $routes->post('menu', 'Dapur::menu_save');
 $routes->get('menu_edit/(:num)', 'Dapur::menu_edit/$1');
 $routes->put('menu', 'Dapur::menu_update');
-$routes->delete('menu_delete', 'Dapur::menu_delete');
+$routes->post('menu_delete', 'Dapur::menu_delete');
 // Seragam
 // Fotokopi
 

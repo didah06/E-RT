@@ -190,7 +190,7 @@
                             $foundmenu = false; // Flag to check if matching information was found
 
                             foreach ($daftar_menu as $table) :
-                                if ($table->tgl_menu == $currentDate && $table->sesi_menu == 'pagi' || $table->sesi_menu == 'siang' || $table->sesi_menu == 'malam') :
+                                if (($table->tgl_menu == $currentDate && $table->sesi_menu == 'pagi') || ($table->tgl_menu == $currentDate && $table->sesi_menu == 'siang') || ($table->tgl_menu == $currentDate && $table->sesi_menu == 'malam')) :
                                     $foundmenu = true;
                             ?>
                                     <li class="mb-3">

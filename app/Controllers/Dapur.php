@@ -50,7 +50,7 @@ class Dapur extends BaseController
     }
     public function menu_edit($id_menu)
     {
-        $menu = getData('tb_daftar_menu', ['id_menu' => $id_menu])->get()->getResult();
+        $menu = getData('tb_daftar_menu', ['id_menu' => $id_menu])->get()->getRow();
         if ($menu) {
             $data = [
                 'status'    => true,
@@ -73,11 +73,9 @@ class Dapur extends BaseController
             'e_menu_2'          => $this->_validation('e_menu_2', 'Menu', 'required'),
             'e_menu_3'          => $this->_validation('e_menu_3', 'Menu', 'required'),
             'e_menu_4'          => $this->_validation('e_menu_4', 'Menu', 'required'),
+            'e_sesi_menu'       => $this->_validation('e_sesi_menu', 'Sesi Menu', 'required'),
         ];
-        $json['select'] = [
-            'sesi_menu'      => $this->_validation('sesi_menu', 'Sesi Menu', 'required'),
-        ];
-        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+        if (_validationHasErrors(array_merge($json['input']))) {
             $tgl_menu = _getVar($this->request->getVar('e_tgl_menu'));
             $menu_1   = _getVar($this->request->getVar('e_menu_1'));
             $menu_2   = _getVar($this->request->getVar('e_menu_2'));
@@ -102,19 +100,25 @@ class Dapur extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
-    // public function menu_delete()
-    // {
-    //     $currentDate = date('Y-m-d');
-    //     $menu = getData('tb_daftar_menu')->get()->getRow();
-    //     if (!$menu) {
-    //         $json['msg'] = 'data Booking tidak ditemukan';
-    //     } else {
-    //         $delete = deleteData($menu, ['tgl_menu <', $currentDate]);
-    //         if ($delete) {
-    //             $json['success']    = 1;
-    //         } else {
-    //             $json['msg']        = $delete;
-    //         }
-    //     }
-    // }
+    public function menu_delete()
+    {
+        $id_menu = $this->request->getPost('id_menu');
+        $json = [];
+
+        if ($id_menu) {
+            foreach ($id_menu as $menu_id) {
+                // Assuming 'deleteData' is a method in your model
+                $delete = deleteData('tb_daftar_menu', ['id_menu' => $menu_id]);
+            }
+            if ($delete) {
+                $json['success'] = true;
+                $json['msg'] = 'Data berhasil dihapus';
+            } else {
+                $json['success'] = false;
+                $json['msg'] = 'Tidak ada data yang dipilih untuk dihapus';
+            }
+        }
+        $json['rscript'] = csrf_hash();
+        return $this->response->setJSON($json);
+    }
 }
