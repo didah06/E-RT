@@ -246,7 +246,7 @@
             <?php foreach ($booking as $schedule) : ?> {
                     title: '<?= $schedule->acara_kegiatan; ?>',
                     start: '<?= $schedule->tanggal_pemakaian; ?>',
-                    className: '<?= $schedule->status === "baru" ? "bg-info text-light" : ($schedule->status === "diproses" ? "bg-warning text-light" : ($schedule->status === 'selesai' ? "bg-success text-light" : "bg-primary text-light")) ?>',
+                    className: '<?= $schedule->status === "baru" ? "bg-info text-light" : ($schedule->status === "diproses" ? "bg-warning text-light" : ($schedule->status === 'selesai' ? "bg-success text-light" : ($schedule->status === "ditolak" ? "bg-danger text-light" : "bg-primary text-light"))) ?>',
                     url: '<?= base_url('details_timeline/' . $schedule->id_booking); ?>',
                 },
             <?php endforeach; ?>

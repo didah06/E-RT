@@ -319,14 +319,26 @@ function selectKodeBooking()
 function selectJadwalStart()
 {
     $db = connectdb('ms_jadwal');
-    $db->select("start_time AS text");
-    $db->orderBy('id_jadwal', 'ASC');
+    $db->select("CONCAT(ms_jadwal.start_time, ' - ') AS text,
+    CONCAT(
+            tb_booking_transport.departemen, 
+            '  ', 
+            tb_booking_transport.tujuan,
+    '') AS booking");
+    $db->join('tb_booking_transport', 'tb_booking_transport.jam_keberangkatan = ms_jadwal.start_time', 'left');
+    $db->orderBy('ms_jadwal.id_jadwal', 'ASC');
     return $db->get()->getResult();
 }
 function selectJadwalEnd()
 {
     $db = connectdb('ms_jadwal');
-    $db->select("end_time AS text");
+    $db->select("CONCAT(ms_jadwal.end_time, ' - ') AS text,
+    CONCAT(
+        tb_booking_transport.departemen, 
+        '  ', 
+        tb_booking_transport.tujuan,
+    '') AS booking");
+    $db->join('tb_booking_transport', 'tb_booking_transport.jam_kembali = ms_jadwal.end_time', 'left');
     $db->orderBy('end_time', 'ASC');
     return $db->get()->getResult();
 }
@@ -404,5 +416,19 @@ function selectKondisiBarang()
     $db = connectDb('ms_barang_kondisi');
     $db->select("id_kondisi AS id, kondisi AS text");
     $db->orderBy('kondisi', 'ASC');
+    return $db->get()->getResult();
+}
+function selectSesiMenu()
+{
+    $db = connectDb('ms_sesi_menu');
+    $db->select("id_sesi_menu AS id, sesi_menu AS text");
+    $db->orderBy('sesi_menu', 'ASC');
+    return $db->get()->getResult();
+}
+function get_filtered_data($bulan, $tahun)
+{
+    $db = connectDb('tb_kebersihan_dapur');
+    $db->where('tgl_pemantauan', $bulan);
+    $db->where('tgl_pemantauan', $tahun);
     return $db->get()->getResult();
 }

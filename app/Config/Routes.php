@@ -34,19 +34,19 @@ $routes->setAutoRoute(false);
 $routes->get('/', 'Home::index');
 $routes->get('details_timeline/(:num)', 'Home::details/$1');
 
-//login
+//Login
 $routes->get('/login', 'Login::index');
 $routes->post('/login', 'login::prosesLogin');
 $routes->get('/logout', 'login::logout');
 
-//profile
+//Profile
 $routes->get('/profile', 'User::profile');
 $routes->get('/profile_edit', 'User::profile_edit');
 $routes->post('/profile_update', 'User::profile_update');
 $routes->post('/change_password', 'User::change_password');
 $routes->post('signature', 'User::signature');
 
-// user pengguna
+// User Pengguna
 $routes->get('/user', 'User::index');
 $routes->post('/user', 'User::user_save');
 $routes->put('/user', 'User::user_update');
@@ -56,7 +56,7 @@ $routes->get('/select_departemen/(:num)', 'User::select_departemen/$1');
 $routes->get('/select_user/(:segment)', 'User::select_user/$1');
 $routes->get('/select_userDept/(:segment)', 'User::select_userDept/$1');
 $routes->get('/user_edit/(:num)', 'User::user_edit/$1');
-// user rumah tangga
+// User RT
 // driver
 $routes->get('/driver', 'User::driver');
 $routes->post('/driver', 'User::driver_save');
@@ -68,7 +68,7 @@ $routes->put('security', 'User::security_update');
 // user akses
 $routes->get('/user_akses', 'User::akses');
 
-// transportasi
+// Transportasi
 // booking
 $routes->resource('transportasi'); // api
 $routes->get('/booking', 'Transportasi::booking');
@@ -107,7 +107,7 @@ $routes->post('service_save', 'Transportasi::service_save');
 $routes->get('service_edit/(:num)', 'Transportasi::service_edit/$1');
 $routes->put('service_update', 'Transportasi::service_update');
 
-// keamanan
+// Keamanan
 $routes->get('laporan', 'Keamanan::laporan');
 $routes->post('laporan', 'Keamanan::laporan_save');
 $routes->get('laporan_edit/(:num)', 'Keamanan::laporan_edit/$1');
@@ -125,12 +125,26 @@ $routes->get('inventaris_keamanan_edit/(:num)', 'Keamanan::inventaris_edit/$1');
 $routes->put('inventaris_keamanan', 'Keamanan::inventaris_update');
 $routes->delete('inventaris_keamanan', 'Keamanan::inventaris_delete');
 
-// Dapur
+//  Dapur
+// daftar menu
 $routes->get('menu', 'Dapur::index');
 $routes->post('menu', 'Dapur::menu_save');
 $routes->get('menu_edit/(:num)', 'Dapur::menu_edit/$1');
 $routes->put('menu', 'Dapur::menu_update');
 $routes->post('menu_delete', 'Dapur::menu_delete');
+// kebersihan
+$routes->get('kebersihan', 'Dapur::kebersihan');
+$routes->post('kebersihan', 'Dapur::kebersihan_save');
+$routes->get('kebersihan_edit/(:num)', 'Dapur::kebersihan_edit/$1');
+$routes->put('kebersihan', 'Dapur::kebersihan_update');
+$routes->post('filter_data', 'Dapur::filter_data');
+$routes->post('kebersihan_delete', 'Dapur::kebersihan_delete');
+// porsi makanan
+$routes->get('porsi', 'Dapur::porsi');
+$routes->post('porsi', 'Dapur::porsi_save');
+$routes->get('porsi_edit/(:num)', 'Dapur::porsi_edit/$1');
+
+
 // Seragam
 // Fotokopi
 

@@ -58,7 +58,7 @@
                                                 <select class="form-control select-only" name="jam_keberangkatan" id="jam_keberangkatan" onchange="checktime()">
                                                     <option value="" selected disabled>- Pilih Jam Keberangkatan -</option>
                                                     <?php foreach ($start_time as $item) : ?>
-                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
+                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?><?= $item->booking; ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                                 <div class="invalid-feedback"></div>
@@ -70,7 +70,7 @@
                                                 <select class="form-control select-only" name="jam_kembali" id="jam_kembali" onchange="checktime()">
                                                     <option value="" selected disabled>- Pilih Jam Kembali -</option>
                                                     <?php foreach ($start_time as $item) : ?>
-                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
+                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?><?= $item->booking; ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                                 <div class="invalid-feedback"></div>
