@@ -104,10 +104,10 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
-                                <button class="btn btn-danger mb-3" id="delete-selected">Delete</button>
+                                <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th>
+                                        <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
                                         <th class="text-center">#</th>
                                         <th>Tanggal Menu</th>
                                         <th>Menu 1</th>
@@ -120,10 +120,12 @@
                                 <tbody>
                                     <?php foreach ($daftar_menu as $table) : ?>
                                         <tr>
-                                            <td class="text-center"> <input type="checkbox" class="delete-checkbox" data-id="<?= $table->id_menu; ?>"></td>
                                             <td class="text-center">
                                                 <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
                                                     <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
+                                                </span>
+                                                <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_menu; ?>" type="button">
+                                                    <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
                                                 </span>
                                             </td>
                                             <td><?= $table->tgl_menu; ?></td>
@@ -280,36 +282,37 @@
                 }
             })
         });
-        $('#delete-selected').on('click', function() {
-            var idsToDelete = [];
-
-            // Find the checkboxes that are checked
-            $('.delete-checkbox:checked').each(function() {
-                idsToDelete.push($(this).data('id'));
-            });
-
-            if (idsToDelete.length === 0) {
-                alert('Please select items to delete.');
-                return;
-            }
-
-            // Send an AJAX request to the CodeIgniter Controller to delete the selected items
-            $.ajax({
-                method: 'POST',
-                url: "<?= base_url('menu_delete'); ?>", // Send data as POST, not in the URL
-                data: {
-                    id_menu: idsToDelete
-                },
-                error: function(xhr) {
-                    Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
-                },
-                success: function(d) {
-                    if (d.success) {
-                        location.reload();
-                    } else {
-                        invalidError(d);
-                        Swal.fire('Hapus gagal', d.msg, 'error');
-                    }
+        $('.btn-delete').on('click', function() {
+            var menuId = $(this).data('id');
+            Swal.fire({
+                title: 'Apa anda yakin?',
+                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus',
+                confirmButtonColor: '#fd625e',
+                cancelButtonText: 'Batal',
+            }).then(function(result) {
+                if (result.value) {
+                    processStart();
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url('menu_delete'); ?>/" + menuId,
+                        error: function(xhr) {
+                            processDone();
+                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+                        },
+                        success: function(d) {
+                            if (d['success'] > 0) {
+                                location.reload();
+                            } else {
+                                processDone();
+                                invalidError(d);
+                                Swal.fire('Hapus gagal', d['msg'], 'error');
+                            }
+                        }
+                    })
                 }
             });
         });

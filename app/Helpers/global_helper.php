@@ -425,10 +425,16 @@ function selectSesiMenu()
     $db->orderBy('sesi_menu', 'ASC');
     return $db->get()->getResult();
 }
-function get_filtered_data($bulan, $tahun)
+function selectDaftarMenu()
 {
-    $db = connectDb('tb_kebersihan_dapur');
-    $db->where('tgl_pemantauan', $bulan);
-    $db->where('tgl_pemantauan', $tahun);
+    $db = connectDb('tb_daftar_menu');
+    $db->select("id_menu AS id, tgl_menu AS date, CONCAT(' - ', sesi_menu, '', '(', menu_1, ' - ', menu_2, ' - ', menu_3, ' - ', menu_4, ')') AS text");
+    $db->orderBy('id_menu', 'ASC');
     return $db->get()->getResult();
 }
+// function findMenuItemByID($id_menu)
+// {
+//     $db = connectdb('tb_daftar_menu');
+//     $db->where('id_menu', $id_menu);
+//     return $db->get()->getRow();
+// }

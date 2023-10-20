@@ -117,26 +117,24 @@ class Dapur extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
-    public function menu_delete()
+    public function delete($id_menu)
     {
-        $id_menu = $this->request->getPost('id_menu');
-        $json = [];
-
-        if ($id_menu) {
-            foreach ($id_menu as $menu_id) {
-                // Assuming 'deleteData' is a method in your model
-                $delete = deleteData('tb_daftar_menu', ['id_menu' => $menu_id]);
-            }
+        $menu = getData('tb_daftar_menu', ['id_menu' => $id_menu])->get()->getRow();
+        $porsi = getData('tb_porsi_makanan')->get()->getRow();
+        if (!$menu) {
+            $json['msg'] = 'data Booking tidak ditemukan';
+        } else if ($menu->tgl_menu == $porsi->tgl_produksi) {
+            $json['msg']  = 'data menu sudah di set porsinya';
+        } else {
+            $delete = deleteData('tb_daftar_menu', ['id_menu' => $id_menu]);
             if ($delete) {
-                $json['success'] = true;
-                $json['msg'] = 'Data berhasil dihapus';
+                $json['success']    = 1;
             } else {
-                $json['success'] = false;
-                $json['msg'] = 'Tidak ada data yang dipilih untuk dihapus';
+                $json['msg']        = $delete;
             }
         }
-        $json['rscript'] = csrf_hash();
-        return $this->response->setJSON($json);
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
     }
     public function kebersihan()
     {
@@ -298,7 +296,62 @@ class Dapur extends BaseController
     }
     public function porsi()
     {
-        $data['sesi_menu']   = selectSesiMenu();
+        $data['menu']   = selectDaftarMenu();
+        // $data['tgl_menu'] = selectTanggal();
+        $data['porsi'] = getData('tb_porsi_makanan')->get()->getResult();
         return _tempHTML('dapur/porsi_makanan', $data);
+    }
+    public function porsi_save()
+    {
+        $json['input'] = [
+            'jumlah_produksi'   => $this->_validation('jumlah_produksi', 'Jumlah Produksi', 'required|is_natural'),
+            'jumlah_pembagian'  => $this->_validation('jumlah_pembagian', 'Jumlah Pembagian', 'required|is_natural'),
+            'jumlah_persediaan' => $this->_validation('jumlah_persediaan', 'Jumlah Persediaan', 'required|is_natural'),
+            'keterangan'        => $this->_validation('keterangan', 'Keterangan', 'required'),
+            'foto'              => $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
+        ];
+        $json['select'] = [
+            'id_menu' => $this->_validation('id_menu', 'Menu', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $menu = getData('tb_daftar_menu', ['id_menu' => _getVar($this->request->getVar('id_menu'))])->get()->getRow();
+            $porsi = getData('tb_porsi_makanan')->get()->getRow();
+            $jumlah_produksi = _getVar($this->request->getVar('jumlah_produksi'));
+            $jumlah_pembagian = _getVar($this->request->getVar('jumlah_pembagian'));
+            $jumlah_persediaan = _getVar($this->request->getVar('jumlah_persediaan'));
+            $keterangan = _getVar($this->request->getVar('keterangan'));
+            $foto = $this->request->getFile('foto');
+            if (!$menu) {
+                $json['select']['id_menu'] = 'data menu tidak ditemukan';
+            } else {
+                if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
+                    $photo        = $foto->getRandomName();
+                    $foto->move(FCPATH . './public/assets/images/dapur/porsi_makanan', $photo);
+                    $data = [
+                        'tgl_produksi'      => $menu->tgl_menu,
+                        'sesi_menu'         => $menu->sesi_menu,
+                        'jumlah_produksi'   => $jumlah_produksi,
+                        'jumlah_pembagian'  => $jumlah_pembagian,
+                        'jumlah_persediaan' => $jumlah_persediaan,
+                        'keterangan'        => $keterangan,
+                        'foto'              => $photo,
+                    ];
+                    if ($menu->tgl_menu == $porsi->tgl_produksi) {
+                        $json['error'] = 'menu ini porsinya sudah tersedia';
+                    } else {
+                        $add = addData('tb_porsi_makanan', $data);
+                        if ($add) {
+                            $json['success'] = 'data sukses upload';
+                        } else {
+                            $json['error'] = 'data gagal upload';
+                        }
+                    }
+                } else {
+                    $json['input']['foto'] = 'foto gagal upload';
+                }
+            }
+        }
+        $json['rscript'] = csrf_hash();
+        return $this->response->setJSON($json);
     }
 }

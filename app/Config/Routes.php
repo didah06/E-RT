@@ -131,7 +131,7 @@ $routes->get('menu', 'Dapur::index');
 $routes->post('menu', 'Dapur::menu_save');
 $routes->get('menu_edit/(:num)', 'Dapur::menu_edit/$1');
 $routes->put('menu', 'Dapur::menu_update');
-$routes->post('menu_delete', 'Dapur::menu_delete');
+$routes->post('menu_delete/(:num)', 'Dapur::delete/$1');
 // kebersihan
 $routes->get('kebersihan', 'Dapur::kebersihan');
 $routes->post('kebersihan', 'Dapur::kebersihan_save');
