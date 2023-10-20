@@ -29,7 +29,7 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h6 class="modal-title" id="exampleModalLongTitle">Pemantauan Kebersihan</h6>
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah Porsi Makanan</h6>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -148,49 +148,39 @@
                         </div>
                     </div>
                     <!-- modal -->
-                    <!-- <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+                    <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h6 class="modal-title" id="exampleModalLongTitle">Edit Informasi</h6>
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Edit Porsi Makanan</h6>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="error-area"></div>
+                                    <?= form_open(base_url('porsi'), ['class' => 'update-form']); ?>
                                     <input type="hidden" name="_method" value="PUT" />
-                                    <input type="hidden" name="e_id_kebersihan_dapur">
+                                    <input type="hidden" name="e_id_porsi_makanan">
                                     <div class="row clearfix">
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label class="form-label">Tanggal Pemantauan</label>
-                                                <input type="date" class="form-control" name="e_tgl_pemantauan">
+                                                <label class="form-label">Jumlah Produksi</label>
+                                                <input type="text" class="form-control" name="e_jumlah_produksi" id="e_jumlah_produksi">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label class="form-label">Shift</label>
-                                                <select class="form-control select-only" name="e_id_shift">
-                                                    <option value="" selected disabled>- Pilih Shift -</option>
-                                                </select>
+                                                <label class="form-label">Jumlah Pembagian</label>
+                                                <input type="text" class="form-control" name="e_jumlah_pembagian" id="e_jumlah_pembagian">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label class="form-label">Area</label>
-                                                <select class="form-control select-only" name="e_id_area">
-                                                    <option value="" selected disabled>- Pilih Area -</option>
-                                                </select>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Foto</label>
-                                                <input type="file" class="form-control" name="e_foto" accept="image/png, image/jpeg, image/jpg">
+                                                <label class="form-label">Jumlah Persediaan</label>
+                                                <input type="text" class="form-control" name="e_jumlah_persediaan" id="e_jumlah_persediaan" readonly>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -198,6 +188,13 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Keterangan</label>
                                                 <input type="text" class="form-control" name="e_keterangan">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Foto</label>
+                                                <input type="file" class="form-control" name="e_foto" accept="image/png, image/jpeg, image/jpg">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -209,7 +206,7 @@
                                 </form>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     <!-- end modal -->
                 </div>
             </div>
@@ -221,6 +218,9 @@
     $(document).ready(function() {
         $('#jumlah_produksi, #jumlah_pembagian').on('change', function() {
             calculatePorsiPersediaan();
+        })
+        $('#e_jumlah_produksi, #e_jumlah_pembagian').on('change', function() {
+            calculatePorsiPersediaanEdit();
         })
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
@@ -253,12 +253,12 @@
             })
         })
         $('.btn-edit').on('click', function() {
-            $.getJSON("<?= base_url('kebersihan_edit/'); ?>/" + $(this).data('id'), function(d) {
+            $.getJSON("<?= base_url('porsi_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
-                    $('input[name=e_id_kebersihan_dapur]').val(d['data'].id_kebersihan_dapur);
-                    $('input[name=e_tgl_pemantauan]').val(d['data'].tgl_pemantauan);
-                    $('select[name=e_id_shift]').val(d['data'].id_shift).trigger('change');;
-                    $('select[name=e_id_area]').val(d['data'].id_area).trigger('change');;
+                    $('input[name=e_id_porsi_makanan]').val(d['data'].id_porsi_makanan);
+                    $('input[name=e_jumlah_produksi]').val(d['data'].jumlah_produksi);
+                    $('input[name=e_jumlah_pembagian]').val(d['data'].jumlah_pembagian);
+                    $('input[name=e_jumlah_persediaan]').val(d['data'].jumlah_persediaan);
                     $('input[name=e_keterangan]').val(d['data'].keterangan);
                 }
             });
@@ -331,9 +331,9 @@
             // Send an AJAX request to the CodeIgniter Controller to delete the selected items
             $.ajax({
                 method: 'POST',
-                url: "<?= base_url('kebersihan_delete'); ?>", // Send data as POST, not in the URL
+                url: "<?= base_url('porsi_delete'); ?>", // Send data as POST, not in the URL
                 data: {
-                    id_kebersihan_dapur: idsToDelete
+                    id_porsi_makanan: idsToDelete
                 },
                 error: function(xhr) {
                     Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
@@ -358,5 +358,15 @@
 
         $('#jumlah_persediaan').siblings('input').val(jumlah_persediaan).trigger('change');
         $('#jumlah_persediaan').val(jumlah_persediaan);
+    }
+
+    function calculatePorsiPersediaanEdit() {
+        var jumlah_produksi = parseInt($('#e_jumlah_produksi').val());
+        var jumlah_pembagian = parseInt($('#e_jumlah_pembagian').val());
+
+        var e_jumlah_persediaan = jumlah_produksi - jumlah_pembagian;
+
+        // $('#e_jumlah_persediaan').siblings('input').val(e_jumlah_persediaan).trigger('change');
+        $('#e_jumlah_persediaan').val(e_jumlah_persediaan);
     }
 </script>

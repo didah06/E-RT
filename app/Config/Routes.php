@@ -143,6 +143,8 @@ $routes->post('kebersihan_delete', 'Dapur::kebersihan_delete');
 $routes->get('porsi', 'Dapur::porsi');
 $routes->post('porsi', 'Dapur::porsi_save');
 $routes->get('porsi_edit/(:num)', 'Dapur::porsi_edit/$1');
+$routes->put('porsi', 'Dapur::porsi_update');
+$routes->post('porsi_delete', 'Dapur::porsi_delete');
 
 
 // Seragam

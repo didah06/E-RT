@@ -329,6 +329,7 @@ class Dapur extends BaseController
                     $foto->move(FCPATH . './public/assets/images/dapur/porsi_makanan', $photo);
                     $data = [
                         'tgl_produksi'      => $menu->tgl_menu,
+                        'id_sesi_menu'      => $menu->id_sesi_menu,
                         'sesi_menu'         => $menu->sesi_menu,
                         'jumlah_produksi'   => $jumlah_produksi,
                         'jumlah_pembagian'  => $jumlah_pembagian,
@@ -349,6 +350,91 @@ class Dapur extends BaseController
                 } else {
                     $json['input']['foto'] = 'foto gagal upload';
                 }
+            }
+        }
+        $json['rscript'] = csrf_hash();
+        return $this->response->setJSON($json);
+    }
+    public function porsi_edit($id_porsi_makanan)
+    {
+        $porsi = getData('tb_porsi_makanan', ['id_porsi_makanan' => $id_porsi_makanan])->get()->getRow();
+        if ($porsi) {
+            $data = [
+                'status'    => true,
+                'data'      => $porsi
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function porsi_update()
+    {
+        $id_porsi_makanan = _getVar($this->request->getVar('e_id_porsi_makanan'));
+        $json['input'] = [
+            'e_jumlah_produksi'   => $this->_validation('e_jumlah_produksi', 'Jumlah Produksi', 'required|is_natural'),
+            'e_jumlah_pembagian'  => $this->_validation('e_jumlah_pembagian', 'Jumlah Pembagian', 'required|is_natural'),
+            'e_jumlah_persediaan' => $this->_validation('e_jumlah_persediaan', 'Jumlah Persediaan', 'required|is_natural'),
+            'e_keterangan'        => $this->_validation('e_keterangan', 'Keterangan', 'required'),
+            'e_foto'              => $this->_validation('e_foto', 'foto', 'uploaded[e_foto]|max_size[e_foto, 1024]|mime_in[e_foto,image/jpeg,image/png,image/jpg]'),
+        ];
+        if (_validationHasErrors(array_merge($json['input']))) {
+            $jumlah_produksi = _getVar($this->request->getVar('e_jumlah_produksi'));
+            $jumlah_pembagian = _getVar($this->request->getVar('e_jumlah_pembagian'));
+            $jumlah_persediaan = _getVar($this->request->getVar('e_jumlah_persediaan'));
+            $keterangan = _getVar($this->request->getVar('e_keterangan'));
+            $porsi = getData('tb_porsi_makanan', ['id_porsi_makanan' => $id_porsi_makanan])->get()->getRow();
+            $foto = $this->request->getFile('e_foto');
+            if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
+                $photo        = $foto->getRandomName();
+                if ($foto->move(FCPATH . './public/assets/images/dapur/kebersihan_dapur', $photo)) {
+                    if (file_exists(FCPATH . './public/assets/images/dapur/kebersihan_dapur' . $photo)) {
+                        unlink(FCPATH . './public/assets/images/dapur/kebersihan_dapur' . $photo);
+                    } else {
+                        $json['error'] = "Failed to delete old file";
+                    }
+                    $data = [
+                        'jumlah_produksi'   => $jumlah_produksi,
+                        'jumlah_pembagian'  => $jumlah_pembagian,
+                        'jumlah_persediaan' => $jumlah_persediaan,
+                        'keterangan'        => $keterangan,
+                        'foto'              => $photo,
+                    ];
+                    $update = updateData('tb_porsi_makanan', $data, ['id_porsi_makanan' => $id_porsi_makanan]);
+                    if ($update) {
+                        $json['success'] = 'data sukses upload';
+                    } else {
+                        $json['error'] = 'data gagal upload';
+                    }
+                } else {
+                    $json['error'] = 'foto gagal upload';
+                }
+            } else {
+                $foto = $porsi->foto;
+            }
+        }
+        $json['rscript'] = csrf_hash();
+        return $this->response->setJSON($json);
+    }
+    public function porsi_delete()
+    {
+        $id_porsi_makanan = $this->request->getPost('id_porsi_makanan');
+        $json = [];
+
+        if ($id_porsi_makanan) {
+            foreach ($id_porsi_makanan as $porsi_id) {
+                // Assuming 'deleteData' is a method in your model
+                $delete = deleteData('tb_porsi_makanan', ['id_porsi_makanan' => $porsi_id]);
+            }
+            if ($delete) {
+                $json['success'] = true;
+                $json['msg'] = 'Data berhasil dihapus';
+            } else {
+                $json['success'] = false;
+                $json['msg'] = 'Tidak ada data yang dipilih untuk dihapus';
             }
         }
         $json['rscript'] = csrf_hash();
