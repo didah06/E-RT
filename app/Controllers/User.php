@@ -462,6 +462,84 @@ class User extends BaseController
             echo json_encode($json);
         }
     }
+    public function security_edit($user_id)
+    {
+        $user        = getUser(['user_id' => $user_id])->getRow();
+        $user->hp    = str_replace('+62', '0', $user->hp);
+        if ($user) {
+            $data = [
+                'status'    => true,
+                'data'    => $user
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'    => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function security_update()
+    {
+        $json['input'] = [
+            'e_nama'              => $this->_validation('e_nama', 'Nama', 'required|min_length[5]'),
+            'e_jabatan'           => $this->_validation('e_jabatan', 'Jabatan', 'required|min_length[2]'),
+            'e_tmpt_lahir'        => $this->_validation('e_tmpt_lahir', 'Tempat Lahir', 'required'),
+            'e_tgl_lahir'         => $this->_validation('e_tgl_lahir', 'Tanggal Lahir', 'required|valid_date[Y-m-d]'),
+        ];
+        $json['select'] = [
+            'e_user_id'           => $this->_validation('e_user_id', 'User', 'required|is_natural'),
+            'e_id_dept'           => $this->_validation('e_id_dept', 'Departemen', 'required|is_natural'),
+            'e_jk'                => $this->_validation('e_jk', 'Jenis Kelamin', 'required'),
+        ];
+        if (!empty($this->request->getVar('e_hp'))) {
+            $json['input']['e_hp']    = $this->_validation('e_hp', 'No. Handphone', 'min_length[8]|is_natural');
+        }
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('e_user_id'))])->get()->getRow();
+            $departemen    = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('e_id_dept'))])->get()->getRow();
+            if (!$user) {
+                $json['select'] = [
+                    'e_user_id'       => 'Pilihan data tidak ditemukan',
+                ];
+            } else if (!$departemen) {
+                $json['select'] = [
+                    'id_dept' => 'Pilihan data tidak ditemukan',
+                ];
+            } else {
+                $nama           = _getVar($this->request->getVar('e_nama'));
+                $jabatan        = _getVar($this->request->getVar('e_jabatan'));
+                $jk             = _getVar($this->request->getVar('e_jk'));
+                $hp             = !empty($this->request->getVar('e_hp')) ? _noHP(_getVar($this->request->getVar('e_hp'))) : '';
+                $tmpt_lahir     = _getVar($this->request->getVar('e_tmpt_lahir'));
+                $tgl_lahir      = _getVar($this->request->getVar('e_tgl_lahir'));
+                $data           = [
+                    'nama'              => $nama,
+                    'jabatan'           => $jabatan,
+                    'jk'                => $jk,
+                    'hp'                => $hp,
+                    'tmpt_lahir'        => $tmpt_lahir,
+                    'tgl_lahir'         => $tgl_lahir,
+                ];
+                $update = updateData('db_master.ms_user', $data, ['user_id'     => $user->user_id]);
+                if ($update > 0) {
+                    $data = [
+                        'master_id'         => $user->user_id,
+                        'id_direktorat'     => $departemen->id_direktorat,
+                        'id_divisi'         => $departemen->id_divisi,
+                        'id_dept'           => $departemen->id_dept,
+                        'role'              => 'Satpam',
+                    ];
+                    updateData('ms_user', $data, ['master_id'     => $user->user_id]);
+                    $json['success']    = $update;
+                } else {
+                    $json['error']        = 'Tidak ada data yang berubah';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
     //Driver
     public function driver()
     {
@@ -533,6 +611,23 @@ class User extends BaseController
             echo json_encode($json);
         }
     }
+    public function driver_edit($user_id)
+    {
+        $user        = getUser(['user_id' => $user_id])->getRow();
+        $user->hp    = str_replace('+62', '0', $user->hp);
+        if ($user) {
+            $data = [
+                'status'    => true,
+                'data'    => $user
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'    => ''
+            ];
+        }
+        echo json_encode($data);
+    }
     public function driver_update()
     {
         $json['input'] = [
@@ -576,16 +671,15 @@ class User extends BaseController
                     'tgl_lahir'         => $tgl_lahir,
                 ];
                 $update = updateData('db_master.ms_user', $data, ['user_id'     => $user->user_id]);
-                $data = [
-                    'master_id'         => $user->user_id,
-                    'id_direktorat'     => $departemen->id_direktorat,
-                    'id_divisi'         => $departemen->id_divisi,
-                    'id_dept'           => $departemen->id_dept,
-                    'role'              => 'Driver',
-                ];
-                $update = updateData('ms_user', $data, ['master_id'     => $user->user_id]);
-                $update += $this->model->db->affectedRows();
                 if ($update > 0) {
+                    $data = [
+                        'master_id'         => $user->user_id,
+                        'id_direktorat'     => $departemen->id_direktorat,
+                        'id_divisi'         => $departemen->id_divisi,
+                        'id_dept'           => $departemen->id_dept,
+                        'role'              => 'Driver',
+                    ];
+                    updateData('ms_user', $data, ['master_id'     => $user->user_id]);
                     $json['success']    = $update;
                 } else {
                     $json['error']        = 'Tidak ada data yang berubah';
@@ -676,6 +770,155 @@ class User extends BaseController
             ];
         }
         echo json_encode($data);
+    }
+    // user Dapur
+    public function user_dapur()
+    {
+        $data['ms_user']    = selectUserDapur();
+        $data['direktorat'] = selectDirektorat();
+        $data['divisi']     = selectDivisi();
+        $data['departemen'] = selectDepartemen();
+        $data['user'] = getUser(['ms_user.role' => "Dapur", 'is_aktif' => 1])->getResult();
+        return _tempHTML('user/user_dapur', $data);
+    }
+    public function user_dapur_save()
+    {
+        $json['input'] = [
+            'nama'              => $this->_validation('nama', 'Nama', 'required|min_length[5]'),
+            'jabatan'           => $this->_validation('jabatan', 'Jabatan', 'required|min_length[2]'),
+            'tmpt_lahir'        => $this->_validation('tmpt_lahir', 'Tempat Lahir', 'required'),
+            'tgl_lahir'         => $this->_validation('tgl_lahir', 'Tanggal Lahir', 'required|valid_date[Y-m-d]'),
+        ];
+        $json['select'] = [
+            'user_id'           => $this->_validation('user_id', 'User', 'required|is_natural|is_unique[ms_user.master_id]'),
+            'id_dept'           => $this->_validation('id_dept', 'Departemen', 'required|is_natural'),
+            'jk'                => $this->_validation('jk', 'Jenis Kelamin', 'required'),
+        ];
+        if (!empty($this->request->getVar('hp'))) {
+            $json['input']['hp']    = $this->_validation('hp', 'No. Handphone', 'min_length[8]|is_natural');
+        }
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('user_id'))])->get()->getRow();
+            $departemen    = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('id_dept'))])->get()->getRow();
+            if (!$user) {
+                $json['select'] = [
+                    'user_id'       => 'Pilihan data tidak ditemukan',
+                ];
+            } else if (!$departemen) {
+                $json['select'] = [
+                    'id_dept' => 'Pilihan data tidak ditemukan',
+                ];
+            } else {
+                $data = [
+                    'master_id'         => $user->user_id,
+                    'id_direktorat'     => $departemen->id_direktorat,
+                    'id_divisi'         => $departemen->id_divisi,
+                    'id_dept'           => $departemen->id_dept,
+                    'role'              => 'Dapur',
+                ];
+                $add = $this->model->insert($data);
+                if ($add > 0) {
+                    $nama           = _getVar($this->request->getVar('nama'));
+                    $jabatan        = _getVar($this->request->getVar('jabatan'));
+                    $jk             = _getVar($this->request->getVar('jk'));
+                    $hp             = !empty($this->request->getVar('hp')) ? _noHP(_getVar($this->request->getVar('hp'))) : '';
+                    $tmpt_lahir     = _getVar($this->request->getVar('tmpt_lahir'));
+                    $tgl_lahir      = _getVar($this->request->getVar('tgl_lahir'));
+                    $data           = [
+                        'nama'              => $nama,
+                        'jabatan'           => $jabatan,
+                        'jk'                => $jk,
+                        'hp'                => $hp,
+                        'tmpt_lahir'        => $tmpt_lahir,
+                        'tgl_lahir'         => $tgl_lahir,
+                    ];
+                    $add += updateData('db_master.ms_user', $data, ['user_id'     => $user->user_id]);
+                    $json['success']    = $add;
+                } else {
+                    $json['error']        = 'Tambah user gagal';
+                }
+            }
+            $json['rscript']    = csrf_hash();
+            echo json_encode($json);
+        }
+    }
+    public function user_dapur_edit($user_id)
+    {
+        $user        = getUser(['user_id' => $user_id])->getRow();
+        $user->hp    = str_replace('+62', '0', $user->hp);
+        if ($user) {
+            $data = [
+                'status'    => true,
+                'data'    => $user
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'    => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function user_dapur_update()
+    {
+        $json['input'] = [
+            'e_nama'              => $this->_validation('e_nama', 'Nama', 'required'),
+            'e_jabatan'           => $this->_validation('e_jabatan', 'Jabatan', 'required|min_length[2]'),
+            'e_tmpt_lahir'        => $this->_validation('e_tmpt_lahir', 'Tempat Lahir', 'required'),
+            'e_tgl_lahir'         => $this->_validation('e_tgl_lahir', 'Tanggal Lahir', 'required|valid_date[Y-m-d]'),
+        ];
+        $json['select'] = [
+            'e_user_id'           => $this->_validation('e_user_id', 'User', 'required|is_natural'),
+            'e_id_dept'           => $this->_validation('e_id_dept', 'Departemen', 'required|is_natural'),
+            'e_jk'                => $this->_validation('e_jk', 'Jenis Kelamin', 'required'),
+        ];
+        if (!empty($this->request->getVar('e_hp'))) {
+            $json['input']['e_hp']    = $this->_validation('e_hp', 'No. Handphone', 'min_length[8]|is_natural');
+        }
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('e_user_id'))])->get()->getRow();
+            $departemen    = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('e_id_dept'))])->get()->getRow();
+            if (!$user) {
+                $json['select'] = [
+                    'e_user_id'       => 'Pilihan data tidak ditemukan',
+                ];
+            } else if (!$departemen) {
+                $json['select'] = [
+                    'id_dept' => 'Pilihan data tidak ditemukan',
+                ];
+            } else {
+                $nama           = _getVar($this->request->getVar('e_nama'));
+                $jabatan        = _getVar($this->request->getVar('e_jabatan'));
+                $jk             = _getVar($this->request->getVar('e_jk'));
+                $hp             = !empty($this->request->getVar('e_hp')) ? _noHP(_getVar($this->request->getVar('e_hp'))) : '';
+                $tmpt_lahir     = _getVar($this->request->getVar('e_tmpt_lahir'));
+                $tgl_lahir      = _getVar($this->request->getVar('e_tgl_lahir'));
+                $data           = [
+                    'nama'              => $nama,
+                    'jabatan'           => $jabatan,
+                    'jk'                => $jk,
+                    'hp'                => $hp,
+                    'tmpt_lahir'        => $tmpt_lahir,
+                    'tgl_lahir'         => $tgl_lahir,
+                ];
+                $update = updateData('db_master.ms_user', $data, ['user_id'     => $user->user_id]);
+                if ($update > 0) {
+                    $data = [
+                        'master_id'         => $user->user_id,
+                        'id_direktorat'     => $departemen->id_direktorat,
+                        'id_divisi'         => $departemen->id_divisi,
+                        'id_dept'           => $departemen->id_dept,
+                        'role'              => 'Dapur',
+                    ];
+                    updateData('ms_user', $data, ['master_id'     => $user->user_id]);
+                    $json['success']    = $update;
+                } else {
+                    $json['error']        = 'Tidak ada data yang berubah';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
     }
     //user akses
     public function akses()

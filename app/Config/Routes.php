@@ -60,11 +60,18 @@ $routes->get('/user_edit/(:num)', 'User::user_edit/$1');
 // driver
 $routes->get('/driver', 'User::driver');
 $routes->post('/driver', 'User::driver_save');
+$routes->get('/driver_edit/(:num)', 'User::driver_edit/$1');
 $routes->put('/driver', 'User::driver_update');
 // security
 $routes->get('security', 'User::security');
 $routes->post('security', 'User::security_save');
+$routes->get('/security_edit/(:num)', 'User::security_edit/$1');
 $routes->put('security', 'User::security_update');
+// user dapur
+$routes->get('user_dapur', 'User::user_dapur');
+$routes->post('user_dapur', 'User::user_dapur_save');
+$routes->get('/user_dapur_edit/(:num)', 'User::user_dapur_edit/$1');
+$routes->put('user_dapur', 'User::user_dapur_update');
 // user akses
 $routes->get('/user_akses', 'User::akses');
 
@@ -145,8 +152,15 @@ $routes->post('porsi', 'Dapur::porsi_save');
 $routes->get('porsi_edit/(:num)', 'Dapur::porsi_edit/$1');
 $routes->put('porsi', 'Dapur::porsi_update');
 $routes->post('porsi_delete', 'Dapur::porsi_delete');
-
-
+// petugas dapur
+$routes->get('petugas', 'Dapur::petugas_dapur');
+$routes->get('/select_user/(:segment)', 'Dapur::select_user/$1');
+$routes->post('petugas', 'Dapur::petugas_dapur_save');
+$routes->get('petugas_edit/(:num)', 'Dapur::petugas_dapur_edit/$1');
+$routes->put('petugas', 'Dapur::petugas_dapur_update');
+$routes->post('petugas_delete', 'Dapur::petugas_dapur_delete');
+// penilaian dan saran
+$routes->get('penilaian', 'Dapur::penilaian');
 // Seragam
 // Fotokopi
 

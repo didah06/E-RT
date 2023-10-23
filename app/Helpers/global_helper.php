@@ -432,9 +432,33 @@ function selectDaftarMenu()
     $db->orderBy('id_menu', 'ASC');
     return $db->get()->getResult();
 }
-// function findMenuItemByID($id_menu)
-// {
-//     $db = connectdb('tb_daftar_menu');
-//     $db->where('id_menu', $id_menu);
-//     return $db->get()->getRow();
-// }
+function selectUserDapur()
+{
+    $db = connectDb('db_master.ms_user');
+    $db->select("user_id AS id, CONCAT(nama, ' - (', jabatan, ')') AS text");
+    $db->where('user_as', 'PTK');
+    $db->like('jabatan', 'dapur');
+    $db->orderBy('user_id', 'ASC');
+    return $db->get()->getResult();
+}
+function isMenuPagiExist($tgl_menu)
+{
+    $db = connectdb('tb_daftar_menu');
+    $db->where('tgl_menu', $tgl_menu);
+    $db->where('sesi_menu', 'pagi');
+    return $db->countAllResults();
+}
+function isMenuSiangExist($tgl_menu)
+{
+    $db = connectdb('tb_daftar_menu');
+    $db->where('tgl_menu', $tgl_menu);
+    $db->where('sesi_menu', 'siang');
+    return $db->countAllResults();
+}
+function isMenuMalamExist($tgl_menu)
+{
+    $db = connectdb('tb_daftar_menu');
+    $db->where('tgl_menu', $tgl_menu);
+    $db->where('sesi_menu', 'malam');
+    return $db->countAllResults();
+}

@@ -392,7 +392,7 @@
             }
         });
         $('.btn-edit').on('click', function() {
-            $.getJSON("<?= base_url('user_edit'); ?>/" + $(this).data('id'), function(d) {
+            $.getJSON("<?= base_url('security_edit'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_user_id]').val(d['data'].user_id);
                     $('select[name=e_id_direktorat]').val(d['data'].id_direktorat).trigger('change');

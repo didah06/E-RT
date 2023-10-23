@@ -2,10 +2,16 @@
 
 namespace App\Controllers;
 
+use App\Models\DaftarMenuModel;
+
 use App\Controllers\BaseController;
 
 class Dapur extends BaseController
 {
+    public function __construct()
+    {
+        $this->model       = new DaftarMenuModel();
+    }
     public function index()
     {
         $data['sesi_menu']   = selectSesiMenu();
@@ -35,7 +41,7 @@ class Dapur extends BaseController
                 $json['select']['id_sesi_menu'] = 'data sesi menu tidak ditemukan';
             } else {
                 $data = [
-                    'tgl_menu' => $tgl_menu,
+                    'tgl_menu'   => $tgl_menu,
                     'menu_1'     => $menu_1,
                     'menu_2'     => $menu_2,
                     'menu_3'     => $menu_3,
@@ -45,11 +51,19 @@ class Dapur extends BaseController
                     'created_by'   => _session('nama'),
                     'created_at'   => time(),
                 ];
-                $add = addData('tb_daftar_menu', $data);
-                if ($add) {
-                    $json['success'] = $add;
+                if (isMenuPagiExist($tgl_menu) > 0) {
+                    $json['error'] = 'Menu pagi sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.';
+                } else if (isMenuSiangExist($tgl_menu) > 0) {
+                    $json['error'] = 'Menu siang sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.';
+                } else if (isMenuMalamExist($tgl_menu) > 0) {
+                    $json['error'] = 'Menu malam sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.';
                 } else {
-                    $json['error'] = 'tambah data gagal';
+                    $add = addData('tb_daftar_menu', $data);
+                    if ($add) {
+                        $json['success'] = $add;
+                    } else {
+                        $json['error'] = 'tambah data gagal';
+                    }
                 }
             }
         }
@@ -297,8 +311,13 @@ class Dapur extends BaseController
     public function porsi()
     {
         $data['menu']   = selectDaftarMenu();
-        // $data['tgl_menu'] = selectTanggal();
-        $data['porsi'] = getData('tb_porsi_makanan')->get()->getResult();
+        $start_date = _getVar($this->request->getVar('start_date'));
+        $end_date   = _getVar($this->request->getVar('end_date'));
+        $data['shift']      = selectShift();
+        $data['area']       = selectArea();
+        $data['start_date'] = $start_date == "" ? date('Y-m-') . '01' : $start_date;
+        $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
+        $data['porsi'] = getData('tb_porsi_makanan', ['tgl_produksi BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null])->get()->getResult();
         return _tempHTML('dapur/porsi_makanan', $data);
     }
     public function porsi_save()
@@ -439,5 +458,159 @@ class Dapur extends BaseController
         }
         $json['rscript'] = csrf_hash();
         return $this->response->setJSON($json);
+    }
+    // petugas dapur
+    public function petugas_dapur()
+    {
+        $data['ms_user']       = selectUserDapur();
+        $data['shift']         = selectShift();
+        $data['petugas_dapur'] = getData('tb_petugas_dapur')->get()->getResult();
+        return _tempHTML('dapur/petugas_dapur', $data);
+    }
+    public function select_user($user_id)
+    {
+        $user = getMasterUser([
+            'user_id' => $user_id
+        ]);
+        if ($user) {
+            $data = [
+                'status'    => true,
+                'data'    => $user
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'    => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function petugas_dapur_save()
+    {
+        $json['input'] = [
+            'nama'        => $this->_validation('nama', 'Nama', 'required'),
+            'foto'        => $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
+        ];
+        $json['select'] = [
+            'user_id'     => $this->_validation('user_id', 'User', 'required'),
+            'id_shift'    => $this->_validation('id_shift', 'Shift', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('user_id'))])->get()->getRow();
+            $shift         = getData('ms_shift', ['id_shift' => _getVar($this->request->getVar('id_shift'))])->get()->getRow();
+            $nama          = _getVar($this->request->getVar('nama'));
+            $foto          = $this->request->getFile('foto');
+            if (!$user) {
+                $json['select']['user_id'] = 'Data user tidak ditemukan';
+            } else if (!$shift) {
+                $json['select']['id_shift'] = 'Data shift tidak ditemukan';
+            } else {
+                if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
+                    $photo        = $foto->getRandomName();
+                    ($foto->move(FCPATH . './public/assets/images/dapur/petugas_dapur', $photo));
+                    $data = [
+                        'user_id'  => $user->user_id,
+                        'nama'     => $nama,
+                        'id_shift' => $shift->id_shift,
+                        'shift'    => $shift->shift,
+                        'foto'     => $photo,
+                    ];
+                    $add = addData('tb_petugas_dapur', $data);
+                    if ($add > 0) {
+                        $data = [
+                            'nama'  => $nama,
+                        ];
+                        updateData('db_master.ms_user', $data, ['user_id' => $user->user_id]);
+                        $json['success'] = 'Data berhasil ditambahkan';
+                    } else {
+                        $json['error'] = 'Data gagal ditambahkan';
+                    }
+                } else {
+                    $json['input']['foto'] = 'foto gagal di upload';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function petugas_dapur_edit($id_petugas_dapur)
+    {
+        $petugas_dapur = getData('tb_petugas_dapur', ['id_petugas_dapur' => $id_petugas_dapur])->get()->getRow();
+        if ($petugas_dapur) {
+            $data = [
+                'status'    => true,
+                'data'      => $petugas_dapur
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function petugas_dapur_update()
+    {
+        $id_petugas_dapur = _getVar($this->request->getVar('e_id_petugas_dapur'));
+        $json['input'] = [
+            'e_nama'        => $this->_validation('e_nama', 'Nama', 'required'),
+            'e_foto'        => $this->_validation('e_foto', 'foto', 'uploaded[e_foto]|max_size[e_foto, 1024]|mime_in[e_foto,image/jpeg,image/png,image/jpg]'),
+        ];
+        $json['select'] = [
+            'e_user_id'     => $this->_validation('e_user_id', 'User', 'required'),
+            'e_id_shift'    => $this->_validation('e_id_shift', 'Shift', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('e_user_id'))])->get()->getRow();
+            $shift         = getData('ms_shift', ['id_shift' => _getVar($this->request->getVar('e_id_shift'))])->get()->getRow();
+            $petugas_dapur = getData('tb_petugas_dapur', ['id_petugas_dapur' => $id_petugas_dapur])->get()->getRow();
+            $nama          = _getVar($this->request->getVar('e_nama'));
+            $foto          = $this->request->getFile('e_foto');
+            if (!$user) {
+                $json['select']['e_user_id'] = 'Data user tidak ditemukan';
+            } else if (!$shift) {
+                $json['select']['e_id_shift'] = 'Data shift tidak ditemukan';
+            } else {
+                if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
+                    $photo        = $foto->getRandomName();
+                    if ($foto->move(FCPATH . './public/assets/images/dapur/petugas_dapur', $photo)) {
+                        if (file_exists(FCPATH . './public/assets/images/dapur/petugas_dapur' . $photo)) {
+                            unlink(FCPATH . './public/assets/images/dapur/petugas_dapur' . $photo);
+                        }
+                        $data = [
+                            'user_id'  => $user->user_id,
+                            'nama'     => $nama,
+                            'id_shift' => $shift->id_shift,
+                            'shift'    => $shift->shift,
+                            'foto'     => $photo,
+                        ];
+                        $update = updateData('tb_petugas_dapur', $data, ['id_petugas_dapur' => $id_petugas_dapur]);
+                        if ($update > 0) {
+                            $data = [
+                                'nama'  => $nama,
+                            ];
+                            updateData('db_master.ms_user', $data, ['user_id' => $user->user_id]);
+                            $json['success'] = 'Data berhasil diubah';
+                        } else {
+                            $json['error'] = 'Data gagal diubah';
+                        }
+                    } else {
+                        $json['input']['foto'] = 'foto gagal di upload';
+                    }
+                } else {
+                    $foto = $petugas_dapur->foto;
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    // Penilian dan saran
+    public function penilaian()
+    {
+        $today = _getVar($this->request->getVar('today'));
+        $data['today'] = $today == "" ? date('Y-m-d') : $today;
+        $data['daftar_menu'] = getData('tb_daftar_menu', ['tgl_menu' => $data['today']])->get()->getResult();
+        return _tempHTML('dapur/penilaian', $data);
     }
 }

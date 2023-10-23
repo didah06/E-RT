@@ -2,7 +2,7 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Porsi Makanan
+                <h2>Petugas Dapur
                     <small class="text-muted"><?= appName(); ?></small>
                 </h2>
             </div>
@@ -16,7 +16,7 @@
                 </ul>
             </div>
             <div class=" pt-3 pl-3">
-                <h2>Porsi Makanan</h2>
+                <h2>Petugas Dapur</h2>
             </div>
         </div>
     </div>
@@ -29,54 +29,39 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah Porsi Makanan</h6>
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah Petugas Dapur</h6>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="error-area"></div>
-                                    <?= form_open(base_url('porsi'), ['class' => 'add-form']); ?>
+                                    <?= form_open(base_url('petugas'), ['class' => 'add-form']); ?>
                                     <div class="row clearfix">
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Menu</label>
-                                                <select class="form-control select-only" name="id_menu">
-                                                    <option value="" selected disabled>- Pilih Menu -</option>
-                                                    <?php foreach ($menu as $item) : ?>
-                                                        <option value="<?= $item->id; ?>"><?= $item->date; ?><?= $item->text; ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">User</label>
+                                            <select class="form-control select-only" name="user_id">
+                                                <option value="" selected disabled>- Pilih User -</option>
+                                                <?php foreach ($ms_user as $item) : ?>
+                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div class="invalid-feedback"></div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">Jumlah Produksi</label>
-                                                <input type="text" class="form-control divide" name="jumlah_produksi" id="jumlah_produksi">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">Jumlah Pembagian</label>
-                                                <input type="text" class="form-control divide" name="jumlah_pembagian" id="jumlah_pembagian">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">Jumlah Persediaan</label>
-                                                <input type="text" class="form-control divide" name="jumlah_persediaan" id="jumlah_persediaan" readonly>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">User</label>
+                                            <select class="form-control select-only" name="id_shift">
+                                                <option value="" selected disabled>- Pilih Shift -</option>
+                                                <?php foreach ($shift as $item) : ?>
+                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Keterangan</label>
-                                                <input type="text" class="form-control" name="keterangan">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
+                                            <label>Nama</label>
+                                            <input class="form-control" type="text" name="nama">
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
@@ -98,72 +83,37 @@
                     <div class="body">
                         <div class="row">
                             <div class="text-start">
-                                <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Porsi Makanan
+                                <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Petugas Dapur
                                     </i></button>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <form method="GET" action="<?= base_url('porsi') ?>">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="mb-2">
-                                            <label class="form-label">min date</label>
-                                            <input type="date" class="form-control" name="start_date" id="min" value="<?= $start_date; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-2">
-                                            <label class="form-label">max date</label>
-                                            <input type="date" class="form-control" name="end_date" id="max" value="<?= $end_date; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mt-3">
-                                            <button class="btn btn-warning" type="submit">filter</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                                <button class="btn btn-danger mb-3" id="delete-selected">Delete</button>
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th>
                                         <th class="text-center">#</th>
-                                        <th>Tanggal Produksi</th>
-                                        <th>Sesi Menu</th>
-                                        <th>Jumlah Produksi</th>
-                                        <th>Jumlah Pembagian</th>
-                                        <th>Jumlah Persediaan</th>
-                                        <th>Keterangan</th>
+                                        <th>Nama</th>
+                                        <th>Shift</th>
                                         <th>Foto</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($porsi as $table) : ?>
+                                    <?php foreach ($petugas_dapur as $table) : ?>
                                         <tr>
-                                            <td class="text-center"> <input type="checkbox" class="delete-checkbox" data-id="<?= $table->id_porsi_makanan; ?>"></td>
                                             <td class="text-center">
-                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_porsi_makanan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_petugas_dapur; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
                                                     <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
                                                 </span>
                                             </td>
-                                            <td><?= $table->tgl_produksi; ?></td>
-                                            <td><?= $table->sesi_menu; ?></td>
-                                            <td><?= $table->jumlah_produksi; ?></td>
-                                            <td><?= $table->jumlah_pembagian; ?></td>
-                                            <td><?= $table->jumlah_persediaan; ?></td>
-                                            <td><?= $table->keterangan; ?></td>
+                                            <td><?= $table->nama; ?></td>
+                                            <td><?= $table->shift; ?></td>
                                             <td>
                                                 <?php if ($table->foto != null) : ?>
-                                                    <a href="<?= base_url('public/assets/images/dapur/porsi_makanan/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                                    <a href="<?= base_url('public/assets/images/dapur/petugas_dapur/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
                                                 <?php else : ?>
                                                     <?php echo '-'; ?>
                                                 <?php endif; ?>
                                             </td>
-
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -182,37 +132,34 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="error-area"></div>
-                                    <?= form_open(base_url('porsi'), ['class' => 'update-form']); ?>
+                                    <?= form_open(base_url('petugas'), ['class' => 'update-form']); ?>
                                     <input type="hidden" name="_method" value="PUT" />
-                                    <input type="hidden" name="e_id_porsi_makanan">
+                                    <input type="hidden" name="e_id_petugas_dapur">
                                     <div class="row clearfix">
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">Jumlah Produksi</label>
-                                                <input type="text" class="form-control" name="e_jumlah_produksi" id="e_jumlah_produksi">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">Jumlah Pembagian</label>
-                                                <input type="text" class="form-control" name="e_jumlah_pembagian" id="e_jumlah_pembagian">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">Jumlah Persediaan</label>
-                                                <input type="text" class="form-control" name="e_jumlah_persediaan" id="e_jumlah_persediaan" readonly>
-                                                <div class="invalid-feedback"></div>
-                                            </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label">User</label>
+                                            <select class="form-control select-only" name="e_user_id">
+                                                <option value="" selected disabled>- Pilih User -</option>
+                                                <?php foreach ($ms_user as $item) : ?>
+                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Keterangan</label>
-                                                <input type="text" class="form-control" name="e_keterangan">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
+                                            <label class="form-label">User</label>
+                                            <select class="form-control select-only" name="e_id_shift">
+                                                <option value="" selected disabled>- Pilih Shift -</option>
+                                                <?php foreach ($shift as $item) : ?>
+                                                    <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label>Nama</label>
+                                            <input class="form-control" type="text" name="e_nama">
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
@@ -237,14 +184,7 @@
     </div>
 </section>
 <script>
-    $('.divide').divide();
     $(document).ready(function() {
-        $('#jumlah_produksi, #jumlah_pembagian').on('change', function() {
-            calculatePorsiPersediaan();
-        })
-        $('#e_jumlah_produksi, #e_jumlah_pembagian').on('change', function() {
-            calculatePorsiPersediaanEdit();
-        })
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
@@ -276,13 +216,26 @@
             })
         })
         $('.btn-edit').on('click', function() {
-            $.getJSON("<?= base_url('porsi_edit/'); ?>/" + $(this).data('id'), function(d) {
+            $.getJSON("<?= base_url('petugas_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
-                    $('input[name=e_id_porsi_makanan]').val(d['data'].id_porsi_makanan);
-                    $('input[name=e_jumlah_produksi]').val(d['data'].jumlah_produksi);
-                    $('input[name=e_jumlah_pembagian]').val(d['data'].jumlah_pembagian);
-                    $('input[name=e_jumlah_persediaan]').val(d['data'].jumlah_persediaan);
-                    $('input[name=e_keterangan]').val(d['data'].keterangan);
+                    $('input[name=e_id_petugas_dapur]').val(d['data'].id_petugas_dapur);
+                    $('select[name=e_user_id]').val(d['data'].user_id).trigger('change');
+                    $('input[name=e_nama]').val(d['data'].nama);
+                    $('select[name=e_id_shift]').val(d['data'].id_shift).trigger('change');
+                }
+            });
+        });
+        $('select[name=user_id]').on('change', function() {
+            $.getJSON("<?= base_url('select_user'); ?>/" + $(this).val(), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=nama]').val(d['data'].nama);
+                }
+            });
+        });
+        $('select[name=e_user_id]').on('change', function() {
+            $.getJSON("<?= base_url('select_user'); ?>/" + $(this).val(), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=e_nama]').val(d['data'].nama);
                 }
             });
         });
@@ -372,24 +325,4 @@
             });
         });
     })
-
-    function calculatePorsiPersediaan() {
-        var jumlah_produksi = parseInt($('#jumlah_produksi').siblings('input').val());
-        var jumlah_pembagian = parseInt($('#jumlah_pembagian').siblings('input').val());
-
-        var jumlah_persediaan = jumlah_produksi - jumlah_pembagian;
-
-        $('#jumlah_persediaan').siblings('input').val(jumlah_persediaan).trigger('change');
-        $('#jumlah_persediaan').val(jumlah_persediaan);
-    }
-
-    function calculatePorsiPersediaanEdit() {
-        var jumlah_produksi = parseInt($('#e_jumlah_produksi').val());
-        var jumlah_pembagian = parseInt($('#e_jumlah_pembagian').val());
-
-        var e_jumlah_persediaan = jumlah_produksi - jumlah_pembagian;
-
-        // $('#e_jumlah_persediaan').siblings('input').val(e_jumlah_persediaan).trigger('change');
-        $('#e_jumlah_persediaan').val(e_jumlah_persediaan);
-    }
 </script>

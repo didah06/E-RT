@@ -2,7 +2,7 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Driver
+                <h2>Petugas Dapur
                     <small class="text-muted">Welcome to <?= appName(); ?></small>
                 </h2>
             </div>
@@ -12,7 +12,7 @@
                 </button>
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i><?= appName(); ?></a></li>
-                    <li class="breadcrumb-item active">Driver</li>
+                    <li class="breadcrumb-item active">Petugas Dapur</li>
                 </ul>
             </div>
             <div class="btn-user pt-3 pl-3">
@@ -70,20 +70,20 @@
             </div>
         </div>
     </div>
-    <!-- driver add -->
+    <!-- dapur add -->
     <!-- modal -->
     <div class="modal fade" id="myModal" data-backdrop="false" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah Driver</h6>
+                    <h6 class="modal-title" id="exampleModalLongTitle">Tambah User Dapur</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="error-area"></div>
-                    <?= form_open(base_url('driver'), ['class' => 'add-form']); ?>
+                    <?= form_open(base_url('user_dapur'), ['class' => 'add-form']); ?>
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label">User</label>
@@ -175,20 +175,20 @@
         </div>
     </div>
     <!-- end modal -->
-    <!-- Driver Edit -->
+    <!-- user Dapur Edit -->
     <!-- modal -->
     <div class="modal fade modal-update" id="ModalEdit" data-backdrop="false" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLongTitle">Edit User Driver</h6>
+                    <h6 class="modal-title" id="exampleModalLongTitle">Edit User Dapur</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="error-area"></div>
-                    <?= form_open(base_url('driver'), ['class' => 'update-form']); ?>
+                    <?= form_open(base_url('user_dapur'), ['class' => 'update-form']); ?>
                     <input type="hidden" name="_method" value="PUT" />
                     <input type="hidden" name="e_user_id">
                     <div class="row">
@@ -304,67 +304,6 @@
                 }
             })
         });
-        $('.update-form').on('submit', function(e) {
-            e.preventDefault();
-            processStart();
-            $.ajax({
-                url: e.target.action,
-                type: 'post',
-                dataType: 'json',
-                data: $(this).serialize(),
-                error: function(xhr) {
-                    processDone();
-                    invalidError({
-                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
-                    });
-                },
-                success: function(d) {
-                    if (d['success'] > 0) {
-                        location.reload();
-                    } else {
-                        processDone();
-                        invalidError(d);
-                    }
-                }
-            })
-        });
-        $('.btn-delete').on('click', function() {
-            var userId = $(this).data('id');
-            Swal.fire({
-                title: 'Apa anda yakin?',
-                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus',
-                confirmButtonColor: '#fd625e',
-                cancelButtonText: 'Batal',
-            }).then(function(result) {
-                if (result.value) {
-                    processStart();
-                    $.ajax({
-                        type: 'post',
-                        dataType: 'json',
-                        url: "<?= base_url('driver/delete'); ?>",
-                        data: {
-                            user_id: userId
-                        },
-                        error: function(xhr) {
-                            processDone();
-                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
-                        },
-                        success: function(d) {
-                            if (d['success'] > 0) {
-                                location.reload();
-                            } else {
-                                processDone();
-                                invalidError(d);
-                                Swal.fire('Hapus gagal', d['msg'], 'error');
-                            }
-                        }
-                    })
-                }
-            });
-        });
         $('select[name=user_id]').on('change', function() {
             $.getJSON("<?= base_url('select_user'); ?>/" + $(this).val(), function(d) {
                 if (d['status'] === true) {
@@ -397,7 +336,7 @@
             }
         });
         $('.btn-edit').on('click', function() {
-            $.getJSON("<?= base_url('driver_edit'); ?>/" + $(this).data('id'), function(d) {
+            $.getJSON("<?= base_url('user_dapur_edit'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_user_id]').val(d['data'].user_id);
                     $('select[name=e_id_direktorat]').val(d['data'].id_direktorat).trigger('change');
@@ -413,5 +352,29 @@
                 }
             });
         });
-    });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success'] > 0) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
+    })
 </script>

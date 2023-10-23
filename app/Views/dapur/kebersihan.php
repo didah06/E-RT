@@ -276,8 +276,8 @@
                 if (d['status'] === true) {
                     $('input[name=e_id_kebersihan_dapur]').val(d['data'].id_kebersihan_dapur);
                     $('input[name=e_tgl_pemantauan]').val(d['data'].tgl_pemantauan);
-                    $('select[name=e_id_shift]').val(d['data'].id_shift).trigger('change');;
-                    $('select[name=e_id_area]').val(d['data'].id_area).trigger('change');;
+                    $('select[name=e_id_shift]').val(d['data'].id_shift).trigger('change');
+                    $('select[name=e_id_area]').val(d['data'].id_area).trigger('change');
                     $('input[name=e_keterangan]').val(d['data'].keterangan);
                 }
             });
