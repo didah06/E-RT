@@ -1,3 +1,16 @@
+<style>
+    .star {
+        font-size: 24px;
+        cursor: pointer;
+        color: #ddd;
+        /* Default star color */
+    }
+
+    .star.active {
+        color: #FFD700;
+        /* Active star color (e.g., yellow) */
+    }
+</style>
 <section class="content">
     <div class="block-header">
         <div class="row">
@@ -54,7 +67,7 @@
                                                     <p class="card-text"><?= $menu_today->menu_2; ?></p>
                                                     <p class="card-text"><?= $menu_today->menu_3; ?></p>
                                                     <p class="card-text"><?= $menu_today->menu_4; ?></p>
-                                                    <button class="btn btn-info">Penilaian & Saran</button>
+                                                    <button class="btn btn-info" data-id="<?= $menu_today->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Penilaian & Saran</button>
                                                 </div>
                                             </div>
                                         <?php endif; ?>
@@ -66,7 +79,7 @@
                                                     <p class="card-text"><?= $menu_today->menu_2; ?></p>
                                                     <p class="card-text"><?= $menu_today->menu_3; ?></p>
                                                     <p class="card-text"><?= $menu_today->menu_4; ?></p>
-                                                    <button class="btn btn-info">Penilaian & Saran</button>
+                                                    <button class="btn btn-info" data-id="<?= $menu_today->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Penilaian & Saran</button>
                                                 </div>
                                             </div>
                                         <?php endif; ?>
@@ -78,7 +91,7 @@
                                                     <p class="card-text"><?= $menu_today->menu_2; ?></p>
                                                     <p class="card-text"><?= $menu_today->menu_3; ?></p>
                                                     <p class="card-text"><?= $menu_today->menu_4; ?></p>
-                                                    <button class="btn btn-info">Penilaian & Saran</button>
+                                                    <button class="btn btn-info" data-id="<?= $menu_today->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Penilaian & Saran</button>
                                                 </div>
                                             </div>
                                         <?php endif; ?>
@@ -87,7 +100,73 @@
                             </div>
                         </div>
                     </div>
+                    <!-- modal penilaian -->
+                    <div class="modal fade" id="ModalPenilaian" data-backdrop="false" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h7 class="modal-title text-center p-2" id="exampleModalLongTitle">Silahkan Berikan Rating dan Saran Anda!</h7>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="error-area"></div>
+                                    <?= form_open(base_url('penilaian'), ['class' => 'update-form']); ?>
+                                    <input type="hidden" name="_method" value="PUT" />
+                                    <input type="hidden" name="e_id_menu">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12 text-center">
+                                            <!-- <label class="form-label">Rating</label>
+                                            <?php
+                                            $rating = 5; // Set the rating value
+                                            for ($i = 1; $i <= 5; $i++) {
+                                                $class = ($i <= $rating) ? 'zmdi zmdi-star' : 'zmdi zmdi-star-outline'; // Determine whether to use a filled or outline star
+                                                echo '<i class="' . $class . '"></i>';
+                                            }
+                                            ?> -->
+                                            <div class="rating">
+                                                <span class="star" data-rating="1">&#9733;</span>
+                                                <span class="star" data-rating="2">&#9733;</span>
+                                                <span class="star" data-rating="3">&#9733;</span>
+                                                <span class="star" data-rating="4">&#9733;</span>
+                                                <span class="star" data-rating="5">&#9733;</span>
+                                            </div>
+                                            <p id="ratingValue">Rating: 0</p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Saran & Komentar</label>
+                                                <textarea class="form-control" id="saran" rows="3"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center pt-3 pb-3">
+                                    <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 </section>
+<script>
+    $(document).ready(function() {
+        $('.star').click(function() {
+            const rating = $(this).data('rating');
+
+            $('#ratingValue').text('Rating: ' + rating);
+
+            // Reset the color of all stars
+            $('.star').removeClass('active');
+
+            // Set the color of stars up to the clicked star
+            for (let i = 1; i <= rating; i++) {
+                $('.star[data-rating="' + i + '"]').addClass('active');
+            }
+        });
+    });
+</script>
