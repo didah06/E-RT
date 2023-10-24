@@ -33,6 +33,8 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('details_timeline/(:num)', 'Home::details/$1');
+$routes->get('get_menu_dapur/(:num)', 'Home::get_menu_dapur');
+$routes->put('penilaian_menu_dapur', 'Home::penilaian_menu_dapur');
 
 //Login
 $routes->get('/login', 'Login::index');
@@ -161,6 +163,8 @@ $routes->put('petugas', 'Dapur::petugas_dapur_update');
 $routes->post('petugas_delete', 'Dapur::petugas_dapur_delete');
 // penilaian dan saran
 $routes->get('penilaian', 'Dapur::penilaian');
+$routes->get('penilaian_get/(:num)', 'Dapur::get_penilaian/$1');
+$routes->put('penilaian', 'Dapur::set_penilaian');
 // Seragam
 // Fotokopi
 

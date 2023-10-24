@@ -51,18 +51,18 @@ class Dapur extends BaseController
                     'created_by'   => _session('nama'),
                     'created_at'   => time(),
                 ];
-                if (isMenuPagiExist($tgl_menu) > 0) {
-                    $json['error'] = 'Menu pagi sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.';
-                } else if (isMenuSiangExist($tgl_menu) > 0) {
-                    $json['error'] = 'Menu siang sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.';
-                } else if (isMenuMalamExist($tgl_menu) > 0) {
-                    $json['error'] = 'Menu malam sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.';
+                if (isMenuPagiExist($tgl_menu) > 0 && $sesi_menu->id_sesi_menu == 1) {
+                    $json['error'] = 'Menu pagi sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.'; //jika menu pagi 0 maka lanjut menu pagi
+                } elseif (isMenuSiangExist($tgl_menu) > 0 && $sesi_menu->id_sesi_menu == 2) {
+                    $json['error'] = 'Menu siang sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.'; //jika menu siang 0 lanjut menu malam
+                } elseif (isMenuMalamExist($tgl_menu) > 0 && $sesi_menu->id_sesi_menu == 3) {
+                    $json['error'] = 'Menu malam sudah ada pada tanggal tersebut. Anda tidak dapat menambahkan menu baru.'; //jika menu pagi 0 lanjut menu malam
                 } else {
-                    $add = addData('tb_daftar_menu', $data);
+                    $add = addData('tb_daftar_menu', $data); // jika semuanya !> 0
                     if ($add) {
                         $json['success'] = $add;
                     } else {
-                        $json['error'] = 'tambah data gagal';
+                        $json['error'] = 'Tambah data gagal';
                     }
                 }
             }
@@ -612,5 +612,48 @@ class Dapur extends BaseController
         $data['today'] = $today == "" ? date('Y-m-d') : $today;
         $data['daftar_menu'] = getData('tb_daftar_menu', ['tgl_menu' => $data['today']])->get()->getResult();
         return _tempHTML('dapur/penilaian', $data);
+    }
+    public function get_penilaian($id_menu)
+    {
+        $menu = getData('tb_daftar_menu', ['id_menu' => $id_menu])->get()->getRow();
+        if ($menu) {
+            $data = [
+                'status'    => true,
+                'data'      => $menu
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function set_penilaian()
+    {
+        $json['input'] = [
+            'rating'    => $this->_validation('rating', 'Rating', 'required'),
+            'saran'     => $this->_validation('saran', 'Saran', 'required'),
+        ];
+        if (_validationHasErrors($json['input'])) {
+            $rating = _getVar($this->request->getVar('rating'));
+            $saran  = _getVar($this->request->getVar('saran'));
+            $daftar_menu = getData('tb_daftar_menu', ['id_menu' => _getVar($this->request->getVar('id_menu'))])->get()->getRow();
+            if (!$daftar_menu) {
+                echo 'data menu tidak ditemukan';
+            }
+            $data = [
+                'rating' => $rating,
+                'saran'  => $saran,
+            ];
+            $update = updateData('tb_daftar_menu', $data, ['id_menu' => $daftar_menu->id_menu]);
+            if ($update) {
+                $json['success'] = 'penilaian berhasil disimpan';
+            } else {
+                $json['error'] = 'penilaian gagal disimpan';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
     }
 }

@@ -445,20 +445,20 @@ function isMenuPagiExist($tgl_menu)
 {
     $db = connectdb('tb_daftar_menu');
     $db->where('tgl_menu', $tgl_menu);
-    $db->where('sesi_menu', 'pagi');
+    $db->where('id_sesi_menu', 1);
     return $db->countAllResults();
 }
 function isMenuSiangExist($tgl_menu)
 {
     $db = connectdb('tb_daftar_menu');
     $db->where('tgl_menu', $tgl_menu);
-    $db->where('sesi_menu', 'siang');
+    $db->where('id_sesi_menu', 2);
     return $db->countAllResults();
 }
 function isMenuMalamExist($tgl_menu)
 {
     $db = connectdb('tb_daftar_menu');
     $db->where('tgl_menu', $tgl_menu);
-    $db->where('sesi_menu', 'malam');
+    $db->where('id_sesi_menu', 3);
     return $db->countAllResults();
 }
