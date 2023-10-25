@@ -209,38 +209,132 @@
                                     $foundmenu = true;
                             ?>
                                     <?php if ($table->sesi_menu == 'pagi') : ?>
-                                        <div class="card border-warning mb-3" style="width: 18rem;">
-                                            <div class="card-header"><?= $table->sesi_menu; ?></div>
+                                        <div class="card border-warning mb-3" style="width: 20rem;">
+                                            <div class="card-header">
+                                                <p>menu <?= $table->sesi_menu; ?></p>
+                                            </div>
                                             <div class="card-body text-warning">
                                                 <p class="card-text"><?= $table->menu_1; ?></p>
                                                 <p class="card-text"><?= $table->menu_2; ?></p>
                                                 <p class="card-text"><?= $table->menu_3; ?></p>
                                                 <p class="card-text"><?= $table->menu_4; ?></p>
-                                                <button class="btn btn-info btn-edit" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Penilaian & Saran</button>
+                                                <?php if ($table->saran == "" && $table->rating == "") : ?>
+                                                    <button class="btn btn-info btn-edit" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Berikan Review</button>
+                                                <?php else : ?>
+                                                    <button class="btn btn-info btn-edit-rating" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalEditPenilaian">Edit Review</button>
+                                                <?php endif; ?>
+                                                <?php if ($table->saran != "" && $table->rating != "") : ?>
+                                                    <hr>
+                                                    <div class="col-md-12 text-dark">
+                                                        <p>Review</p>
+                                                        <div class="row">
+                                                            <?php
+                                                            $rating = $table->rating; // Get the rating value from your data
+                                                            if ($rating < 0) {
+                                                                $rating = 0;
+                                                            } elseif ($rating > 5) {
+                                                                $rating = 5;
+                                                            }
+
+                                                            for ($i = 1; $i <= 5; $i++) {
+                                                                $class = ($i <= $rating) ? 'zmdi zmdi-star' : 'zmdi zmdi-star-outline';
+                                                                $color = ($i <= $rating) ? 'orange' : 'gray';
+                                                                echo '<i class="' . $class . '" style="color: ' . $color . ';"></i>';
+                                                            }
+                                                            ?>
+                                                        </div>
+                                                        <div class="row">
+                                                            <p class="card-text">Saran : <?= $table->saran; ?></p>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($table->sesi_menu == 'siang') : ?>
-                                        <div class="card border-info mb-3" style="width: 18rem;">
-                                            <div class="card-header"><?= $table->sesi_menu; ?></div>
+                                        <div class="card border-info mb-2" style="width: 20rem;">
+                                            <div class="card-header">
+                                                <p>menu <?= $table->sesi_menu; ?></p>
+                                            </div>
                                             <div class="card-body text-info">
                                                 <p class="card-text"><?= $table->menu_1; ?></p>
                                                 <p class="card-text"><?= $table->menu_2; ?></p>
                                                 <p class="card-text"><?= $table->menu_3; ?></p>
                                                 <p class="card-text"><?= $table->menu_4; ?></p>
-                                                <button class="btn btn-info btn-edit" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Penilaian & Saran</button>
+                                                <?php if ($table->saran == "" && $table->rating == "") : ?>
+                                                    <button class="btn btn-info btn-edit" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Berikan Review</button>
+                                                <?php else : ?>
+                                                    <button class="btn btn-info btn-edit-rating" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalEditPenilaian">Edit Review</button>
+                                                <?php endif; ?>
+                                                <?php if ($table->saran != "" && $table->rating != "") : ?>
+                                                    <hr>
+                                                    <div class="col-md-12 text-dark">
+                                                        <p>Review</p>
+                                                        <div class="row">
+                                                            <?php
+                                                            $rating = $table->rating; // Get the rating value from your data
+                                                            if ($rating < 0) {
+                                                                $rating = 0;
+                                                            } elseif ($rating > 5) {
+                                                                $rating = 5;
+                                                            }
+
+                                                            for ($i = 1; $i <= 5; $i++) {
+                                                                $class = ($i <= $rating) ? 'zmdi zmdi-star' : 'zmdi zmdi-star-outline';
+                                                                $color = ($i <= $rating) ? 'orange' : 'gray';
+                                                                echo '<i class="' . $class . '" style="color: ' . $color . ';"></i>';
+                                                            }
+                                                            ?>
+                                                        </div>
+                                                        <div class="row">
+                                                            <p class="card-text">Saran : <?= $table->saran; ?></p>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($table->sesi_menu == 'malam') : ?>
-                                        <div class="card  border-success mb-3" style="width: 18rem;">
-                                            <div class="card-header"><?= $table->sesi_menu; ?></div>
+                                        <div class="card  border-success mb-3" style="width: 20rem;">
+                                            <div class="card-header">
+                                                <p>menu <?= $table->sesi_menu; ?></p>
+                                            </div>
                                             <div class="card-body text-success">
                                                 <p class="card-text"><?= $table->menu_1; ?></p>
                                                 <p class="card-text"><?= $table->menu_2; ?></p>
                                                 <p class="card-text"><?= $table->menu_3; ?></p>
                                                 <p class="card-text"><?= $table->menu_4; ?></p>
-                                                <button class="btn btn-info btn-edit" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Penilaian & Saran</button>
+                                                <?php if ($table->saran == "" && $table->rating == "") : ?>
+                                                    <button class="btn btn-info btn-edit" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalPenilaian">Berikan Review</button>
+                                                <?php else : ?>
+                                                    <button class="btn btn-info btn-edit-rating" data-id="<?= $table->id_menu; ?>" data-toggle="modal" data-target="#ModalEditPenilaian">Edit Review</button>
+                                                <?php endif; ?>
+                                                <?php if ($table->saran != "" && $table->rating != "") : ?>
+                                                    <hr>
+                                                    <div class="col-md-12 text-dark ">
+                                                        <p>Review</p>
+                                                        <div class="row">
+                                                            <?php
+                                                            $rating = $table->rating; // Get the rating value from your data
+                                                            if ($rating < 0) {
+                                                                $rating = 0;
+                                                            } elseif ($rating > 5) {
+                                                                $rating = 5;
+                                                            }
+
+                                                            for ($i = 1; $i <= 5; $i++) {
+                                                                $class = ($i <= $rating) ? 'zmdi zmdi-star' : 'zmdi zmdi-star-outline';
+
+                                                                $color = ($i <= $rating) ? 'orange' : 'gray';
+                                                                echo '<i class="' . $class . '" style="color: ' . $color . ';"></i>';
+                                                            }
+                                                            ?>
+                                                        </div>
+                                                        <div class="row">
+                                                            <p class="card-text">Saran : <?= $table->saran; ?></p>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     <?php endif; ?>
@@ -278,19 +372,59 @@
                         <input type="hidden" name="id_menu" id="id_menu">
                         <div class="row clearfix">
                             <div class="col-md-12 text-center">
-                                <div class="rating">
+                                <div class="rating" name="rating">
                                     <span class="star" data-rating="1">&#9733;</span>
                                     <span class="star" data-rating="2">&#9733;</span>
                                     <span class="star" data-rating="3">&#9733;</span>
                                     <span class="star" data-rating="4">&#9733;</span>
                                     <span class="star" data-rating="5">&#9733;</span>
                                 </div>
-                                <p id="ratingValue" name="rating">Rating: 0</p>
                             </div>
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Saran & Komentar</label>
                                     <textarea class="form-control" id="saran" name="saran" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center pt-3 pb-3">
+                            <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal edit penilaian -->
+        <div class="modal fade" id="ModalEditPenilaian" data-backdrop="false" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h7 class="modal-title text-center p-2" id="exampleModalLongTitle">Edit Rating dan Saran Anda!</h7>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="error-area"></div>
+                        <?= form_open(base_url('penilaian_menu'), ['class' => 'update-form']); ?>
+                        <input type="hidden" name="_method" value="PUT" />
+                        <input type="hidden" name="e_id_menu" id="id_menu">
+                        <div class="row clearfix">
+                            <div class="col-md-12 text-center">
+                                <div class="rating" name="rating">
+                                    <span class="star" data-rating="1">&#9733;</span>
+                                    <span class="star" data-rating="2">&#9733;</span>
+                                    <span class="star" data-rating="3">&#9733;</span>
+                                    <span class="star" data-rating="4">&#9733;</span>
+                                    <span class="star" data-rating="5">&#9733;</span>
+                                </div>
+                                <!-- <p id="ratingValue" name="e_rating">Rating: 0</p> -->
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Saran & Komentar</label>
+                                    <textarea class="form-control" id="e_saran" name="e_saran" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -354,7 +488,7 @@
         $('.star').click(function() {
             const rating = $(this).data('rating');
 
-            $('#ratingValue').text('Rating: ' + rating);
+            // $('#ratingValue').text('Rating: ' + rating);
 
             ratingValue = rating;
 
@@ -370,6 +504,25 @@
             $.getJSON("<?= base_url('penilaian_get/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=id_menu]').val(d['data'].id_menu);
+                }
+            });
+        });
+        $('.btn-edit-rating').on('click', function() {
+            const rating = $(this).data('rating');
+            $.getJSON("<?= base_url('edit_menu_dapur/'); ?>/" + $(this).data('id'), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=e_id_menu]').val(d['data'].id_menu);
+                    // $('p[name="e_rating"]').text('Rating: ' + d['data'].rating);
+                    if (d['data'].rating > 0) {
+                        $('.star').removeClass('active');
+
+                        for (var i = 1; i <= d['data'].rating; i++) {
+                            $('.star[data-rating="' + i + '"]').addClass('active');
+                        }
+                    } else if (d['data'].rating = 0) {
+                        $('.star').removeClass('active');
+                    }
+                    $('textarea[name=e_saran]').val(d['data'].saran);
                 }
             });
         });

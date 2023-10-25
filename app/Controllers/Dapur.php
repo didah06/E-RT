@@ -613,6 +613,7 @@ class Dapur extends BaseController
         $data['daftar_menu'] = getData('tb_daftar_menu', ['tgl_menu' => $data['today']])->get()->getResult();
         return _tempHTML('dapur/penilaian', $data);
     }
+    // beri penilaian
     public function get_penilaian($id_menu)
     {
         $menu = getData('tb_daftar_menu', ['id_menu' => $id_menu])->get()->getRow();
@@ -629,6 +630,24 @@ class Dapur extends BaseController
         }
         echo json_encode($data);
     }
+    // edit penilaian
+    public function penilaian_edit($id_menu)
+    {
+        $menu = getData('tb_daftar_menu', ['id_menu' => $id_menu])->get()->getRow();
+        if ($menu) {
+            $data = [
+                'status'    => true,
+                'data'      => $menu
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    // beri penilaian
     public function set_penilaian()
     {
         $json['input'] = [
@@ -639,6 +658,34 @@ class Dapur extends BaseController
             $rating = _getVar($this->request->getVar('rating'));
             $saran  = _getVar($this->request->getVar('saran'));
             $daftar_menu = getData('tb_daftar_menu', ['id_menu' => _getVar($this->request->getVar('id_menu'))])->get()->getRow();
+            if (!$daftar_menu) {
+                echo 'data menu tidak ditemukan';
+            }
+            $data = [
+                'rating' => $rating,
+                'saran'  => $saran,
+            ];
+            $update = updateData('tb_daftar_menu', $data, ['id_menu' => $daftar_menu->id_menu]);
+            if ($update) {
+                $json['success'] = 'penilaian berhasil disimpan';
+            } else {
+                $json['error'] = 'penilaian gagal disimpan';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    // edit penilaian
+    public function penilaian_update()
+    {
+        $json['input'] = [
+            'rating'    => $this->_validation('rating', 'Rating', 'required'),
+            'e_saran'     => $this->_validation('e_saran', 'Saran', 'required'),
+        ];
+        if (_validationHasErrors($json['input'])) {
+            $rating = _getVar($this->request->getVar('rating'));
+            $saran  = _getVar($this->request->getVar('e_saran'));
+            $daftar_menu = getData('tb_daftar_menu', ['id_menu' => _getVar($this->request->getVar('e_id_menu'))])->get()->getRow();
             if (!$daftar_menu) {
                 echo 'data menu tidak ditemukan';
             }
