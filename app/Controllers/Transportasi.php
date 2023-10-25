@@ -46,6 +46,28 @@ class Transportasi extends BaseController
         $data['booking'] = $this->model->whereNotIn('status', ['diproses', 'selesai'])->get()->getResult();
         return _tempHTML('transportasi/booking_transport', $data);
     }
+    public function select_jadwal_start($tanggal_pemakaian)
+    {
+        $defaultNull    = _getVar($this->request->getVar('df'));
+        $jadwal = getJadwal($tanggal_pemakaian)->getResult();
+        // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
+        if ($defaultNull == '') {
+            $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
+        } else if ($defaultNull == 1) {
+            $select    = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
+        }
+        foreach ($jadwal as $item) {
+            if ($item->tujuan != "") {
+                $disable = "disabled";
+                $str = ' - ' . $item->departemen . ' ' . $item->tujuan;
+            } else {
+                $disable = "";
+                $str = '';
+            }
+            $select    .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time  . $str . '</option>';
+        }
+        echo $select;
+    }
     public function validasi_jadwal($tanggal_pemakaian, $jam_keberangkatan, $jam_pulang)
     {
         $booked = isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_pulang);

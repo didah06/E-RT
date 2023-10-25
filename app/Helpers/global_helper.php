@@ -316,30 +316,18 @@ function selectKodeBooking()
     $db->orderBy('id_booking', 'ASC');
     return $db->get()->getResult();
 }
-function selectJadwalStart()
+function selectJadwalStart($where = [])
 {
     $db = connectdb('ms_jadwal');
-    $db->select("CONCAT(ms_jadwal.start_time, ' - ') AS text,
-    CONCAT(
-            tb_booking_transport.departemen, 
-            '  ', 
-            tb_booking_transport.tujuan,
-    '') AS booking");
-    $db->join('tb_booking_transport', 'tb_booking_transport.jam_keberangkatan = ms_jadwal.start_time', 'left');
-    $db->orderBy('ms_jadwal.id_jadwal', 'ASC');
+    $db->select("id_jadwal as id, start_time as text");
+    $db->orderBy('id_jadwal', 'ASC');
     return $db->get()->getResult();
 }
 function selectJadwalEnd()
 {
     $db = connectdb('ms_jadwal');
-    $db->select("CONCAT(ms_jadwal.end_time, ' - ') AS text,
-    CONCAT(
-        tb_booking_transport.departemen, 
-        '  ', 
-        tb_booking_transport.tujuan,
-    '') AS booking");
-    $db->join('tb_booking_transport', 'tb_booking_transport.jam_kembali = ms_jadwal.end_time', 'left');
-    $db->orderBy('end_time', 'ASC');
+    $db->select("id_jadwal as id, end_time as text");
+    $db->orderBy('id_jadwal', 'ASC');
     return $db->get()->getResult();
 }
 function isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_kembali)
@@ -461,4 +449,20 @@ function isMenuMalamExist($tgl_menu)
     $db->where('tgl_menu', $tgl_menu);
     $db->where('id_sesi_menu', 3);
     return $db->countAllResults();
+}
+function getJadwal($tanggal_pemakaian)
+{
+    $db = connectdb('ms_jadwal');
+    // $db->where($where);
+    $db->select("ms_jadwal.*, 
+    CONCAT( '(', 
+           CASE
+               WHEN ms_jadwal.start_time != ''  AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.departemen ELSE null END, 
+           ')') AS departemen,
+    CONCAT(
+           CASE
+               WHEN ms_jadwal.start_time != '' AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.tujuan ELSE null END, 
+           ')') AS tujuan");
+    $db->join('tb_booking_transport', 'tb_booking_transport.jam_keberangkatan = ms_jadwal.start_time', 'left');
+    return $db->get();
 }

@@ -93,6 +93,8 @@ $routes->post('approved_kadep/(:num)', 'Transportasi::approved_kadep/$1');
 $routes->post('approved_kadiv/(:num)', 'Transportasi::approved_kadiv/$1');
 $routes->post('approved_RT/(:num)', 'Transportasi::approved_RT/$1');
 $routes->post('unapproved/(:num)', 'Transportasi::unapproved/$1');
+$routes->get('select_jadwal_start/(:segment)', 'Transportasi::select_jadwal_start/$1');
+$routes->get('select_jadwal_end/(:num)', 'Transportasi::select_jadwal_end/$1');
 // jadwal
 $routes->get('/jadwal', 'Transportasi::jadwal');
 $routes->get('details_jadwal/(:num)', 'Transportasi::details_jadwal/$1');

@@ -48,7 +48,7 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Tanggal Pemakaian</label>
-                                                <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="tanggal_pemakaian" id="tanggal_pemakaian" onchange="checktime()">
+                                                <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="tanggal_pemakaian" id="tanggal_pemakaian">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -58,7 +58,7 @@
                                                 <select class="form-control select-only" name="jam_keberangkatan" id="jam_keberangkatan" onchange="checktime()">
                                                     <option value="" selected disabled>- Pilih Jam Keberangkatan -</option>
                                                     <?php foreach ($start_time as $item) : ?>
-                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?><?= $item->booking; ?></option>
+                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                                 <div class="invalid-feedback"></div>
@@ -69,8 +69,8 @@
                                                 <label class="form-label">Jam Kembali</label>
                                                 <select class="form-control select-only" name="jam_kembali" id="jam_kembali" onchange="checktime()">
                                                     <option value="" selected disabled>- Pilih Jam Kembali -</option>
-                                                    <?php foreach ($start_time as $item) : ?>
-                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?><?= $item->booking; ?></option>
+                                                    <?php foreach ($end_time as $item) : ?>
+                                                        <option value="<?= $item->text; ?>"><?= $item->text; ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                                 <div class="invalid-feedback"></div>
@@ -375,6 +375,17 @@
                 $('.signature-new').removeAttr('hidden');
             }
         });
+        $('input[name="tanggal_pemakaian"]').on('change', function() {
+            checktime();
+            if ($(this).val) {
+                $('select[name="jam_keberangkatan"]').html('<option value="" selected disabled>Loading...</option>');
+                $('select[name="jam_keberangkatan"]').selectpicker('refresh');
+                $.get("<?= base_url('select_jadwal_start'); ?>/" + $(this).val(), function(d) {
+                    $('select[name="jam_keberangkatan"]').html(d);
+                    $('select[name="jam_keberangkatan"]').selectpicker('refresh');
+                });
+            }
+        })
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
