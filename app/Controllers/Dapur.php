@@ -489,6 +489,7 @@ class Dapur extends BaseController
     {
         $json['input'] = [
             'nama'        => $this->_validation('nama', 'Nama', 'required'),
+            'tanggal'     => $this->_validation('tanggal', 'Tanggal', 'required|valid_date'),
             'foto'        => $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
         ];
         $json['select'] = [
@@ -499,6 +500,7 @@ class Dapur extends BaseController
             $user          = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('user_id'))])->get()->getRow();
             $shift         = getData('ms_shift', ['id_shift' => _getVar($this->request->getVar('id_shift'))])->get()->getRow();
             $nama          = _getVar($this->request->getVar('nama'));
+            $tanggal       = _getVar($this->request->getVar('tanggal'));
             $foto          = $this->request->getFile('foto');
             if (!$user) {
                 $json['select']['user_id'] = 'Data user tidak ditemukan';
@@ -511,6 +513,7 @@ class Dapur extends BaseController
                     $data = [
                         'user_id'  => $user->user_id,
                         'nama'     => $nama,
+                        'tanggal'  => $tanggal,
                         'id_shift' => $shift->id_shift,
                         'shift'    => $shift->shift,
                         'foto'     => $photo,
@@ -554,6 +557,7 @@ class Dapur extends BaseController
         $id_petugas_dapur = _getVar($this->request->getVar('e_id_petugas_dapur'));
         $json['input'] = [
             'e_nama'        => $this->_validation('e_nama', 'Nama', 'required'),
+            'e_tanggal'     => $this->_validation('e_tanggal', 'Tanggal', 'required|valid_date'),
             'e_foto'        => $this->_validation('e_foto', 'foto', 'uploaded[e_foto]|max_size[e_foto, 1024]|mime_in[e_foto,image/jpeg,image/png,image/jpg]'),
         ];
         $json['select'] = [
@@ -565,6 +569,7 @@ class Dapur extends BaseController
             $shift         = getData('ms_shift', ['id_shift' => _getVar($this->request->getVar('e_id_shift'))])->get()->getRow();
             $petugas_dapur = getData('tb_petugas_dapur', ['id_petugas_dapur' => $id_petugas_dapur])->get()->getRow();
             $nama          = _getVar($this->request->getVar('e_nama'));
+            $tanggal       = _getVar($this->request->getVar('e_tanggal'));
             $foto          = $this->request->getFile('e_foto');
             if (!$user) {
                 $json['select']['e_user_id'] = 'Data user tidak ditemukan';
@@ -580,6 +585,7 @@ class Dapur extends BaseController
                         $data = [
                             'user_id'  => $user->user_id,
                             'nama'     => $nama,
+                            'tanggal'  => $tanggal,
                             'id_shift' => $shift->id_shift,
                             'shift'    => $shift->shift,
                             'foto'     => $photo,

@@ -48,6 +48,11 @@
                                             </select>
                                             <div class="invalid-feedback"></div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label">Tanggal tugas</label>
+                                            <input type="date" class="form-control" name="tanggal">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
                                         <div class="col-md-6">
                                             <label class="form-label">User</label>
                                             <select class="form-control select-only" name="id_shift">
@@ -147,6 +152,11 @@
                                             <div class="invalid-feedback"></div>
                                         </div>
                                         <div class="col-md-12">
+                                            <label class="form-label">Tanggal tugas</label>
+                                            <input type="date" class="form-control" name="e_tanggal">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                        <div class="col-md-12">
                                             <label class="form-label">User</label>
                                             <select class="form-control select-only" name="e_id_shift">
                                                 <option value="" selected disabled>- Pilih Shift -</option>
@@ -221,6 +231,7 @@
                     $('input[name=e_id_petugas_dapur]').val(d['data'].id_petugas_dapur);
                     $('select[name=e_user_id]').val(d['data'].user_id).trigger('change');
                     $('input[name=e_nama]').val(d['data'].nama);
+                    $('input[name=e_tanggal').val(d[data].tanggal);
                     $('select[name=e_id_shift]').val(d['data'].id_shift).trigger('change');
                 }
             });
