@@ -48,13 +48,13 @@
                                             </select>
                                             <div class="invalid-feedback"></div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <label class="form-label">Tanggal tugas</label>
                                             <input type="date" class="form-control" name="tanggal">
                                             <div class="invalid-feedback"></div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">User</label>
+                                        <div class="col-md-12">
+                                            <label class="form-label">Shift</label>
                                             <select class="form-control select-only" name="id_shift">
                                                 <option value="" selected disabled>- Pilih Shift -</option>
                                                 <?php foreach ($shift as $item) : ?>
@@ -98,6 +98,7 @@
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th>Nama</th>
+                                        <th>Tanggal</th>
                                         <th>Shift</th>
                                         <th>Foto</th>
                                     </tr>
@@ -110,6 +111,7 @@
                                                     <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
                                                 </span>
                                             </td>
+                                            <td><?= $table->tanggal; ?></td>
                                             <td><?= $table->nama; ?></td>
                                             <td><?= $table->shift; ?></td>
                                             <td>
@@ -157,7 +159,7 @@
                                             <div class="invalid-feedback"></div>
                                         </div>
                                         <div class="col-md-12">
-                                            <label class="form-label">User</label>
+                                            <label class="form-label">Shift</label>
                                             <select class="form-control select-only" name="e_id_shift">
                                                 <option value="" selected disabled>- Pilih Shift -</option>
                                                 <?php foreach ($shift as $item) : ?>
