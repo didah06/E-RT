@@ -384,6 +384,12 @@
                     $('select[name="jam_keberangkatan"]').html(d);
                     $('select[name="jam_keberangkatan"]').selectpicker('refresh');
                 });
+                $('select[name="jam_kembali"]').html('<option value="" selected disabled>Loading...</option>');
+                $('select[name="jam_kembali"]').selectpicker('refresh');
+                $.get("<?= base_url('select_jadwal_end'); ?>/" + $(this).val(), function(d) {
+                    $('select[name="jam_kembali"]').html(d);
+                    $('select[name="jam_kembali"]').selectpicker('refresh');
+                });
             }
         })
         $('.add-form').on('submit', function(e) {

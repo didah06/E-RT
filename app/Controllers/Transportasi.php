@@ -68,6 +68,28 @@ class Transportasi extends BaseController
         }
         echo $select;
     }
+    public function select_jadwal_end($tanggal_pemakaian)
+    {
+        $defaultNull    = _getVar($this->request->getVar('df'));
+        $jadwal         = getJadwalEnd($tanggal_pemakaian)->getResult();
+        // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
+        if ($defaultNull == '') {
+            $select    = '<option value="" selected disabled>--Pilih Jam Kembali--</option>';
+        } else if ($defaultNull == 1) {
+            $select    = '<option value="" selected>--Semua Jam Kembali--</option>';
+        }
+        foreach ($jadwal as $item) {
+            if ($item->tujuan != "") {
+                $disable = "disabled";
+                $str = ' - ' . $item->departemen . ' ' . $item->tujuan;
+            } else {
+                $disable = "";
+                $str = '';
+            }
+            $select    .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time  . $str . '</option>';
+        }
+        echo $select;
+    }
     public function validasi_jadwal($tanggal_pemakaian, $jam_keberangkatan, $jam_pulang)
     {
         $booked = isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_pulang);

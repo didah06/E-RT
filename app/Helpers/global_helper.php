@@ -466,3 +466,18 @@ function getJadwal($tanggal_pemakaian)
     $db->join('tb_booking_transport', 'tb_booking_transport.jam_keberangkatan = ms_jadwal.start_time', 'left');
     return $db->get();
 }
+function getJadwalEnd($tanggal_pemakaian)
+{
+    $db = connectdb('ms_jadwal');
+    $db->select("ms_jadwal.*,
+    CONCAT( '(', 
+            CASE 
+            WHEN ms_jadwal.end_time != '' AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.departemen ELSE null END,
+            ')') AS departemen,
+    CONCAT(
+            CASE 
+            WHEN ms_jadwal.end_time != '' AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.tujuan ELSE null END,
+            ')') AS tujuan");
+    $db->join('tb_booking_transport', 'tb_booking_transport.jam_kembali = ms_jadwal.end_time', 'left');
+    return $db->get();
+}
