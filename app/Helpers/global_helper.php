@@ -481,3 +481,15 @@ function getJadwalEnd($tanggal_pemakaian)
     $db->join('tb_booking_transport', 'tb_booking_transport.jam_kembali = ms_jadwal.end_time', 'left');
     return $db->get();
 }
+function selectSeragam()
+{
+    $db = connectdb('tb_seragam');
+    $db->select("id_seragam AS id, CONCAT(departemen, ' - (', jenis_seragam, ')') AS text");
+    return $db->get()->getResult();
+}
+function selectVendor()
+{
+    $db = connectdb('tb_vendor');
+    $db->select("id_vendor AS id, CONCAT(vendor) AS text");
+    return $db->get()->getResult();
+}

@@ -668,8 +668,10 @@ class Dapur extends BaseController
                 echo 'data menu tidak ditemukan';
             }
             $data = [
-                'rating' => $rating,
-                'saran'  => $saran,
+                'rating'    => $rating,
+                'saran'     => $saran,
+                'rating_by' => session('nama'),
+                'rating_at' => time()
             ];
             $update = updateData('tb_daftar_menu', $data, ['id_menu' => $daftar_menu->id_menu]);
             if ($update) {
@@ -696,8 +698,10 @@ class Dapur extends BaseController
                 echo 'data menu tidak ditemukan';
             }
             $data = [
-                'rating' => $rating,
-                'saran'  => $saran,
+                'rating'    => $rating,
+                'saran'     => $saran,
+                'rating_by' => session('nama'),
+                'rating_at' => time()
             ];
             $update = updateData('tb_daftar_menu', $data, ['id_menu' => $daftar_menu->id_menu]);
             if ($update) {

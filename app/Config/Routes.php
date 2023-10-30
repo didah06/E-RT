@@ -171,7 +171,21 @@ $routes->get('penilaian_get/(:num)', 'Dapur::get_penilaian/$1');
 $routes->put('penilaian', 'Dapur::set_penilaian');
 $routes->get('penilaian_edit/(:num)', 'Dapur::penilaian_edit/$1');
 $routes->put('penilaian_update', 'Dapur::penilaian_update');
+
+
+
 // Seragam
+$routes->get('seragam', 'Seragam::index');
+$routes->post('seragam', 'Seragam::seragam_save');
+$routes->get('data_vendor', 'Seragam::data_vendor');
+$routes->post('data_vendor', 'Seragam::data_vendor_save');
+$routes->get('pemesanan', 'Seragam::pemesanan_seragam');
+$routes->post('pemesanan', 'Seragam::pemesanan_save');
+$routes->get('update_status/(:num)', 'Seragam::update_status/$1');
+$routes->post('update_status', 'Seragam::update_dikirim');
+$routes->post('update_diterima', 'Seragam::update_diterima');
+$routes->get('persediaan', 'Seragam::persediaan');
+$routes->get('pengeluaran/(:num)', 'pengeluaran/$1');
 // Fotokopi
 
 
