@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="error-area"></div>
-                                    <?= form_open(base_url('pengeluaran'), ['class' => 'add-form']); ?>
+                                    <?= form_open(base_url('pengeluaran_save'), ['class' => 'update-form']); ?>
                                     <input type="hidden" name="id_pemesanan">
                                     <div class="row clearfix">
                                         <div class="col-md-12">
@@ -48,15 +48,29 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
+                                                <label class="form-label">Jumlah Terima Seragam</label>
+                                                <input type="text" class="form-control divide" name="jumlah_diterima" id="jml_diterima" value="<?= $pemesanan->jumlah_diterima; ?>" readonly>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
                                                 <label class="form-label">Jumlah Ambil Seragam</label>
-                                                <input type="text" class="form-control divide" name="jumlah_ambil_seragam">
+                                                <input type="text" class="form-control divide" name="jumlah_ambil_seragam" id="jml_diambil">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Stok Seragam</label>
+                                                <input type="text" class="form-control divide" name="stok_seragam" id="stok" readonly>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Foto</label>
-                                                <input type="file" class="form-control divide" name="foto" accept="image/png, image/jpeg, image/jpg">
+                                                <input type="file" class="form-control" name="foto" accept="image/png, image/jpeg, image/jpg">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -86,6 +100,7 @@
                                         <th>Biaya</th>
                                         <th>Tanggal Diterima</th>
                                         <th>Jumlah Diterima</th>
+                                        <th>Jumlah Diambil</th>
                                         <th>Stok Seragam</th>
                                     </tr>
                                 </thead>
@@ -93,14 +108,8 @@
                                     <?php foreach ($persediaan as $table) : ?>
                                         <tr>
                                             <td class="text-center">
-                                                <button class="btn badge badge-info btn-ambil" style="align-items: center; justify-content: center; width: 100px; height: 35px;" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalAmbilSeragam">
+                                                <span class="badge badge-info btn-ambil" style="align-items: center; justify-content: center; width: 95px; height: 35px" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalAmbilSeragam" type="button">
                                                     Ambil Seragam
-                                                </button>
-                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                    <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
-                                                </span>
-                                                <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pemesanan; ?>" type="button">
-                                                    <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
                                                 </span>
                                             </td>
                                             <td><?= $table->jenis_seragam; ?></td>
@@ -109,7 +118,8 @@
                                             <td><?= $table->biaya; ?></td>
                                             <td><?= $table->tgl_diterima; ?></td>
                                             <td><?= $table->jumlah_diterima; ?></td>
-                                            <td><?= $table->jumlah_diterima; ?></td>
+                                            <td><?= ($table->jumlah_diambil !== null) ? $table->jumlah_diambil : '-'; ?></td>
+                                            <td><?= ($table->stok_seragam !== null) ? $table->stok_seragam : $table->jumlah_diterima; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -123,11 +133,56 @@
 </section>
 <script>
     $('.divide').divide();
-    $('.btn-ambil').on('click', function() {
-        $.getJSON("<?= base_url('pengeluaran/'); ?>/" + $(this).data('id'), function(d) {
-            if (d['status'] === true) {
-                $('input[name=id_pemesanan]').val(d['data'].id_pemesanan);
-            }
+    $(document).ready(function() {
+        $('.btn-ambil').on('click', function() {
+            $.getJSON("<?= base_url('get_pemesanan/'); ?>/" + $(this).data('id'), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=id_pemesanan]').val(d['data'].id_pemesanan);
+                    $('input[name=jumlah_diterima]').val(d['data'].jumlah_diterima);
+                }
+            });
         });
-    });
+        $('#jml_diambil').on('change', function() {
+            hitungStok();
+        });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            var formData = new FormData(this);
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: formData,
+                enctype: 'multipart/form-data',
+                cache: false,
+                contentType: false,
+                processData: false,
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
+    })
+
+    function hitungStok() {
+        var jumlahDiterima = parseInt($('#jml_diterima').siblings('input').val());
+        var jumlahAmbilSeragam = parseInt($('#jml_diambil').siblings('input').val());
+
+        var stokSeragam = jumlahDiterima - jumlahAmbilSeragam;
+
+        $('#stok').siblings('input').val(stokSeragam).trigger('change');
+        $('#stok').val(stokSeragam);
+    }
 </script>

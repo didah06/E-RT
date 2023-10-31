@@ -129,8 +129,12 @@
                                         <th>Biaya</th>
                                         <th>Tanggal Pengiriman</th>
                                         <th>Jumlah Dikirim</th>
+                                        <th>created pengiriman by</th>
+                                        <th>created pengiriman at</th>
                                         <th>Tanggal Diterima</th>
                                         <th>Jumlah Diterima</th>
+                                        <th>created diterima by</th>
+                                        <th>created diterima at</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -166,8 +170,12 @@
                                             <td><?= $table->biaya; ?></td>
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->tgl_pengiriman : '-'; ?></td>
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->jumlah_dikirim : '-'; ?></td>
+                                            <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->created_pengiriman_by : '-'; ?></td>
+                                            <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->created_pengiriman_at : '-'; ?></td>
                                             <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->tgl_diterima : '-' ?></td>
                                             <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->jumlah_diterima : '-' ?></td>
+                                            <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->created_terima_by : '-' ?></td>
+                                            <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->created_terima_at : '-' ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

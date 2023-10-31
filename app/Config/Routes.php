@@ -185,7 +185,9 @@ $routes->get('update_status/(:num)', 'Seragam::update_status/$1');
 $routes->post('update_status', 'Seragam::update_dikirim');
 $routes->post('update_diterima', 'Seragam::update_diterima');
 $routes->get('persediaan', 'Seragam::persediaan');
-$routes->get('pengeluaran/(:num)', 'pengeluaran/$1');
+$routes->get('get_pemesanan/(:num)', 'Seragam::get_pemesanan/$1');
+$routes->get('pengeluaran', 'Seragam::pengeluaran');
+$routes->post('pengeluaran_save', 'Seragam::pengeluaran_save');
 // Fotokopi
 
 
