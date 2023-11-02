@@ -129,6 +129,7 @@
                                         <th>Biaya</th>
                                         <th>Tanggal Pengiriman</th>
                                         <th>Jumlah Dikirim</th>
+                                        <th>Sisa Pesanan</th>
                                         <th>created pengiriman by</th>
                                         <th>created pengiriman at</th>
                                         <th>Tanggal Diterima</th>
@@ -170,6 +171,7 @@
                                             <td><?= $table->biaya; ?></td>
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->tgl_pengiriman : '-'; ?></td>
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->jumlah_dikirim : '-'; ?></td>
+                                            <td><?= $table->sisa_pesanan; ?></td>
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->created_pengiriman_by : '-'; ?></td>
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->created_pengiriman_at : '-'; ?></td>
                                             <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->tgl_diterima : '-' ?></td>
@@ -200,6 +202,20 @@
                                     <div class="row clearfix">
                                         <div class="col-md-12">
                                             <div class="mb-3">
+                                                <label class="form-label">Jumlah Pesanan</label>
+                                                <input type="text" class="form-control divide" name="jumlah_pesanan" id="jml_pesan" readonly>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">sisa Pesanan</label>
+                                                <input type="text" class="form-control divide" name="sisa_pesanan" id="sisa_pesan" readonly>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
                                                 <label class="form-label">Tanggal Pengiriman</label>
                                                 <input type="date" class="form-control" name="tgl_pengiriman">
                                                 <div class="invalid-feedback"></div>
@@ -208,10 +224,17 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Jumlah Dikirim</label>
-                                                <input type="text" class="form-control divide" name="jumlah_dikirim">
+                                                <input type="text" class="form-control divide" name="jumlah_dikirim" id="jml_kirim">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
+                                        <!-- <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Sisa Pesanan</label>
+                                                <input type="text" class="form-control divide" name="sisa_pesanan" id="sisa_pesan" readonly>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="text-center pt-3 pb-3">
@@ -268,6 +291,7 @@
     </div>
 </section>
 <script>
+    var sisaAwal = 0;
     $('.divide').divide();
     $(document).ready(function() {
         $('.add-form').on('submit', function(e) {
@@ -299,8 +323,15 @@
             $.getJSON("<?= base_url('update_status/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=id_pemesanan]').val(d['data'].id_pemesanan);
+                    $('#jml_pesan, input[name=jumlah_pesanan]').val(d['data'].jumlah_pesanan);
+                    $('#sisa_pesan, input[name=sisa_pesanan').val(d['data'].sisa_pesanan);
+                    $('#jml_kirim, input[name=jumlah_dikirim').val(0);
+                    sisaAwal = d['data'].sisa_pesanan;
                 }
             });
+        });
+        $('#jml_kirim').on('change', function() {
+            hitungSisaPesanan();
         });
         $('.update-dikirim').on('submit', function(e) {
             e.preventDefault();
@@ -351,4 +382,13 @@
             })
         });
     });
+
+    function hitungSisaPesanan() {
+        var jumlahDikirim = $('#jml_kirim').val();
+
+        var sisaPesanan = sisaAwal - jumlahDikirim;
+
+        $('#sisa_pesan').siblings('input').val(sisaPesanan).trigger('change');
+        $('#sisa_pesan').val(sisaPesanan);
+    }
 </script>

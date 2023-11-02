@@ -49,7 +49,7 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Jumlah Terima Seragam</label>
-                                                <input type="text" class="form-control divide" name="jumlah_diterima" id="jml_diterima" value="<?= $pemesanan->jumlah_diterima; ?>" readonly>
+                                                <input type="text" class="form-control divide" name="jumlah_diterima" id="jml_diterima" readonly>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -94,6 +94,7 @@
                                     <tr>
                                         <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
                                         <th class="text-center" width="20%">#</th>
+                                        <th>Status</th>
                                         <th>Jenis Seragam</th>
                                         <th>Vendor</th>
                                         <th>Ukuran</th>
@@ -111,6 +112,10 @@
                                                 <span class="badge badge-info btn-ambil" style="align-items: center; justify-content: center; width: 95px; height: 35px" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalAmbilSeragam" type="button">
                                                     Ambil Seragam
                                                 </span>
+                                            </td>
+                                            <td>
+                                                <span class="<?= $table->status_stok === 'stok habis' ? 'badge badge-danger' : ($table->status_stok === 'stok tersedia' ? 'badge badge-success' : ''); ?>">
+                                                    <?= $table->status_stok === 'stok habis' ? 'stok habis' : ($table->status_stok === 'stok tersedia' ? 'stok tersedia' : ''); ?></span>
                                             </td>
                                             <td><?= $table->jenis_seragam; ?></td>
                                             <td><?= $table->vendor; ?></td>
@@ -138,7 +143,8 @@
             $.getJSON("<?= base_url('get_pemesanan/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=id_pemesanan]').val(d['data'].id_pemesanan);
-                    $('input[name=jumlah_diterima]').val(d['data'].jumlah_diterima);
+                    $('#jml_diterima, input[name=jumlah_diterima]').val(d['data'].jumlah_diterima);
+                    $('#stok, input[name=stok_seragam]').val(d['data'].stok_seragam);
                 }
             });
         });
@@ -177,10 +183,10 @@
     })
 
     function hitungStok() {
-        var jumlahDiterima = parseInt($('#jml_diterima').siblings('input').val());
+        var stok_seragam = parseInt($('#stok').siblings('input').val());
         var jumlahAmbilSeragam = parseInt($('#jml_diambil').siblings('input').val());
 
-        var stokSeragam = jumlahDiterima - jumlahAmbilSeragam;
+        var stokSeragam = stok_seragam - jumlahAmbilSeragam;
 
         $('#stok').siblings('input').val(stokSeragam).trigger('change');
         $('#stok').val(stokSeragam);

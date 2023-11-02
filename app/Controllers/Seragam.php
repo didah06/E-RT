@@ -123,6 +123,7 @@ class Seragam extends BaseController
                     'tgl_pemesanan'     => $tgl_pemesanan,
                     'ukuran'            => $ukuran,
                     'jumlah_pesanan'    => $jumlah_pesanan,
+                    'sisa_pesanan'      => $jumlah_pesanan,
                     'biaya'             => $biaya,
                     'status'            => 'dipesan',
                     'created_by'        => _session('nama'),
@@ -160,18 +161,33 @@ class Seragam extends BaseController
         $id_pemesanan   = _getVar($this->request->getVar('id_pemesanan'));
         $json['input'] = [
             'tgl_pengiriman' =>  $this->_validation('tgl_pengiriman', 'Tanggal Pengiriman', 'required'),
-            'jumlah_dikirim' =>  $this->_validation('jumlah_dikirim', 'Jumlah dikirim', 'required'),
+            'jumlah_dikirim' =>  $this->_validation('jumlah_dikirim', 'Jumlah dikirim', 'required|is_natural_no_zero'),
+            'sisa_pesanan'   => $this->_validation('sisa_pesanan', 'Sisa Pesanan', 'required'),
         ];
         if (_validationHasErrors($json['input'])) {
+            $pemesanan      = getData('tb_pemesanan_seragam', ['id_pemesanan' => $id_pemesanan])->get()->getRow();
             $tgl_pengiriman = _getVar($this->request->getVar('tgl_pengiriman'));
             $jumlah_dikirim = _getVar($this->request->getVar('jumlah_dikirim'));
+            $sisa_pesanan   = $pemesanan->jumlah_pesanan - ($jumlah_dikirim + $pemesanan->jumlah_dikirim);
+            $status = 'dipesan';
+
+            if ($sisa_pesanan < 0) {
+                $json['error'] = 'jumlah kirim melebihi jumlah pesanan';
+                echo json_encode($json);
+                die;
+            }
+            if ($sisa_pesanan == 0) {
+                $status = 'dikirim';
+            }
             $data = [
                 'tgl_pengiriman'        => $tgl_pengiriman,
-                'jumlah_dikirim'        => $jumlah_dikirim,
-                'status'                => 'dikirim',
+                'jumlah_dikirim'        => $jumlah_dikirim + $pemesanan->jumlah_dikirim,
+                'sisa_pesanan'          => $sisa_pesanan,
+                'status'                => $status,
                 'created_pengiriman_by' => _session('nama'),
                 'created_pengiriman_at' => time(),
             ];
+            // $json['data'] = $data;
             $update = updateData('tb_pemesanan_seragam', $data, ['id_pemesanan' => $id_pemesanan]);
             if ($update) {
                 $json['success'] = $update;
@@ -186,8 +202,8 @@ class Seragam extends BaseController
     {
         $id_pemesanan   = _getVar($this->request->getVar('id_pemesanan'));
         $json['input'] = [
-            'tgl_diterima' =>  $this->_validation('tgl_diterima', 'Tanggal Diterima', 'required'),
-            'jumlah_diterima' =>  $this->_validation('jumlah_diterima', 'Jumlah Diterima', 'required'),
+            'tgl_diterima'    => $this->_validation('tgl_diterima', 'Tanggal Diterima', 'required'),
+            'jumlah_diterima' => $this->_validation('jumlah_diterima', 'Jumlah Diterima', 'required'),
         ];
         if (_validationHasErrors($json['input'])) {
             $tgl_diterima = _getVar($this->request->getVar('tgl_diterima'));
@@ -195,6 +211,7 @@ class Seragam extends BaseController
             $data = [
                 'tgl_diterima'          => $tgl_diterima,
                 'jumlah_diterima'       => $jumlah_diterima,
+                'stok_seragam'          => $jumlah_diterima,
                 'status'                => 'diterima',
                 'created_diterima_by'   => _session('nama'),
                 'created_diterima_at'   => time(),
@@ -245,17 +262,29 @@ class Seragam extends BaseController
             'foto'                    => $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
         ];
         if (_validationHasErrors($json['input'])) {
-            $pemesanan = getData('tb_pemesanan_seragam', ['id_pemesanan' => $id_pemesanan])->get()->getRow();
+            $pemesanan       = getData('tb_pemesanan_seragam', ['id_pemesanan' => $id_pemesanan])->get()->getRow();
             $tgl_pengambilan = _getVar($this->request->getVar('tgl_pengambilan_seragam'));
             $jml_pengambilan = _getVar($this->request->getVar('jumlah_ambil_seragam'));
-            $stok            = _getVar($this->request->getVar('stok_seragam'));
+            $stok            = $pemesanan->stok_seragam - $jml_pengambilan;
             $foto            = $this->request->getFile('foto');
             if (!$pemesanan) {
                 echo 'data pemesanan tidak ditemukan';
             } else {
                 if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
-                    $photo        = $foto->getRandomName();
+                    $photo             = $foto->getRandomName();
                     ($foto->move(FCPATH . './public/assets/images/seragam/pengambilan_seragam', $photo));
+                    if ($pemesanan->stok_seragam == 0) {
+                        $data = [
+                            'status_stok'             => 'stok habis'
+                        ];
+                        updateData('tb_pemesanan_seragam', $data, ['id_pemesanan' => $id_pemesanan]);
+                    }
+                    if ($pemesanan->stok_seragam > 0) {
+                        $data = [
+                            'status_stok'             => 'stok tersedia'
+                        ];
+                        updateData('tb_pemesanan_seragam', $data, ['id_pemesanan' => $id_pemesanan]);
+                    }
                     $data = [
                         'id_seragam'              => $pemesanan->id_seragam,
                         'jenis_seragam'           => $pemesanan->jenis_seragam,

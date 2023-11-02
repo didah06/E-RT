@@ -92,6 +92,8 @@ class BaseController extends Controller
                 $errors[$key]  = $label . ' bukan file gambar';
             } else if ($key == 'decimal') {
                 $errors[$key]  = $label . 'harus berisi decimal valid';
+            } else if ($key == 'is_natural_no_zero') {
+                $errors[$key]  = $label . 'harus lebih dari 0';
             }
         }
         if (!$this->validate(
