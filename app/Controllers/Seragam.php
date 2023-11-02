@@ -267,24 +267,16 @@ class Seragam extends BaseController
             $jml_pengambilan = _getVar($this->request->getVar('jumlah_ambil_seragam'));
             $stok            = $pemesanan->stok_seragam - $jml_pengambilan;
             $foto            = $this->request->getFile('foto');
+            $status          = 'stok tersedia';
+            if ($stok == 0) {
+                $status = 'stok habis';
+            }
             if (!$pemesanan) {
                 echo 'data pemesanan tidak ditemukan';
             } else {
                 if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
                     $photo             = $foto->getRandomName();
                     ($foto->move(FCPATH . './public/assets/images/seragam/pengambilan_seragam', $photo));
-                    if ($pemesanan->stok_seragam == 0) {
-                        $data = [
-                            'status_stok'             => 'stok habis'
-                        ];
-                        updateData('tb_pemesanan_seragam', $data, ['id_pemesanan' => $id_pemesanan]);
-                    }
-                    if ($pemesanan->stok_seragam > 0) {
-                        $data = [
-                            'status_stok'             => 'stok tersedia'
-                        ];
-                        updateData('tb_pemesanan_seragam', $data, ['id_pemesanan' => $id_pemesanan]);
-                    }
                     $data = [
                         'id_seragam'              => $pemesanan->id_seragam,
                         'jenis_seragam'           => $pemesanan->jenis_seragam,
@@ -301,6 +293,7 @@ class Seragam extends BaseController
                         $data = [
                             'jumlah_diambil' => $jml_pengambilan,
                             'stok_seragam'   => $stok,
+                            'status_stok'    => $status,
                         ];
                         updateData('tb_pemesanan_seragam', $data, ['id_pemesanan' => $pemesanan->id_pemesanan]);
                         $json['success'] = $add;
@@ -315,4 +308,5 @@ class Seragam extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
+    // pengaduan
 }

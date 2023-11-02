@@ -109,9 +109,13 @@
                                     <?php foreach ($persediaan as $table) : ?>
                                         <tr>
                                             <td class="text-center">
-                                                <span class="badge badge-info btn-ambil" style="align-items: center; justify-content: center; width: 95px; height: 35px" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalAmbilSeragam" type="button">
-                                                    Ambil Seragam
-                                                </span>
+                                                <?php if ($table->status_stok == 'stok tersedia') : ?>
+                                                    <span class="badge badge-info btn-ambil" style="align-items: center; justify-content: center; width: 95px; height: 35px" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalAmbilSeragam" type="button">
+                                                        Ambil Seragam
+                                                    </span>
+                                                <?php else : ?>
+                                                    <span class="disable"></span>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
                                                 <span class="<?= $table->status_stok === 'stok habis' ? 'badge badge-danger' : ($table->status_stok === 'stok tersedia' ? 'badge badge-success' : ''); ?>">
