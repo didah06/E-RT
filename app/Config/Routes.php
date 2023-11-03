@@ -188,6 +188,10 @@ $routes->get('persediaan', 'Seragam::persediaan');
 $routes->get('get_pemesanan/(:num)', 'Seragam::get_pemesanan/$1');
 $routes->get('pengeluaran', 'Seragam::pengeluaran');
 $routes->post('pengeluaran_save', 'Seragam::pengeluaran_save');
+$routes->get('pengaduan', 'Seragam::pengaduan');
+$routes->get('get_seragam/(:num)', 'Seragam::get_seragam/$1');
+$routes->post('pengaduan', 'Seragam::pengaduan_save');
+$routes->get('data_pengaduan/(:num)', 'Seragam::data_pengaduan/$1');
 // Fotokopi
 
 

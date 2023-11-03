@@ -36,6 +36,8 @@ class Seragam extends BaseController
                         'departemen'    => $departemen->departemen,
                         'jenis_seragam' => $jenis_seragam,
                         'gambar'        => $design,
+                        'created_by'    => _session('nama'),
+                        'created_at'    => time(),
                     ];
                     $add = addData('tb_seragam', $data);
                     if ($add) {
@@ -309,4 +311,76 @@ class Seragam extends BaseController
         echo json_encode($json);
     }
     // pengaduan
+    public function pengaduan()
+    {
+        $data['pengaduan'] = getData('tb_seragam')->get()->getResult();
+        return _tempHTML('seragam/pengaduan_saran', $data);
+    }
+    public function get_seragam($id_seragam)
+    {
+        $seragam = getData('tb_seragam', ['id_seragam' => $id_seragam])->get()->getRow();
+        if ($seragam) {
+            $data = [
+                'status'    => true,
+                'data'      => $seragam
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function pengaduan_save()
+    {
+        $id_seragam = _getVar($this->request->getVar('id_seragam'));
+        $json['input'] = [
+            'tgl_pengaduan' => $this->_validation('tgl_pengaduan', 'Tanggal Pengaduan', 'required|valid_date'),
+            'pengaduan'     => $this->_validation('pengaduan', 'Pengaduan', 'required'),
+            'saran'         => $this->_validation('saran', 'Saran', 'required'),
+            'foto'          =>  $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
+        ];
+        if (_validationHasErrors($json['input'])) {
+            $seragam           = getData('tb_seragam', ['id_seragam' => $id_seragam])->get()->getRow();
+            $tgl_pengaduan     = _getVar($this->request->getVar('tgl_pengaduan'));
+            $pengaduan         = _getVar($this->request->getVar('pengaduan'));
+            $saran             = _getVar($this->request->getVar('saran'));
+            $foto              = $this->request->getFile('foto');
+            if (!$seragam) {
+                echo 'data pengaduan tidak ditemukan';
+            } else {
+                if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
+                    $photo             = $foto->getRandomName();
+                    ($foto->move(FCPATH . './public/assets/images/seragam/pengaduan_seragam', $photo));
+                    $data = [
+                        'id_seragam'    => $seragam->id_seragam,
+                        'departemen'    => $seragam->departemen,
+                        'tgl_pengaduan' => $tgl_pengaduan,
+                        'pengaduan'     => $pengaduan,
+                        'saran'         => $saran,
+                        'foto'          => $photo,
+                        'created_by'    => _session('nama'),
+                        'created_at'    => time(),
+                    ];
+                    $add = addData('tb_pengaduan', $data);
+                    if ($add) {
+                        $json['success'] = $add;
+                    } else {
+                        $json['error'] = 'data pengaduan gagal ditambahkan';
+                    }
+                } else {
+                    $json['input']['foto'] = 'upload foto gagal';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function data_pengaduan($id_seragam)
+    {
+        $data['pengaduan'] = getData('tb_pengaduan', ['id_seragam' => $id_seragam])->get()->getResult();
+        $data['seragam'] = getData('tb_seragam', ['id_seragam' => $id_seragam])->get()->getRow();
+        return _tempHTML('seragam/data_pengaduan', $data);
+    }
 }
