@@ -493,3 +493,13 @@ function selectVendor()
     $db->select("id_vendor AS id, CONCAT(vendor) AS text");
     return $db->get()->getResult();
 }
+function getSeragam($where = [], $order = '')
+{
+    $db = connectdb('tb_seragam');
+    $db->where($where);
+    $db->orderBy($order);
+    $db->select('tb_seragam.*, tb_pemesanan_seragam.*, tb_pengambilan_seragam.*');
+    $db->join('tb_pemesanan_seragam', 'tb_pemesanan_seragam.id_seragam = tb_seragam.id_seragam', 'LEFT');
+    $db->join('tb_pengambilan_seragam', 'tb_pengambilan_seragam.id_seragam = tb_seragam.id_seragam', 'LEFT');
+    return $db->get();
+}

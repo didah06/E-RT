@@ -78,10 +78,6 @@
                     </div>
                     <!-- end modal -->
                     <div class="body">
-                        <div class="row mb-5">
-                            <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Seragam
-                                </i></button>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->

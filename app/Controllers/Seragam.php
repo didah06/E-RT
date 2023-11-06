@@ -20,7 +20,6 @@ class Seragam extends BaseController
         ];
         $json['select'] = [
             'id_dept'         => $this->_validation('id_dept', 'Departemen', 'required'),
-            'ukuran'          => $this->_validation('ukuran', 'Ukuran', 'required'),
         ];
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             $departemen = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('id_dept'))])->get()->getRow();
@@ -33,6 +32,7 @@ class Seragam extends BaseController
                     $design        = $gambar->getRandomName();
                     $gambar->move(FCPATH . './public/assets/images/seragam/gambar', $design);
                     $data = [
+                        'id_dept'       => $departemen->id_dept,
                         'departemen'    => $departemen->departemen,
                         'jenis_seragam' => $jenis_seragam,
                         'gambar'        => $design,
@@ -52,6 +52,88 @@ class Seragam extends BaseController
         }
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
+    }
+    public function seragam_edit($id_seragam)
+    {
+        $seragam = getData('tb_seragam', ['id_seragam' => $id_seragam])->get()->getRow();
+        if ($seragam) {
+            $data = [
+                'status'    => true,
+                'data'      => $seragam
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function seragam_update()
+    {
+        $id_seragam = _getVar($this->request->getVar('e_id_seragam'));
+        $json['input'] = [
+            'e_jenis_seragam'   => $this->_validation('e_jenis_seragam', 'Jenis Seragam', 'required'),
+            'e_gambar'          => $this->_validation('e_gambar', 'Gambar', 'uploaded[e_gambar]|max_size[e_gambar, 1024]|mime_in[e_gambar,image/jpeg,image/png,image/jpg]'),
+        ];
+        $json['select'] = [
+            'e_id_dept'         => $this->_validation('e_id_dept', 'Departemen', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $seragam        = getData('tb_seragam', ['id_seragam' => $id_seragam])->get()->getRow();
+            $departemen     = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('e_id_dept'))])->get()->getRow();
+            $jenis_seragam  = _getVar($this->request->getVar('e_jenis_seragam'));
+            $gambar = $this->request->getFile('e_gambar');
+            if (!$departemen) {
+                $json['select']['e_id_dept'] = 'departemen tidak ditemukan';
+            } else if (!$seragam) {
+                echo 'data seragam tidak ditemukan';
+            } else {
+                if ($gambar->getError() == 0 && $gambar->isValid() && !$gambar->hasMoved()) {
+                    $design        = $gambar->getRandomName();
+                    $gambar->move(FCPATH . './public/assets/images/seragam/gambar', $design);
+                    $data = [
+                        'id_dept'       => $departemen->id_dept,
+                        'departemen'    => $departemen->departemen,
+                        'jenis_seragam' => $jenis_seragam,
+                        'gambar'        => $design,
+                        'created_by'    => _session('nama'),
+                        'created_at'    => time(),
+                    ];
+                    $update = updateData('tb_seragam', $data, ['id_seragam' => $seragam->id_seragam]);
+                    if ($update) {
+                        $json['success'] = $update;
+                    } else {
+                        $json['error'] = 'data seragam gagal diupdate';
+                    }
+                } else {
+                    $json['input']['gambar'] = 'gambar gagal upload';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function seragam_delete()
+    {
+        $id_seragam = $this->request->getPost('id_seragam');
+        $json = [];
+
+        if ($id_seragam) {
+            foreach ($id_seragam as $seragam_id) {
+                // Assuming 'deleteData' is a method in your model
+                $delete = deleteData('tb_seragam', ['id_seragam' => $seragam_id]);
+            }
+            if ($delete) {
+                $json['success'] = true;
+                $json['msg'] = 'Data berhasil dihapus';
+            } else {
+                $json['success'] = false;
+                $json['msg'] = 'Tidak ada data yang dipilih untuk dihapus';
+            }
+        }
+        $json['rscript'] = csrf_hash();
+        return $this->response->setJSON($json);
     }
     public function data_vendor()
     {
@@ -84,11 +166,76 @@ class Seragam extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
+    public function vendor_edit($id_vendor)
+    {
+        $vendor = getData('tb_vendor', ['id_vendor' => $id_vendor])->get()->getRow();
+        if ($vendor) {
+            $data = [
+                'status'    => true,
+                'data'      => $vendor
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function vendor_update()
+    {
+        $id_vendor = _getVar($this->request->getVar('e_id_vendor'));
+        $json['input'] = [
+            'e_vendor'    => $this->_validation('e_vendor', 'Vendor', 'required'),
+            'e_alamat'    => $this->_validation('e_alamat', 'Alamat', 'required'),
+            'e_telp'      => $this->_validation('e_telp', 'Telepon', 'required|decimal|min_length[12]')
+        ];
+        if (_validationHasErrors($json['input'])) {
+            $data_vendor = getData('tb_vendor', ['id_vendor' => $id_vendor])->get()->getRow();
+            $vendor = _getVar($this->request->getVar('e_vendor'));
+            $alamat = _getVar($this->request->getVar('e_alamat'));
+            $telp   = _getVar($this->request->getVar('e_telp'));
+            $data = [
+                'vendor' => $vendor,
+                'alamat' => $alamat,
+                'telp'   => $telp,
+            ];
+            $update = updateData('tb_vendor', $data, ['id_vendor' => $data_vendor->id_vendor]);
+            if ($update) {
+                $json['success'] = $update;
+            } else {
+                $json['error'] = 'Data Vendor gagal diubah';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function vendor_delete()
+    {
+        $id_vendor = $this->request->getPost('id_vendor');
+        $json = [];
+
+        if ($id_vendor) {
+            foreach ($id_vendor as $vendor_id) {
+                // Assuming 'deleteData' is a method in your model
+                $delete = deleteData('tb_vendor', ['id_vendor' => $vendor_id]);
+            }
+            if ($delete) {
+                $json['success'] = true;
+                $json['msg'] = 'Data berhasil dihapus';
+            } else {
+                $json['success'] = false;
+                $json['msg'] = 'Tidak ada data yang dipilih untuk dihapus';
+            }
+        }
+        $json['rscript'] = csrf_hash();
+        return $this->response->setJSON($json);
+    }
     public function pemesanan_seragam()
     {
-        $data['seragam']   = selectSeragam();
-        $data['vendor']    = selectVendor();
-        $data['pemesanan'] = getData('tb_pemesanan_seragam')->get()->getResult();
+        $data['seragam']    = selectSeragam();
+        $data['vendor']     = selectVendor();
+        $data['pemesanan']  = getData('tb_pemesanan_seragam')->get()->getResult();
         $data['pengiriman'] = getData('tb_pemesanan_seragam')->get()->getRow();
         return _tempHTML('seragam/pemesanan', $data);
     }
@@ -137,6 +284,89 @@ class Seragam extends BaseController
                 } else {
                     $json['error'] = 'data seragam gagal dipesan';
                 }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function pemesanan_edit($id_pemesanan)
+    {
+        $pemesanan = getData('tb_pemesanan_seragam', ['id_pemesanan' => $id_pemesanan])->get()->getRow();
+        if ($pemesanan) {
+            $data = [
+                'status'    => true,
+                'data'      => $pemesanan
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function pemesanan_update()
+    {
+        $id_pemesanan = _getVar($this->request->getVar('e_id_pemesanan'));
+        $json['input'] = [
+            'e_tgl_pemesanan'  => $this->_validation('e_tgl_pemesanan', 'Tanggal Pemesanan', 'required|valid_date'),
+            'e_jumlah_pesanan' => $this->_validation('e_jumlah_pesanan', 'Jumlah Pesanan', 'required|decimal'),
+            'e_biaya'          => $this->_validation('e_biaya', 'Biaya', 'required|decimal'),
+        ];
+        $json['select'] = [
+            'e_id_seragam'    => $this->_validation('e_id_seragam', 'Seragam', 'required'),
+            'e_id_vendor'     => $this->_validation('e_id_vendor', 'Vendor', 'required'),
+            'e_ukuran'        => $this->_validation('e_ukuran', 'Ukuran', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $seragam        = getData('tb_seragam', ['id_seragam' => _getVar($this->request->getVar('e_id_seragam'))])->get()->getRow();
+            $vendor         = getData('tb_vendor', ['id_vendor' => _getVar($this->request->getVar('e_id_vendor'))])->get()->getRow();
+            $tgl_pemesanan  = _getVar($this->request->getVar('e_tgl_pemesanan'));
+            $jumlah_pesanan = _getVar($this->request->getVar('e_jumlah_pesanan'));
+            $biaya          = _getVar($this->request->getVar('e_biaya'));
+            $ukuran         = _getVar($this->request->getVar('e_ukuran'));
+            if (!$seragam) {
+                $json['select']['seragam'] = 'data seragam tidak ditemukan';
+            } else if (!$vendor) {
+                $json['select']['vendor'] = 'data vendor tidak ditemukan';
+            } else {
+                $data = [
+                    'id_seragam'        => $seragam->id_seragam,
+                    'jenis_seragam'     => $seragam->jenis_seragam,
+                    'departemen'        => $seragam->departemen,
+                    'id_vendor'         => $vendor->id_vendor,
+                    'vendor'            => $vendor->vendor,
+                    'tgl_pemesanan'     => $tgl_pemesanan,
+                    'ukuran'            => $ukuran,
+                    'jumlah_pesanan'    => $jumlah_pesanan,
+                    'sisa_pesanan'      => $jumlah_pesanan,
+                    'biaya'             => $biaya,
+                    'status'            => 'dipesan',
+                    'created_by'        => _session('nama'),
+                    'created_at'        => time(),
+                ];
+                $update = updateData('tb_pemesanan_seragam', $data, ['id_pemesanan' => $id_pemesanan]);
+                if ($update) {
+                    $json['success'] = $update;
+                } else {
+                    $json['error'] = 'data seragam gagal diubah';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function delete($id_pemesanan)
+    {
+        $pemesanan = getData('tb_pemesanan_seragam', ['id_pemesanan' => $id_pemesanan])->get()->getRow();
+        if (!$pemesanan) {
+            $json['msg'] = 'data Pemesanan tidak ditemukan';
+        } else {
+            $delete = deleteData('tb_pemesanan_seragam', ['id_pemesanan' => $id_pemesanan]);
+            if ($delete) {
+                $json['success']    = 1;
+            } else {
+                $json['msg']        = $delete;
             }
         }
         $json['rscript']    = csrf_hash();
@@ -382,5 +612,10 @@ class Seragam extends BaseController
         $data['pengaduan'] = getData('tb_pengaduan', ['id_seragam' => $id_seragam])->get()->getResult();
         $data['seragam'] = getData('tb_seragam', ['id_seragam' => $id_seragam])->get()->getRow();
         return _tempHTML('seragam/data_pengaduan', $data);
+    }
+    public function laporan()
+    {
+        $data['laporan'] = getSeragam()->getResult();
+        return _tempHTML('seragam/laporan', $data);
     }
 }

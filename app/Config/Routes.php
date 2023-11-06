@@ -177,13 +177,22 @@ $routes->put('penilaian_update', 'Dapur::penilaian_update');
 // Seragam
 $routes->get('seragam', 'Seragam::index');
 $routes->post('seragam', 'Seragam::seragam_save');
+$routes->get('seragam_edit/(:num)', 'Seragam::seragam_edit/$1');
+$routes->post('seragam_update', 'Seragam::seragam_update');
+$routes->post('seragam_delete', 'Seragam::seragam_delete');
 $routes->get('data_vendor', 'Seragam::data_vendor');
 $routes->post('data_vendor', 'Seragam::data_vendor_save');
+$routes->get('data_vendor_edit/(:num)', 'Seragam::vendor_edit/$1');
+$routes->post('vendor_update', 'Seragam::vendor_update');
+$routes->post('vendor_delete', 'Seragam::vendor_delete');
 $routes->get('pemesanan', 'Seragam::pemesanan_seragam');
 $routes->post('pemesanan', 'Seragam::pemesanan_save');
 $routes->get('update_status/(:num)', 'Seragam::update_status/$1');
 $routes->post('update_status', 'Seragam::update_dikirim');
 $routes->post('update_diterima', 'Seragam::update_diterima');
+$routes->get('pemesanan_edit/(:num)', 'Seragam::pemesanan_edit/$1');
+$routes->post('pemesanan_update', 'Seragam::pemesanan_update');
+$routes->post('pemesanan_delete/(:num)', 'Seragam::delete/$1');
 $routes->get('persediaan', 'Seragam::persediaan');
 $routes->get('get_pemesanan/(:num)', 'Seragam::get_pemesanan/$1');
 $routes->get('pengeluaran', 'Seragam::pengeluaran');
@@ -192,6 +201,7 @@ $routes->get('pengaduan', 'Seragam::pengaduan');
 $routes->get('get_seragam/(:num)', 'Seragam::get_seragam/$1');
 $routes->post('pengaduan', 'Seragam::pengaduan_save');
 $routes->get('data_pengaduan/(:num)', 'Seragam::data_pengaduan/$1');
+$routes->get('laporan_seragam', 'Seragam::laporan');
 // Fotokopi
 
 

@@ -23,7 +23,7 @@
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-md-12">
-                <div class="card patients-list pt-5" style="padding-bottom: 100%;">
+                <div class="card patients-list" style="padding-bottom: 100%;">
                     <div class="body">
                         <h5><?= $seragam->departemen; ?> <?php echo ' - '; ?> <?= $seragam->jenis_seragam; ?></h5>
                         <?php foreach ($pengaduan as $table) : ?>

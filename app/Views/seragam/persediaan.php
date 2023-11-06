@@ -2,7 +2,7 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Daftar Menu
+                <h2>Persediaan Seragam
                     <small class="text-muted"><?= appName(); ?></small>
                 </h2>
             </div>
@@ -12,11 +12,11 @@
                 </button>
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i><?= appName(); ?></a></li>
-                    <li class="breadcrumb-item active">Daftar Menu</li>
+                    <li class="breadcrumb-item active">Persediaan Seragam</li>
                 </ul>
             </div>
             <div class=" pt-3 pl-3">
-                <h2>Daftar Menu</h2>
+                <h2>Persediaan Seragam</h2>
             </div>
         </div>
     </div>

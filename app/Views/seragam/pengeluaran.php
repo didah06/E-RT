@@ -2,8 +2,8 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Daftar Menu
-                    <small class="text-muted"><?= appName(); ?></small>
+                <h2>Pengambilan Seragam</h2>
+                <small class="text-muted"><?= appName(); ?></small>
                 </h2>
             </div>
             <div class="col-lg-5 col-md-6 col-sm-12">
@@ -12,11 +12,11 @@
                 </button>
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i><?= appName(); ?></a></li>
-                    <li class="breadcrumb-item active">Daftar Menu</li>
+                    <li class="breadcrumb-item active">Pengambilan Seragam</li>
                 </ul>
             </div>
             <div class=" pt-3 pl-3">
-                <h2>Daftar Menu</h2>
+                <h2>Pengambilan Seragam</h2>
             </div>
         </div>
     </div>
@@ -25,10 +25,6 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <div class="body">
-                        <div class="row mb-5">
-                            <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Seragam
-                                </i></button>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
@@ -37,7 +33,6 @@
                                 <thead>
                                     <tr>
                                         <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
-                                        <th class="text-center">#</th>
                                         <th>Jenis Seragam</th>
                                         <th>Departemen</th>
                                         <th>Tanggal Pengambilan Seragam</th>
@@ -50,14 +45,6 @@
                                 <tbody>
                                     <?php foreach ($pengeluran as $table) : ?>
                                         <tr>
-                                            <td class="text-center">
-                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pengambilan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                    <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
-                                                </span>
-                                                <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pengambilan; ?>" type="button">
-                                                    <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
-                                                </span>
-                                            </td>
                                             <td><?= $table->jenis_seragam; ?></td>
                                             <td><?= $table->departemen; ?></td>
                                             <td><?= $table->tgl_pengambilan_seragam; ?></td>

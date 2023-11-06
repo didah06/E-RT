@@ -2,7 +2,7 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Daftar Menu
+                <h2>Pemesanan Seragam
                     <small class="text-muted"><?= appName(); ?></small>
                 </h2>
             </div>
@@ -12,11 +12,11 @@
                 </button>
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i><?= appName(); ?></a></li>
-                    <li class="breadcrumb-item active">Daftar Menu</li>
+                    <li class="breadcrumb-item active">Pemesanan Seragam</li>
                 </ul>
             </div>
             <div class=" pt-3 pl-3">
-                <h2>Daftar Menu</h2>
+                <h2>Pemesanan Seragam</h2>
             </div>
         </div>
     </div>
@@ -152,12 +152,15 @@
                                                         <span class="zmdi zmdi-check" style="font-size: 18px;"></span>
                                                     </span>
                                                 <?php endif; ?>
-                                                <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                    <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
-                                                </span>
-                                                <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pemesanan; ?>" type="button">
-                                                    <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
-                                                </span>
+                                                <?php if ($table->status === 'dipesan') : ?>
+                                                    <span class="badge badge-warning btn-edit-pemesanan" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pemesanan; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                        <span class="zmdi zmdi-edit" style="font-size: 18px;"></span>
+                                                    </span>
+                                                    <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pemesanan; ?>" type="button">
+                                                        <span class="zmdi zmdi-delete" style="font-size: 18px;"></span>
+                                                    </span>
+                                                <?php endif; ?>
+
                                             </td>
                                             <td>
                                                 <span class="<?= $table->status === 'dipesan' ? 'badge badge-info' : ($table->status === 'dikirim' ? 'badge badge-warning' : 'badge badge-success'); ?>">
@@ -285,6 +288,89 @@
                         </div>
                     </div>
                     <!-- end modal -->
+                    <!-- modal -->
+                    <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Pemesanan Seragam</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="error-area"></div>
+                                    <?= form_open(base_url('pemesanan_update'), ['class' => 'update-form']); ?>
+                                    <input type="hidden" name="e_id_pemesanan">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Seragam</label>
+                                                <select class="form-control select-only" name="e_id_seragam">
+                                                    <option value="" selected disabled>- Pilih Seragam -</option>
+                                                    <?php foreach ($seragam as $item) : ?>
+                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Vendor</label>
+                                                <select class="form-control select-only" name="e_id_vendor">
+                                                    <option value="" selected disabled>- Pilih Vendor -</option>
+                                                    <?php foreach ($vendor as $item) : ?>
+                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Tanggal Pemesanan</label>
+                                                <input type="date" class="form-control" name="e_tgl_pemesanan">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Ukuran</label>
+                                                <select class="form-control select-only" name="e_ukuran">
+                                                    <option value="" selected disabled>- Pilih Ukuran -</option>
+                                                    <option value="S">S</option>
+                                                    <option value="M">M</option>
+                                                    <option value="L">L</option>
+                                                    <option value="XL">XL</option>
+                                                </select>
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Jumlah Pesanan</label>
+                                                <input type="text" class="form-control" name="e_jumlah_pesanan">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Biaya</label>
+                                                <input type="text" class="form-control" name="e_biaya">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center pt-3 pb-3">
+                                    <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end modal -->
                 </div>
             </div>
         </div>
@@ -327,6 +413,19 @@
                     $('#sisa_pesan, input[name=sisa_pesanan').val(d['data'].sisa_pesanan);
                     $('#jml_kirim, input[name=jumlah_dikirim').val(0);
                     sisaAwal = d['data'].sisa_pesanan;
+                }
+            });
+        });
+        $('.btn-edit-pemesanan').on('click', function() {
+            $.getJSON("<?= base_url('pemesanan_edit/'); ?>/" + $(this).data('id'), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=e_id_pemesanan]').val(d['data'].id_pemesanan);
+                    $('select[name=e_id_seragam').val(d['data'].id_seragam).trigger('change');
+                    $('select[name=e_id_vendor').val(d['data'].id_vendor).trigger('change');
+                    $('input[name=e_tgl_pemesanan]').val(d['data'].tgl_pemesanan);
+                    $('select[name=e_ukuran').val(d['data'].ukuran).trigger('change');
+                    $('input[name=e_jumlah_pesanan]').val(d['data'].jumlah_pesanan);
+                    $('input[name=e_biaya]').val(d['data'].biaya);
                 }
             });
         });
@@ -380,6 +479,64 @@
                     }
                 }
             })
+        });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
+        $('.btn-delete').on('click', function() {
+            var pemesananId = $(this).data('id');
+            Swal.fire({
+                title: 'Apa anda yakin?',
+                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus',
+                confirmButtonColor: '#fd625e',
+                cancelButtonText: 'Batal',
+            }).then(function(result) {
+                if (result.value) {
+                    processStart();
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url('pemesanan_delete'); ?>/" + pemesananId,
+                        error: function(xhr) {
+                            processDone();
+                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+                        },
+                        success: function(d) {
+                            if (d['success'] > 0) {
+                                location.reload();
+                            } else {
+                                processDone();
+                                invalidError(d);
+                                Swal.fire('Hapus gagal', d['msg'], 'error');
+                            }
+                        }
+                    })
+                }
+            });
         });
     });
 
