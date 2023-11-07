@@ -202,7 +202,21 @@ $routes->get('get_seragam/(:num)', 'Seragam::get_seragam/$1');
 $routes->post('pengaduan', 'Seragam::pengaduan_save');
 $routes->get('data_pengaduan/(:num)', 'Seragam::data_pengaduan/$1');
 $routes->get('laporan_seragam', 'Seragam::laporan');
+
 // Fotokopi
+$routes->get('inventaris_fotokopi', 'Fotocopy::index');
+$routes->post('inventaris_fotokopi', 'Fotocopy::inventaris_save');
+$routes->get('get_inventaris/(:num)', 'Fotocopy::get_inventaris/$1');
+$routes->post('pengajuan', 'Fotocopy::pengajuan_save');
+$routes->get('transaksi', 'Fotocopy::transaksi_fotokopi');
+$routes->post('transaksi', 'Fotocopy::transaksi_fotokopi_save');
+$routes->get('pembelian_perawatan', 'Fotocopy::pembelian_perawatan');
+$routes->post('approve', 'Fotocopy::approve');
+$routes->post('tolak', 'Fotocopy::tolak');
+$routes->post('proses_pembelian', 'Fotocopy::proses');
+$routes->post('selesai_pembelian', 'Fotocopy::selesai');
+
+
 
 
 /*

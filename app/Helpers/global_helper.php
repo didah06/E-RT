@@ -503,3 +503,18 @@ function getSeragam($where = [], $order = '')
     $db->join('tb_pengambilan_seragam', 'tb_pengambilan_seragam.id_seragam = tb_seragam.id_seragam', 'LEFT');
     return $db->get();
 }
+function generate_kode_barang()
+{
+    $prefix = 'INV-FTK'; // Prefix for the booking code
+    $length = 8; // Length of the random part
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Characters to use
+
+    $randomPart = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomPart .= $characters[rand(0, strlen($characters) - 1)];
+    }
+
+    $kode_barang = $prefix . '-' . $randomPart;
+
+    return $kode_barang;
+}
