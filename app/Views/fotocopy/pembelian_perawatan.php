@@ -40,10 +40,10 @@
                                         <th class="text-center">#</th>
                                         <th>Status</th>
                                         <th>Kode Barang</th>
+                                        <th>Jenis Pengajuan</th>
                                         <th>Nama Barang</th>
                                         <th>Merk</th>
                                         <th>No Serial</th>
-                                        <th>Jenis Pengajuan</th>
                                         <th>Tanggal</th>
                                         <th>Jumlah Barang</th>
                                         <th>Harga</th>
@@ -57,7 +57,7 @@
                                             <td class="text-center">
                                                 <!-- if role RT and Developer -->
                                                 <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
-                                                    <?php if ($table->status === 'pengajuan' || $table->status === 'pengajuan perawatan') : ?>
+                                                    <?php if ($table->status === 'pengajuan') : ?>
                                                         <button class="btn btn-success btn-approve" style="align-items: center; justify-content: center; width: 120px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">Approve</button>
                                                         <button class="btn btn-danger btn-tolak" style="align-items: center; justify-content: center; width: 120px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">Tolak</button>
                                                     <?php endif; ?>
@@ -66,7 +66,7 @@
                                                             <i class="zmdi zmdi-shopping-cart" style="font-size: 20px;"></i>
                                                         </span>
                                                     <?php endif; ?>
-                                                    <?php if ($table->status === 'pembelian') : ?>
+                                                    <?php if ($table->status === 'pembelian' || $table->status === 'perawatan') : ?>
                                                         <span class="badge badge-danger btn-selesai" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">
                                                             <i class="zmdi zmdi-check" style="font-size: 20px;"></i>
                                                         </span>
@@ -79,10 +79,14 @@
                                                 </span>
                                             </td>
                                             <td><?= $table->kode_barang; ?></td>
+                                            <td>
+                                                <span class="<?= $table->jenis_pengajuan === 'pembelian' ? 'badge badge-info' : 'badge badge-warning'; ?>">
+                                                    <?= $table->jenis_pengajuan === 'pembelian' ? 'pembelian' : 'perawatan'; ?>
+                                                </span>
+                                            </td>
                                             <td><?= $table->nama_barang; ?></td>
                                             <td><?= $table->merk; ?></td>
                                             <td><?= $table->no_serial; ?></td>
-                                            <td><?= $table->jenis_pengajuan; ?></td>
                                             <td><?= $table->tanggal != null ? $table->tanggal : '-'; ?></td>
                                             <td><?= $table->jml_barang != null ? $table->jml_barang : '-'; ?></td>
                                             <td>

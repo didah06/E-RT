@@ -71,9 +71,10 @@
                                                 <label class="form-label">kondisi</label>
                                                 <select class="form-control select-only" name="kondisi">
                                                     <option value="baru">Baru</option>
-                                                    <option value="normal">Normal</option>
                                                     <option value="perbaikan">Perbaikan</option>
                                                     <option value="rusak">Rusak</option>
+                                                    <option value="habis">Habis</option>
+
                                                 </select>
                                                 <div class="invalid-feedback"></div>
                                             </div>
@@ -131,13 +132,13 @@
                                     <?php foreach ($inventaris as $table) : ?>
                                         <tr>
                                             <td class="text-center">
-                                                <?php if (($table->kondisi === 'rusak' || $table->kondisi === 'perbaikan') && $table->status === 'inventaris') : ?>
+                                                <?php if (($table->kondisi === 'rusak' || $table->kondisi === 'perbaikan' || $table->kondisi === 'habis') && $table->status === 'inventaris') : ?>
                                                     <span class="badge badge-danger btn-edit-pembelian" style="align-items: center; justify-content: center; width: 120px; height: 35px;" data-id="<?= $table->id_inventaris_fotokopi; ?>" data-toggle="modal" data-target="#ModalPembelian" type="button">pengajuan</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td>
                                                 <span class="<?= $table->status === 'inventaris' ? 'badge badge-info' : 'badge badge-warning'; ?>">
-                                                    <?= $table->status === 'inventaris' ? 'inventaris' : ($table->status === 'pembelian' ? 'pembelian' : 'perawatan'); ?>
+                                                    <?= $table->status === 'inventaris' ? 'inventaris' : 'pengajuan'; ?>
                                                 </span>
                                             </td>
                                             <td><?= $table->kode_barang; ?></td>

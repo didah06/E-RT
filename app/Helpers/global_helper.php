@@ -505,16 +505,28 @@ function getSeragam($where = [], $order = '')
 }
 function generate_kode_barang()
 {
-    $prefix = 'INV-FTK'; // Prefix for the booking code
+    $prefix = 'INFC'; // Prefix for the barcode
     $length = 8; // Length of the random part
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Characters to use
+    $charactersLength = strlen($characters);
 
     $randomPart = '';
     for ($i = 0; $i < $length; $i++) {
-        $randomPart .= $characters[rand(0, strlen($characters) - 1)];
+        $randomPart .= $characters[rand(0, $charactersLength - 1)];
     }
 
     $kode_barang = $prefix . '-' . $randomPart;
 
     return $kode_barang;
 }
+// function generate_no_serial()
+// {
+//     $prefix = 'inftcpy';
+//     $length = 9;
+
+//     for ($i = 0; $i < $length; $i++) {
+//         $countFormatted = str_pad($i, 2, '0', STR_PAD_LEFT);
+//     }
+//     $no_serial = $prefix . '-' . $countFormatted;
+//     return $no_serial;
+// }
