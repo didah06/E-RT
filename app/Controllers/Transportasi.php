@@ -577,6 +577,7 @@ class Transportasi extends BaseController
         }
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             $status  = getData('ms_status', ['id_status' => 6])->get()->getRow();
+            $booking = getData('tb_booking_transport', ['id_booking' => _getVar($this->request->getVar('id_booking'))])->get()->getRow();
             $jam_berangkat      = _getVar($this->request->getVar('jam_berangkat'));
             $jam_pulang         = _getVar($this->request->getVar('jam_pulang'));
             $km_berangkat       = _getVar($this->request->getVar('km_berangkat'));
@@ -584,9 +585,9 @@ class Transportasi extends BaseController
             $tgl_berangkat      = _getVar($this->request->getVar('tgl_berangkat'));
             $biaya_etol         = _getVar($this->request->getVar('biaya_etol'));
             $top_up             = _getVar($this->request->getVar('top_up'));
-            $saldo_akhir_etol   = _getVar($this->request->getVar('saldo_akhir_etol'));
+            $saldo_akhir_etol   = $booking->saldo_awal_etol - $biaya_etol + $top_up;
             $bensin             = _getVar($this->request->getVar('bensin'));
-            $total_pengeluaran  = _getVar($this->request->getVar('total_pengeluaran'));
+            $total_pengeluaran  = $biaya_etol + $bensin;
             $old_check  = _getVar($this->request->getVar('old_check'));
             if ($old_check == 1) {
                 $ttd    = $user->ttd;

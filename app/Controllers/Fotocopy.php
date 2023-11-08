@@ -63,11 +63,6 @@ class Fotocopy extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
-    public function transaksi_fotokopi()
-    {
-        $data['transaksi'] = getData('tb_transaksi_fotokopi')->get()->getResult();
-        return _tempHTML('fotocopy/transaksi', $data);
-    }
     public function get_inventaris($id_inventaris_fotokopi)
     {
         $inventaris = getData('tb_inventaris_fotokopi', ['id_inventaris_fotokopi' => $id_inventaris_fotokopi])->get()->getRow();
@@ -108,35 +103,39 @@ class Fotocopy extends BaseController
                 if ($struk->getError() == 0 && $struk->isValid() && !$struk->hasMoved()) {
                     $nota = $struk->getRandomName();
                     $struk->move(FCPATH . './public/assets/images/fotocopy/struk', $nota);
-                }
-                if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
-                    $photo             = $foto->getRandomName();
-                    ($foto->move(FCPATH . './public/assets/images/fotocopy/foto', $photo));
-                }
-                $data = [
-                    'kode_barang'           => $inventaris_fotokopi->kode_barang,
-                    'nama_barang'           => $inventaris_fotokopi->nama_barang,
-                    'merk'                  => $inventaris_fotokopi->merk,
-                    'no_serial'             => $inventaris_fotokopi->no_serial,
-                    'jenis_pengajuan'       => $jenis_pengajuan,
-                    'tanggal'               => $tgl,
-                    'jml_barang'            => $jml_barang,
-                    'harga'                 => $harga,
-                    'struk'                 => $nota,
-                    'foto'                  => $photo,
-                    'status'                => 'pengajuan',
-                    'created_by'            => _session('nama'),
-                    'created_at'            => time(),
-                ];
-                $add = addData('tb_pembelian_barang_fotokopi', $data);
-                if ($add > 0) {
-                    $dataInven = [
-                        'status' => 'pengajuan',
-                    ];
-                    updateData('tb_inventaris_fotokopi', $dataInven, ['id_inventaris_fotokopi' => $id_inventaris_fotokopi]);
-                    $json['success'] = $add;
+                    if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
+                        $photo             = $foto->getRandomName();
+                        ($foto->move(FCPATH . './public/assets/images/fotocopy/foto', $photo));
+                        $data = [
+                            'kode_barang'           => $inventaris_fotokopi->kode_barang,
+                            'nama_barang'           => $inventaris_fotokopi->nama_barang,
+                            'merk'                  => $inventaris_fotokopi->merk,
+                            'no_serial'             => $inventaris_fotokopi->no_serial,
+                            'jenis_pengajuan'       => $jenis_pengajuan,
+                            'tanggal'               => $tgl,
+                            'jml_barang'            => $jml_barang,
+                            'harga'                 => $harga,
+                            'struk'                 => $nota,
+                            'foto'                  => $photo,
+                            'status'                => 'pengajuan',
+                            'created_by'            => _session('nama'),
+                            'created_at'            => time(),
+                        ];
+                        $add = addData('tb_pembelian_barang_fotokopi', $data);
+                        if ($add > 0) {
+                            $dataInven = [
+                                'status' => 'pengajuan',
+                            ];
+                            updateData('tb_inventaris_fotokopi', $dataInven, ['id_inventaris_fotokopi' => $id_inventaris_fotokopi]);
+                            $json['success'] = $add;
+                        } else {
+                            $json['error'] = 'pengajuan  barang fotocopy gagal';
+                        }
+                    } else {
+                        $json['input']['foto'] = 'foto gagal di upload';
+                    }
                 } else {
-                    $json['error'] = 'pengajuan  barang fotocopy gagal';
+                    $json['input']['error'] = 'struk gagal di upload';
                 }
             }
         }
@@ -144,6 +143,67 @@ class Fotocopy extends BaseController
         echo json_encode($json);
     }
     // transaksi
+    public function transaksi_fotokopi()
+    {
+        $data['departemen'] = selectDepartemen();
+        $data['transaksi'] = getData('tb_transaksi_fotokopi')->get()->getResult();
+        return _tempHTML('fotocopy/transaksi', $data);
+    }
+    public function transaksi_save()
+    {
+        $json['input'] = [
+            'tanggal'           => $this->_validation('tanggal', 'Tanggal', 'required|valid_date'),
+            'jml_halaman'       => $this->_validation('jml_halaman', 'Jumlah Halaman', 'required'),
+            'harga_perhalaman'  => $this->_validation('harga_perhalaman', 'Harga Perhalaman', 'required'),
+            'total_harga'       => $this->_validation('total_harga', 'Total Harga', 'required|decimal'),
+            'foto'              => $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
+        ];
+        $json['select'] = [
+            'id_dept'           => $this->_validation('id_dept', 'Departemen', 'required'),
+            'jenis_user'        => $this->_validation('jenis_user', 'Jenis User', 'required'),
+            'kebutuhan_transaksi' => $this->_validation('kebutuhan_transaksi', 'Kebutuhan Transaksi', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $tanggal = _getVar($this->request->getVar('tanggal'));
+            $jml_halaman = _getVar($this->request->getVar('jml_halaman'));
+            $harga_perhalaman = _getVar($this->request->getVar('harga_perhalaman'));
+            $total_harga = $jml_halaman * $harga_perhalaman;
+            $foto = $this->request->getFile('foto');
+            $jenis_user = _getVar($this->request->getVar('jenis_user'));
+            $kebutuhan_transaksi = _getVar($this->request->getVar('kebutuhan_transaksi'));
+            $departemen = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('id_dept'))])->get()->getRow();
+            if (!$departemen) {
+                $json['select']['id_dept'] = 'departemen tidak ditemukan';
+            } else {
+                if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
+                    $photo = $foto->getRandomName();
+                    $foto->move(FCPATH . './public/assets/images/fotocopy/transaksi', $photo);
+                    $data = [
+                        'departemen'          => $departemen->departemen,
+                        'jenis_user'          => $jenis_user,
+                        'kebutuhan_transaksi' => $kebutuhan_transaksi,
+                        'tanggal'             => $tanggal,
+                        'jml_halaman'         => $jml_halaman,
+                        'harga_perhalaman'    => $harga_perhalaman,
+                        'total_harga'         => $total_harga,
+                        'foto'                => $photo,
+                        'created_by'          => _session('nama'),
+                        'created_at'          => time(),
+                    ];
+                    $add = addData('tb_transaksi_fotokopi', $data);
+                    if ($add) {
+                        $json['success'] = $add;
+                    } else {
+                        $json['error'] = 'data transaksi gagal di input';
+                    }
+                } else {
+                    $json['input']['foto'] = 'foto gagal upload';
+                }
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
     // pembelian perawatan
     public function pembelian_perawatan()
     {
