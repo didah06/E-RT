@@ -307,4 +307,17 @@ class Fotocopy extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
+    public function laporan_transaksi()
+    {
+        $start_date = _getVar($this->request->getVar('start_date'));
+        $end_date   = _getVar($this->request->getVar('end_date'));
+        $filter_kebutuhan_transaksi = _getVar($this->request->getVar('kebutuhan_transaksi'));
+        $data['shift']      = selectShift();
+        $data['area']       = selectArea();
+        $data['start_date'] = $start_date == "" ? date('Y-m-d') : $start_date;
+        $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
+        $data['laporan_transaksi'] = getData('tb_transaksi_fotokopi', ['tanggal BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null, 'kebutuhan_transaksi' => $filter_kebutuhan_transaksi])->get()->getResult();
+        var_dump($data['laporan_transaksi']);
+        return _tempHTML('fotocopy/laporan', $data);
+    }
 }

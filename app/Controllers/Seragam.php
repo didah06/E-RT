@@ -615,7 +615,13 @@ class Seragam extends BaseController
     }
     public function laporan()
     {
-        $data['laporan'] = getSeragam()->getResult();
+        $start_date = _getVar($this->request->getVar('start_date'));
+        $end_date = _getVar($this->request->getVar('end_date'));
+        $data['shift'] = selectShift();
+        $data['area'] = selectArea();
+        $data['start_date'] = empty($start_date) ? date('Y-m-d') : $start_date; // Use `empty` to check if a variable is empty
+        $data['end_date'] = empty($end_date) ? date('Y-m-t') : $end_date; // Use `empty` to check if a variable is empty
+        $data['laporan'] = getSeragam(['tgl_pemesanan BETWEEN ' . $data['start_date'] . ' AND ' . $data['end_date'] => null])->getResult(); // Use BETWEEN for date range
         return _tempHTML('seragam/laporan', $data);
     }
 }

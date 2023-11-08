@@ -131,6 +131,7 @@
                                         <th>Kebutuhan Transaksi</th>
                                         <th>Departemen</th>
                                         <th>Jenis User</th>
+                                        <th>tanggal</th>
                                         <th>Jumlah Halaman</th>
                                         <th>Harga Perhalaman</th>
                                         <th>Total Harga</th>
@@ -145,6 +146,7 @@
                                                     <?= $table->kebutuhan_transaksi === 'fotocopy' ? 'fotocopy' : 'laminating'; ?></span></td>
                                             <td><?= $table->departemen; ?></td>
                                             <td><?= $table->jenis_user; ?></td>
+                                            <td><?= $table->tanggal; ?></td>
                                             <td><?= $table->jml_halaman; ?></td>
                                             <td><?= $table->harga_perhalaman; ?></td>
                                             <td><?= $table->total_harga; ?></td>
