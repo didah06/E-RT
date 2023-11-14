@@ -175,27 +175,73 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <!-- Signature Edit ditolak -->
+                                    <!-- modal -->
+                                    <div class="modal fade" id="ModalSignatureEditditolak" data-backdrop="false" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="error-area"></div>
+                                                    <form id="signature-edit-ditolak">
+                                                        <div class="d-flex">
+                                                            <div class="mr-auto p-2">Digital Signature</div>
+                                                            <div class="p-2">
+                                                                <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                                    <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="signature-wrapper signature-new text-start">
+                                                            <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                                        </div>
+                                                        <div class="card signature-old m-0" hidden>
+                                                            <div class="card-body p-1">
+                                                                <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-check mt-0">
+                                                            <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                            <label class="form-check-label" for="formCheck1">
+                                                                Gunakan signature tersimpan
+                                                            </label>
+                                                        </div>
+                                                        <input type="hidden" name="signature">
+                                                        <div class="invalid-feedback"></div>
+                                                        <button class="btn btn-light" type="submit">Lanjut Approve</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>
-                                                            <?php if (_session('role') == 'Kadep' || _session('role') == 'Developer') : ?>
+                                                            <?php if (_session('role') == 'Kadep') : ?>
                                                                 <?php if ($booking->status === 'baru') : ?>
                                                                     Approved Kadep
                                                                 <?php endif; ?>
                                                             <?php endif; ?>
                                                         </th>
                                                         <th>
-                                                            <?php if (_session('role') == 'Kadiv' || _session('role') == 'Developer') : ?>
+                                                            <?php if (_session('role') == 'Kadiv') : ?>
                                                                 <?php if ($booking->status === 'approved kadep') : ?>
                                                                     Approved Kadiv
                                                                 <?php endif; ?>
                                                             <?php endif; ?>
                                                         </th>
                                                         <th>
-                                                            <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
+                                                            <?php if (_session('role') == 'RT') : ?>
                                                                 <?php if ($booking->status === 'approved kadiv') : ?>
                                                                     Approved RT
                                                                 <?php endif; ?>
@@ -221,18 +267,19 @@
                                                     <?php foreach ($booking_list as $list) : ?>
                                                         <tr>
                                                             <td>
-                                                                <?php if (_session('role') == 'Kadep' || _session('role') == 'Developer') : ?>
+                                                                <?php if (_session('role') == 'Kadep') : ?>
                                                                     <?php if ($booking->status === 'baru') : ?>
                                                                         <button class="btn btn-light" data-toggle="modal" data-target="#ModalSignatureEdit">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove">Tolak</button>
                                                                         <div class="hidden-reason" style="display: none;">
                                                                             <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
-                                                                            <button class="btn btn-danger " data-toggle="modal" data-target="#ModalSignatureEdit">Konfirmasi Penolakan</button>
+                                                                            <button class="btn btn-danger " data-toggle="modal" data-target="#ModalSignatureEditditolak">Konfirmasi Penolakan</button>
                                                                         </div>
                                                                     <?php endif; ?>
                                                                     <script>
                                                                         $(document).ready(function() {
                                                                             var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+                                                                            // approved kadep
                                                                             $('#signature-edit').submit(function(e) {
                                                                                 e.preventDefault();
                                                                                 Swal.fire({
@@ -273,12 +320,13 @@
                                                                                     }
                                                                                 });
                                                                             });
+                                                                            // unapproved kadep
                                                                             $('.btn-unapprove').on('click', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
-                                                                            $('#signature-edit').submit(function(e) {
+                                                                            $('#signature-edit-ditolak').submit(function(e) {
                                                                                 e.preventDefault();
-                                                                                var signature_ttd = signaturePad.toDataURL();
+                                                                                var form = $(this);
                                                                                 var keterangan = $('textarea[name="ditolak_ket"]').val();
                                                                                 if (!keterangan) {
                                                                                     return;
@@ -294,14 +342,14 @@
                                                                                 }).then((result) => {
                                                                                     if (result.value) {
                                                                                         processStart();
+                                                                                        $('input[name=signature]').val(signaturePad.toDataURL());
+                                                                                        var formData = form.serialize();
+                                                                                        formData += '&ditolak_ket=' + encodeURIComponent(keterangan);
                                                                                         $.ajax({
                                                                                             type: 'post',
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
-                                                                                            data: {
-                                                                                                ditolak_ket: keterangan,
-                                                                                                signature: signature_ttd,
-                                                                                            },
+                                                                                            data: formData,
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
                                                                                                     $('input[name=rscript]').val(d['rscript']);
@@ -327,18 +375,19 @@
                                                             </td>
                                                             <td>
                                                                 <!-- approve kadiv -->
-                                                                <?php if (_session('role') == 'Kadiv' || _session('role') == 'Developer') : ?>
+                                                                <?php if (_session('role') == 'Kadiv') : ?>
                                                                     <?php if ($booking->status === 'approved kadep') : ?>
                                                                         <button class="btn btn-light" data-toggle="modal" data-target="#ModalSignatureEdit">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove-kadiv">Tolak</button>
                                                                         <div class="hidden-reason" style="display: none;">
                                                                             <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
-                                                                            <button class="btn btn-danger" data-toggle="modal" data-target="#ModalSignatureEdit">Konfirmasi Penolakan</button>
+                                                                            <button class="btn btn-danger" data-toggle="modal" data-target="#ModalSignatureEditditolak">Konfirmasi Penolakan</button>
                                                                         </div>
                                                                     <?php endif; ?>
                                                                     <script>
                                                                         $(document).ready(function() {
                                                                             var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+                                                                            // approved kadiv
                                                                             $('#signature-edit').submit(function(e) {
                                                                                 e.preventDefault();
                                                                                 Swal.fire({
@@ -378,12 +427,13 @@
                                                                                     }
                                                                                 });
                                                                             });
+                                                                            // unapproved kadiv
                                                                             $('.btn-unapprove-kadiv').on('click', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
-                                                                            $('#signature-edit').submit(function(e) {
+                                                                            $('#signature-edit-ditolak').submit(function(e) {
                                                                                 e.preventDefault();
-                                                                                var signature_ttd = signaturePad.toDataURL();
+                                                                                var form = $(this);
                                                                                 var keterangan = $('textarea[name="ditolak_ket"]').val();
                                                                                 if (!keterangan) {
                                                                                     return;
@@ -399,18 +449,18 @@
                                                                                 }).then((result) => {
                                                                                     if (result.value) {
                                                                                         processStart();
+                                                                                        $('input[name=signature]').val(signaturePad.toDataURL());
+                                                                                        var formData = form.serialize();
+                                                                                        formData += '&ditolak_ket=' + encodeURIComponent(keterangan);
                                                                                         $.ajax({
                                                                                             type: 'post',
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
-                                                                                            data: {
-                                                                                                ditolak_ket: keterangan,
-                                                                                                signature: signature_ttd,
-                                                                                            },
+                                                                                            data: formData,
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
                                                                                                     $('input[name=rscript]').val(d['rscript']);
-                                                                                                    $('#ModalSignatureEdit').modal('hide')
+                                                                                                    $('#ModalSignatureEditditolak').modal('hide')
                                                                                                     location.reload();
                                                                                                     Swal.fire('Booking Ditolak', d['msg'], 'success')
                                                                                                 } else {
@@ -431,18 +481,19 @@
                                                                 <?php endif; ?>
                                                             </td>
                                                             <td>
-                                                                <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
+                                                                <?php if (_session('role') == 'RT') : ?>
                                                                     <?php if ($booking->status === 'approved kadiv') : ?>
                                                                         <button class="btn btn-light" data-toggle="modal" data-target="#ModalSignatureEdit">Approve</button>
                                                                         <button class="btn btn-danger btn-unapprove-rt">Tolak</button>
                                                                         <div class="hidden-reason" style="display: none;">
                                                                             <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
-                                                                            <button class="btn btn-danger" data-toggle="modal" data-target="#ModalSignatureEdit">Konfirmasi Penolakan</button>
+                                                                            <button class="btn btn-danger" data-toggle="modal" data-target="#ModalSignatureEditditolak">Konfirmasi Penolakan</button>
                                                                         </div>
                                                                     <?php endif; ?>
                                                                     <script>
                                                                         $(document).ready(function() {
                                                                             var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+                                                                            // approved RT
                                                                             $('#signature-edit').submit(function(e) {
                                                                                 e.preventDefault();
                                                                                 Swal.fire({
@@ -483,11 +534,12 @@
                                                                                     }
                                                                                 });
                                                                             });
+                                                                            // unapproved RT
                                                                             $('.btn-unapprove-rt').on('click', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
-                                                                            $('#signature-edit').submit(function() {
-                                                                                var signature_ttd = signaturePad.toDataURL();
+                                                                            $('#signature-edit-ditolak').submit(function() {
+                                                                                var form = $(this);
                                                                                 var keterangan = $('textarea[name="ditolak_ket"]').val();
                                                                                 if (!keterangan) {
                                                                                     return;
@@ -503,14 +555,14 @@
                                                                                 }).then((result) => {
                                                                                     if (result.value) {
                                                                                         processStart();
+                                                                                        $('input[name=signature]').val(signaturePad.toDataURL());
+                                                                                        var formData = form.serialize();
+                                                                                        formData += '&ditolak_ket=' + encodeURIComponent(keterangan);
                                                                                         $.ajax({
                                                                                             type: 'post',
                                                                                             dataType: 'json',
                                                                                             url: "<?= base_url('unapproved/' . $list->id_booking); ?>",
-                                                                                            data: {
-                                                                                                ditolak_ket: keterangan,
-                                                                                                signature: signature_ttd,
-                                                                                            },
+                                                                                            data: formData,
                                                                                             success: function(d) {
                                                                                                 if (d['success']) {
                                                                                                     $('input[name=rscript]').val(d['rscript']);
@@ -599,7 +651,6 @@
         $('.signature-clear').on('click', function(event) {
             signaturePad.clear();
         });
-
         $('#ModalSignatureEdit').on('hidden.modal', function(e) {
             signaturePad.clear();
             $('.alert').remove();
@@ -614,5 +665,6 @@
                 $('.signature-new').removeAttr('hidden');
             }
         });
+
     });
 </script>

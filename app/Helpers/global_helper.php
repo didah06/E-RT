@@ -15,7 +15,8 @@ function _tempHTML($view, $data = [])
             if (
                 $user->role != 'Developer' &&
                 $view       != 'dashboard/index' &&
-                $view       != 'user/index'
+                $view       != 'user/profile' &&
+                $view       != 'user/profile_edit'
             ) {
                 getAccess();
             }
@@ -53,13 +54,14 @@ function _session($name)
         return session()->get($name) ? session()->get($name) : 0;
     }
 }
-function getData($table, $where = [], $order = '', $select = '*')
+function getData($table, $where = [], $order = '', $group = '', $select = '*')
 {
     $db             = \Config\Database::connect();
     $builder        = $db->table($table);
     $builder->select($select);
     $builder->where($where);
     $builder->orderBy($order);
+    $builder->groupBy($group);
     return $builder;
 }
 function getJadwalTranport($where = [])
@@ -78,10 +80,10 @@ function getAccess()
     $submenu    = getData('ms_menu_sub', ['links LIKE "%(' . $url . ')%"' => null, 'is_aktif' => 1])->get();
 
     if (count($menu->getResult()) > 0) {
-        $num        += getData('tb_access_menu', ['id_menu' => $menu->getRow()->id, '(role = "' . _session('role') . '" OR id_user =' . _session('id') . ')' => null])->countAllResults();
+        $num        += getData('tb_access_menu', ['id_menu' => $menu->getRow()->id, '(role = "' . _session('role') . '" OR id_user = ' . _session('id') . ')' => null])->countAllResults();
     }
     if (count($submenu->getResult()) > 0) {
-        $num        += getData('tb_access_menu', ['id_menu' => $menu->getRow()->id, '(role = "' . _session('role') . '" OR id_user =' . _session('id') . ')' => null])->countAllResults();
+        $num    += getData('tb_access_menu', ['id_menu_sub' => $submenu->getRow()->id, '(role = "' . _session('role') . '" OR id_user = ' . _session('id') . ')' => null])->countAllResults();
     }
     if ($num == 0 && $uri != '' && _session('role') != 'Developer') {
         header('Location: ' . base_url());
@@ -181,22 +183,22 @@ function _userMenu($segmen)
             $menu = getData('ms_menu', ['is_aktif' => 1, 'ms_menu.id IN(1,2,3)' => null], 'sort ASC')->get()->getResult();
         } elseif ($segmen == 'sistem_manajemen') {
             $menu = getData('ms_menu', ['is_aktif' => 1, 'ms_menu.id IN(4,5,6,7,8)' => null], 'sort ASC')->get()->getResult();
-        } else {
-            $db = connectDb('ms_menu');
-            $db->select('ms_menu.*');
-            $db->join('tb_access_menu', 'id_menu = ms_menu.id');
-            if ($segmen == 'user_pengguna') {
-                $db->where(['ms_menu.id IN(1,2,3)' => null]);
-            } else if ($segmen == 'sistem_manajemen') {
-                $db->where(['ms_menu.id IN(4,5,6,7,8)' => null]);
-            }
-            $db->where(['role = "' . session('role') . '" OR id_user = ' . session('id') . ')' => null, 'is_aktif' => 1]);
-            $db->groupBy('id_menu');
-            $db->orderBy('sort ASC');
-            $menu = $db->get()->getResult();
         }
-        return $menu;
+    } else {
+        $db = connectDb('ms_menu');
+        $db->select('ms_menu.*');
+        $db->join('tb_access_menu', 'id_menu = ms_menu.id');
+        if ($segmen == 'user_pengguna') {
+            $db->where(['ms_menu.id IN(1,2,3)' => null]);
+        } else if ($segmen == 'sistem_manajemen') {
+            $db->where(['ms_menu.id IN(4,5,6,7,8)' => null]);
+        }
+        $db->where(['(role = "' . _session('role') . '" OR id_user = ' . _session('id') . ')' => null, 'is_aktif' => 1]);
+        $db->groupBy('id_menu');
+        $db->orderBy('sort ASC');
+        $menu = $db->get()->getResult();
     }
+    return $menu;
 }
 function _userSubMenu($id_menu)
 {
@@ -210,7 +212,7 @@ function _userSubMenu($id_menu)
     } else {
         $db->select('ms_menu_sub.*');
         $db->join('ms_menu_sub', 'ms_menu_sub.id_menu = ms_menu.id');
-        $db->join('tb_access_menu', 'tb_access_menu.id_sub_menu = ms_menu_sub.id');
+        $db->join('tb_access_menu', 'tb_access_menu.id_menu_sub = ms_menu_sub.id');
         $db->where(['(role = "' . session('role') . '" OR id_user = ' . session('id') . ')' => null, 'ms_menu_sub.is_aktif' => 1, 'ms_menu_sub.id_menu' => $id_menu]);
         $db->orderBy('sort ASC');
         $menu = $db->get()->getResult();
