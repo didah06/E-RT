@@ -73,6 +73,7 @@
                                         <th>Harga Perhalaman</th>
                                         <th>Total Harga</th>
                                         <th>Foto</th>
+                                        <th>File</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -92,6 +93,8 @@
                                                 <?php else : ?>
                                                     <?php echo '-'; ?>
                                                 <?php endif; ?>
+                                            </td>
+                                            <td><?= $table->file; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

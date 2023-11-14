@@ -29,106 +29,195 @@
                             <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Pembelian Barang
                                 </i></button>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                                <!-- delete old menu if menu is not menu current date -->
-                                <!-- delete based on checklist -->
-                                <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
-                                <thead>
-                                    <tr>
-                                        <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
-                                        <th class="text-center">#</th>
-                                        <th>Status</th>
-                                        <th>Kode Barang</th>
-                                        <th>Jenis Pengajuan</th>
-                                        <th>Nama Barang</th>
-                                        <th>Merk</th>
-                                        <th>No Serial</th>
-                                        <th>Tanggal</th>
-                                        <th>Jumlah Barang</th>
-                                        <th>Harga</th>
-                                        <th>Struk</th>
-                                        <th>Foto</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($pembelian_perawatan as $table) : ?>
-                                        <tr>
-                                            <td class="text-center">
-                                                <!-- if role RT and Developer -->
-                                                <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
-                                                    <?php if ($table->status === 'pengajuan') : ?>
-                                                        <button class="btn btn-success btn-approve" style="align-items: center; justify-content: center; width: 120px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">Approve</button>
-                                                        <button class="btn btn-danger btn-tolak" style="align-items: center; justify-content: center; width: 120px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">Tolak</button>
-                                                    <?php endif; ?>
-                                                    <?php if ($table->status === 'approved') : ?>
-                                                        <span class="badge badge-danger btn-proses" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">
-                                                            <i class="zmdi zmdi-shopping-cart" style="font-size: 20px;"></i>
-                                                        </span>
-                                                    <?php endif; ?>
-                                                    <?php if ($table->status === 'pembelian' || $table->status === 'perawatan') : ?>
-                                                        <span class="badge badge-danger btn-selesai" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">
-                                                            <i class="zmdi zmdi-check" style="font-size: 20px;"></i>
-                                                        </span>
-                                                    <?php endif; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <span class="<?= $table->status === 'pengajuan pembelian' ? 'badge badge-danger' : ($table->status === 'pengajuan perawatan' ? 'badge badge-warning' : 'badge badge-success'); ?>">
-                                                    <?= $table->status === 'pengajuan' ? 'pengajuan' : ($table->status === 'approved' ? 'approved' : ($table->status === 'pembelian' ? 'pembelian' : ($table->status === 'perawatan' ? 'perawatan' : ($table->status)))); ?>
-                                                </span>
-                                            </td>
-                                            <td><?= $table->kode_barang; ?></td>
-                                            <td>
-                                                <span class="<?= $table->jenis_pengajuan === 'pembelian' ? 'badge badge-info' : 'badge badge-warning'; ?>">
-                                                    <?= $table->jenis_pengajuan === 'pembelian' ? 'pembelian' : 'perawatan'; ?>
-                                                </span>
-                                            </td>
-                                            <td><?= $table->nama_barang; ?></td>
-                                            <td><?= $table->merk; ?></td>
-                                            <td><?= $table->no_serial; ?></td>
-                                            <td><?= $table->tanggal != null ? $table->tanggal : '-'; ?></td>
-                                            <td><?= $table->jml_barang != null ? $table->jml_barang : '-'; ?></td>
-                                            <td>
-                                                <?= $table->harga; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($table->struk != null) : ?>
-                                                    <a href="<?= base_url('public/assets/images/fotocopy/struk/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
-                                                <?php else : ?>
-                                                    <?php echo '-'; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($table->foto != null) : ?>
-                                                    <a href="<?= base_url('public/assets/images/fotocopy/foto/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
-                                                <?php else : ?>
-                                                    <?php echo '-'; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                        <!-- Signature Edit -->
+                        <!-- modal -->
+                        <div class="modal fade" id="ModalSignatureEdit" data-backdrop="false" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="error-area"></div>
+                                        <form id="signature-edit">
+                                            <div class="d-flex">
+                                                <div class="mr-auto p-2">Digital Signature</div>
+                                                <div class="p-2">
+                                                    <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                        <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="signature-wrapper signature-new text-start">
+                                                <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                            </div>
+                                            <div class="card signature-old m-0" hidden>
+                                                <div class="card-body p-1">
+                                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                </div>
+                                            </div>
+                                            <div class="form-check mt-0">
+                                                <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                <label class="form-check-label" for="formCheck1">
+                                                    Gunakan signature tersimpan
+                                                </label>
+                                            </div>
+                                            <input type="hidden" name="signature">
+                                            <div class="invalid-feedback"></div>
+                                            <button class="btn btn-light" type="submit">Lanjut Approve</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="modal fade" id="ModalSignatureEditditolak" data-backdrop="false" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Silahkan masukkan tanda tangan</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="error-area"></div>
+                                        <form id="signature-edit-ditolak">
+                                            <div class="d-flex">
+                                                <div class="mr-auto p-2">Digital Signature</div>
+                                                <div class="p-2">
+                                                    <span class="btn-delete signature-clear" style="color: red;" type="button">
+                                                        <span class="zmdi zmdi-delete" style="font-size: 20px;"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="signature-wrapper signature-new text-start">
+                                                <canvas id="signature-pad" class="signature-pad border" width="250" height=150></canvas>
+                                            </div>
+                                            <div class="card signature-old m-0" hidden>
+                                                <div class="card-body p-1">
+                                                    <img class="img-sign" src="<?= base_url('public/assets/images/ttd/' . $user_login->ttd); ?>" width="100%">
+                                                </div>
+                                            </div>
+                                            <div class="form-check mt-0">
+                                                <input class="form-check-input" type="checkbox" id="formCheck1" name="old_check" value="1">
+                                                <label class="form-check-label" for="formCheck1">
+                                                    Gunakan signature tersimpan
+                                                </label>
+                                            </div>
+                                            <input type="hidden" name="signature">
+                                            <div class="invalid-feedback"></div>
+                                            <button class="btn btn-light" type="submit">Lanjut Approve</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <!-- delete old menu if menu is not menu current date -->
+                            <!-- delete based on checklist -->
+                            <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
+                            <thead>
+                                <tr>
+                                    <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
+                                    <th class="text-center">#</th>
+                                    <th>Status</th>
+                                    <th>Kode Barang</th>
+                                    <th>Jenis Pengajuan</th>
+                                    <th>Nama Barang</th>
+                                    <th>Merk</th>
+                                    <th>No Serial</th>
+                                    <th>Tanggal</th>
+                                    <th>Jumlah Barang</th>
+                                    <th>Harga</th>
+                                    <th>Struk</th>
+                                    <th>Foto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pembelian_perawatan as $table) : ?>
+                                    <tr>
+                                        <td class="text-center">
+                                            <!-- if role RT and Developer -->
+                                            <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
+                                                <?php if ($table->status === 'pengajuan') : ?>
+                                                    <button class="btn btn-success btn-approve" type="button" data-toggle="modal" data-target="#ModalSignatureEdit">Approve</button>
+                                                    <button class="btn btn-danger btn-tolak" type="button">Tolak</button>
+                                                    <div class="hidden-reason" style="display: none;">
+                                                        <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
+                                                        <button class="btn btn-danger " data-toggle="modal" data-target="#ModalSignatureEditditolak">Konfirmasi Penolakan</button>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if ($table->status === 'approved') : ?>
+                                                    <span class="badge badge-danger btn-proses" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">
+                                                        <i class="zmdi zmdi-shopping-cart" style="font-size: 20px;"></i>
+                                                    </span>
+                                                <?php endif; ?>
+                                                <?php if ($table->status === 'pembelian' || $table->status === 'perawatan') : ?>
+                                                    <span class="badge badge-danger btn-selesai" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_pembelian_barang; ?>" type="button">
+                                                        <i class="zmdi zmdi-check" style="font-size: 20px;"></i>
+                                                    </span>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <span class="<?= $table->status === 'pengajuan pembelian' ? 'badge badge-danger' : ($table->status === 'pengajuan perawatan' ? 'badge badge-warning' : 'badge badge-success'); ?>">
+                                                <?= $table->status === 'pengajuan' ? 'pengajuan' : ($table->status === 'approved' ? 'approved' : ($table->status === 'pembelian' ? 'pembelian' : ($table->status === 'perawatan' ? 'perawatan' : ($table->status)))); ?>
+                                            </span>
+                                        </td>
+                                        <td><?= $table->kode_barang; ?></td>
+                                        <td>
+                                            <span class="<?= $table->jenis_pengajuan === 'pembelian' ? 'badge badge-info' : 'badge badge-warning'; ?>">
+                                                <?= $table->jenis_pengajuan === 'pembelian' ? 'pembelian' : 'perawatan'; ?>
+                                            </span>
+                                        </td>
+                                        <td><?= $table->nama_barang; ?></td>
+                                        <td><?= $table->merk; ?></td>
+                                        <td><?= $table->no_serial; ?></td>
+                                        <td><?= $table->tanggal != null ? $table->tanggal : '-'; ?></td>
+                                        <td><?= $table->jml_barang != null ? $table->jml_barang : '-'; ?></td>
+                                        <td>
+                                            <?= $table->harga; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($table->struk != null) : ?>
+                                                <a href="<?= base_url('public/assets/images/fotocopy/struk/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                            <?php else : ?>
+                                                <?php echo '-'; ?>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($table->foto != null) : ?>
+                                                <a href="<?= base_url('public/assets/images/fotocopy/foto/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
+                                            <?php else : ?>
+                                                <?php echo '-'; ?>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 </section>
 <script>
     $(document).ready(function() {
-        $('.btn-approve').on('click', function() {
-            var pembelianId = $(this).data('id');
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        $('#signature-edit').submit(function() {
             processStart();
             $.ajax({
                 type: 'post',
                 dataType: 'json',
-                url: "<?= base_url('approve'); ?>", // Adjust the URL as needed
-                data: {
-                    id_pembelian_barang: pembelianId
-                },
+                url: "<?= base_url('approve/' . $table->id_pembelian_barang); ?>", // Adjust the URL as needed
+                data: $(this).serialize(),
                 error: function(xhr) {
                     processDone();
                     Swal.fire('Approve gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
@@ -144,28 +233,83 @@
             })
         })
         $('.btn-tolak').on('click', function() {
-            var pembelianId = $(this).data('id');
-            processStart();
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                url: "<?= base_url('tolak'); ?>", // Adjust the URL as needed
-                data: {
-                    id_pembelian_barang: pembelianId
-                },
-                error: function(xhr) {
-                    processDone();
-                    Swal.fire('Tolak gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
-                },
-                success: function(d) {
-                    if (d['success']) {
-                        location.reload();
-                    } else {
-                        processDone();
-                        invalidError(d);
-                    }
+            $('.hidden-reason').show();
+        });
+        // $('#signature-edit-ditolak').submit(function() {
+        //     var keterangan = $('textarea[name="ditolak_ket"]').val();
+        //     if (!keterangan) {
+        //         return;
+        //     }
+        //     $('input[name=signature]').val(signaturePad.toDataURL());
+        //     var formData = form.serialize();
+        //     formData += '&ditolak_ket=' + encodeURIComponent(keterangan);
+        //     $.ajax({
+
+        //         type: 'post',
+        //         dataType: 'json',
+        //         url: "<?= base_url('tolak/' . $table->id_pembelian_barang); ?>", // Adjust the URL as needed
+        //         data: {
+        //             ditolak_ket: keterangan,
+        //             signature: signature_ttd,
+        //         },
+        //         error: function(xhr) {
+        //             processDone();
+        //             Swal.fire('Tolak gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+        //         },
+        //         success: function(d) {
+        //             if (d['success']) {
+        //                 location.reload();
+        //             } else {
+        //                 processDone();
+        //                 invalidError(d);
+        //             }
+        //         }
+        //     })
+        // })
+        $('#signature-edit-ditolak').submit(function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var keterangan = $('textarea[name="ditolak_ket"]').val();
+            if (!keterangan) {
+                return;
+            }
+            Swal.fire({
+                title: 'Apa anda yakin?',
+                text: 'kode booking <?= $table->id_pembelian_barang; ?> akan di Tolak',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, tolak',
+                confirmButtonColor: '#FF4949',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.value) {
+                    processStart();
+                    $('input[name=signature]').val(signaturePad.toDataURL());
+                    var formData = form.serialize();
+                    formData += '&ditolak_ket=' + encodeURIComponent(keterangan);
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url('tolak/' . $table->id_pembelian_barang); ?>",
+                        data: formData,
+                        success: function(d) {
+                            if (d['success']) {
+                                $('input[name=rscript]').val(d['rscript']);
+                                $('#ModalSignatureEditditolak').modal('hide')
+                                location.reload();
+                                Swal.fire('Pengajuan ditolak', d['msg'], 'success')
+                            } else {
+                                invalidError(d);
+                                Swal.fire('unapprove gagal', d['msg'], 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            processDone();
+                            Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
+                        }
+                    });
                 }
-            })
+            });
         })
         $('.btn-proses').on('click', function() {
             var pembelianId = $(this).data('id');
@@ -215,5 +359,23 @@
                 }
             })
         })
+        $('.signature-clear').on('click', function(event) {
+            signaturePad.clear();
+        });
+
+        $('#ModalSignatureEdit').on('hidden.modal', function(e) {
+            signaturePad.clear();
+            $('.alert').remove();
+        });
+        $('input[name=old_check]').change(function() {
+            signaturePad.clear();
+            if (this.checked) {
+                $('.signature-new').attr('hidden', 'hidden');
+                $('.signature-old').removeAttr('hidden');
+            } else {
+                $('.signature-old').attr('hidden', 'hidden');
+                $('.signature-new').removeAttr('hidden');
+            }
+        });
     })
 </script>

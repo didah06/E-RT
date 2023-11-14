@@ -212,8 +212,8 @@ $routes->get('transaksi', 'Fotocopy::transaksi_fotokopi');
 $routes->post('transaksi', 'Fotocopy::transaksi_save');
 $routes->get('laporan_fotocopy', 'Fotocopy::laporan_transaksi');
 $routes->get('pembelian_perawatan', 'Fotocopy::pembelian_perawatan');
-$routes->post('approve', 'Fotocopy::approve');
-$routes->post('tolak', 'Fotocopy::tolak');
+$routes->post('approve/(:num)', 'Fotocopy::approve/$1');
+$routes->post('tolak/(:num)', 'Fotocopy::tolak/$1');
 $routes->post('proses_pembelian', 'Fotocopy::proses');
 $routes->post('selesai_pembelian', 'Fotocopy::selesai');
 

@@ -213,13 +213,6 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-5">
-                                                <label class="form-label">Struk</label>
-                                                <input type="file" name="struk" class="form-control" accept="image/png, image/jpeg, image/jpg">
-                                                <div class="invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-5">
                                                 <label class="form-label">Foto</label>
                                                 <input type="file" name="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
                                                 <div class="invalid-feedback"></div>
