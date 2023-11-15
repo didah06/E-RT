@@ -137,8 +137,8 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td>
-                                                <span class="<?= $table->status === 'inventaris' ? 'badge badge-info' : 'badge badge-warning'; ?>">
-                                                    <?= $table->status === 'inventaris' ? 'inventaris' : 'pengajuan'; ?>
+                                                <span class="<?= $table->status === 'inventaris' ? 'badge badge-info' : ($table->status === 'pengajuan' ? 'badge badge-primary' : ($table->status === 'approved' ? 'badge badge-warning' : ($table->status === 'perawatan' ? 'badge badge-success' : 'badge badge-success'))) ?>">
+                                                    <?= $table->status === 'pengajuan' ? 'pengajuan' : ($table->status === 'approved' ? 'approved' : ($table->status === 'pembelian' ? 'pembelian' : ($table->status === 'perawatan' ? 'perawatan' : ($table->status)))); ?>
                                                 </span>
                                             </td>
                                             <td><?= $table->kode_barang; ?></td>

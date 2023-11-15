@@ -220,6 +220,22 @@ class Fotocopy extends BaseController
         $data['pembelian_perawatan'] = getData('tb_pembelian_barang_fotokopi')->get()->getResult();
         return _tempHTML('fotocopy/pembelian_perawatan', $data);
     }
+    public function get_pembelian_perawatan($kode_barang)
+    {
+        $pembelian_perawatan = getData('tb_pembelian_barang_fotokopi', ['kode_barang' => $kode_barang])->get()->getRow();
+        if ($pembelian_perawatan) {
+            $data = [
+                'status'    => true,
+                'data'      => $pembelian_perawatan
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'data'      => ''
+            ];
+        }
+        echo json_encode($data);
+    }
     public function approve($id_pembelian_barang)
     {
         if (!empty($this->request->getVar('signature'))) {
@@ -249,14 +265,15 @@ class Fotocopy extends BaseController
             $data = [
                 'status'          => 'approved',
                 'approved_RT_by'  => _session('nama'),
+                'approved_RT_at'  => time(),
                 'approved_RT_ttd' => $ttd,
             ];
             $update = updateData('tb_pembelian_barang_fotokopi', $data, ['id_pembelian_barang' => $id_pembelian_barang]);
             if ($update > 0) {
-                $dataInven = [
-                    'status'   => 'approved',
+                $data_inventaris = [
+                    'status'     => 'approved',
                 ];
-                updateData('tb_inventais_fotokopi', $dataInven, ['kode_barang' => $pembelian->kode_barang]);
+                updateData('tb_inventaris_fotokopi', $data_inventaris, ['kode_barang' => $pembelian->kode_barang]);
                 $json['success']    = $update;
             } else {
                 $json['error']        = 'data pembelian dan perawatan gagal diupdate';
@@ -304,10 +321,10 @@ class Fotocopy extends BaseController
                 ];
                 $update = updateData('tb_pembelian_barang_fotokopi', $data, ['id_pembelian_barang' => $id_pembelian_barang]);
                 if ($update > 0) {
-                    $dataInven = [
-                        'status'   => 'ditolak',
+                    $data_inventaris = [
+                        'status'     => 'ditolak',
                     ];
-                    updateData('tb_inventais_fotokopi', $dataInven, ['kode_barang' => $pembelian->kode_barang]);
+                    updateData('tb_inventaris_fotokopi', $data_inventaris, ['kode_barang' => $pembelian->kode_barang]);
                     $json['success']    = $update;
                 } else {
                     $json['error']        = 'data pembelian dan perawatan gagal diupdate';
@@ -317,23 +334,21 @@ class Fotocopy extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
-    public function proses()
+    public function proses($kode_barang)
     {
-        $id_pembelian_barang = _getVar($this->request->getVar('id_pembelian_barang'));
-        $pembelian = getData('tb_pembelian_barang_fotokopi', ['id_pembelian_barang' => $id_pembelian_barang])->get()->getRow();
+        $pembelian = getData('tb_pembelian_barang_fotokopi', ['kode_barang' => $kode_barang])->get()->getRow();
         if (!$pembelian) {
             $json['msg'] = 'data Pembelian tidak ditemukan';
         } else {
             $data = [
                 'status'       => $pembelian->jenis_pengajuan,
             ];
-            var_dump($data['status']);
-            $update = updateData('tb_pembelian_barang_fotokopi', $data, ['id_pembelian_barang' => $id_pembelian_barang]);
+            $update = updateData('tb_pembelian_barang_fotokopi', $data, ['kode_barang' => $kode_barang]);
             if ($update > 0) {
-                $dataInven = [
-                    'status'   => $pembelian->jenis_pengajuan,
+                $data_inventaris = [
+                    'status'     => $pembelian->jenis_pengajuan,
                 ];
-                updateData('tb_inventais_fotokopi', $dataInven, ['kode_barang' => $pembelian->kode_barang]);
+                updateData('tb_inventaris_fotokopi', $data_inventaris, ['kode_barang' => $pembelian->kode_barang]);
                 $json['success']    = $update;
             } else {
                 $json['error']        = 'data pembelian dan perawatan gagal diupdate';
@@ -344,23 +359,33 @@ class Fotocopy extends BaseController
     }
     public function selesai()
     {
-        $id_pembelian_barang = _getVar($this->request->getVar('id_pembelian_barang'));
-        $pembelian = getData('tb_pembelian_barang_fotokopi', ['id_pembelian_barang' => $id_pembelian_barang])->get()->getRow();
+        $kode_barang = _getVar($this->request->getVar('e_kode_barang'));
+        $pembelian = getData('tb_pembelian_barang_fotokopi', ['kode_barang' => $kode_barang])->get()->getRow();
+        $tgl_pembelian  = _getVar($this->request->getVar('tgl_pembelian'));
+        $struk          = $this->request->getFile('struk');
         if (!$pembelian) {
             $json['error'] = 'data Pembelian tidak ditemukan';
         } else {
-            $data = [
-                'status'       => 'selesai',
-            ];
-            $update = updateData('tb_pembelian_barang_fotokopi', $data, ['id_pembelian_barang' => $id_pembelian_barang]);
-            if ($update > 0) {
-                $dataInven = [
-                    'status'   => 'selesai',
+            if ($struk->getError() == 0 && $struk->isValid() && !$struk->hasMoved()) {
+                $nota             = $struk->getRandomName();
+                ($struk->move(FCPATH . './public/assets/images/seragam/pengambilan_seragam', $nota));
+                $data = [
+                    'tgl_pembelian' => $tgl_pembelian,
+                    'struk'         => $nota,
+                    'status'        => 'selesai',
                 ];
-                updateData('tb_inventais_fotokopi', $dataInven, ['kode_barang' => $pembelian->kode_barang]);
-                $json['success']    = $update;
+                $update = updateData('tb_pembelian_barang_fotokopi', $data, ['kode_barang' => $kode_barang]);
+                if ($update > 0) {
+                    $data_inventaris = [
+                        'status' => 'selesai',
+                    ];
+                    updateData('tb_inventaris_fotokopi', $data_inventaris, ['kode_barang' => $kode_barang]);
+                    $json['success'] = $update;
+                } else {
+                    $json['error'] = 'Data pembelian dan perawatan gagal diupdate';
+                }
             } else {
-                $json['error']        = 'data pembelian dan perawatan gagal diupdate';
+                echo ' struk gagal upload';
             }
         }
         $json['rscript']    = csrf_hash();
