@@ -49,7 +49,7 @@ class Transportasi extends BaseController
     public function select_jadwal_start($tanggal_pemakaian)
     {
         $defaultNull    = _getVar($this->request->getVar('df'));
-        $jadwal = getJadwal($tanggal_pemakaian)->getResult();
+        $jadwal         = getJadwal($tanggal_pemakaian)->getResult();
         // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
         if ($defaultNull == '') {
             $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
@@ -133,7 +133,8 @@ class Transportasi extends BaseController
             $status             = getData('ms_status', ['id_status' => 1])->get()->getRow();
             $kode_booking       = generateKodeBooking();
             $user               = getUser(['id' => _session('id')])->getRow();
-            $tanggal_pemakaian  = _getVar($this->request->getVar('tanggal_pemakaian'));
+            $tanggal_pemakaian = _getVar($this->request->getVar('tanggal_pemakaian'));
+            $tanggal = $tanggal_pemakaian !== "" ? $tanggal_pemakaian : date('Y-m-d', strtotime('-0 day'));
             $cara_pemakaian     = _getVar($this->request->getVar('cara_pemakaian'));
             $type_pemakaian     = _getVar($this->request->getVar('type_pemakaian'));
             $tujuan             = _getVar($this->request->getVar('tujuan'));
@@ -166,7 +167,7 @@ class Transportasi extends BaseController
                     'departemen'        => $user->departemen,
                     'nama'              => $user->nama,
                     'pemohon_ttd'       => $ttd,
-                    'tanggal_pemakaian' => $tanggal_pemakaian,
+                    'tanggal_pemakaian' => $tanggal,
                     'jam_keberangkatan' => $jam_keberangkatan->start_time,
                     'jam_kembali'       => $jam_kembali->end_time,
                     'cara_pemakaian'    => $cara_pemakaian,
