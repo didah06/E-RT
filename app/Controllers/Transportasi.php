@@ -267,13 +267,13 @@ class Transportasi extends BaseController
         ];
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             $booking            = getData('tb_booking_transport', ['id_booking' => _getVar($this->request->getVar('e_id_booking'))])->get()->getRow();
+            $jam_keberangkatan  = getData('ms_jadwal', ['start_time' => _getVar($this->request->getVar('e_jam_keberangkatan'))])->get()->getRow();
+            $jam_kembali        = getData('ms_jadwal', ['end_time' => _getVar($this->request->getVar('e_jam_kembali'))])->get()->getRow();
             $tanggal_pemakaian  = _getVar($this->request->getVar('e_tanggal_pemakaian'));
             $jumlah_peserta     = _getVar($this->request->getVar('e_jumlah_peserta'));
             $anggaran           = _getVar($this->request->getVar('e_anggaran'));
             $tujuan             = _getVar($this->request->getVar('e_tujuan'));
             $acara_kegiatan     = _getVar($this->request->getVar('e_acara_kegiatan'));
-            $jam_keberangkatan = _getVar($this->request->getVar('e_jam_keberangkatan'));
-            $jam_kembali       = _getVar($this->request->getVar('e_jam_kembali'));
             $cara_pemakaian    = _getVar($this->request->getVar('e_cara_pemakaian'));
             $type_pemakaian    = _getVar($this->request->getVar('e_type_pemakaian'));
             $data = [
@@ -282,8 +282,10 @@ class Transportasi extends BaseController
                 'anggaran'          => $anggaran,
                 'tujuan'            => $tujuan,
                 'acara_kegiatan'    => $acara_kegiatan,
-                'jam_keberangkatan' => $jam_keberangkatan,
-                'jam_kembali'       => $jam_kembali,
+                'id_jadwal_start'   => $jam_keberangkatan->id_jadwal_start,
+                'jam_keberangkatan' => $jam_keberangkatan->start_time,
+                'id_jadwal_end'     => $jam_keberangkatan->id_jadwal_end,
+                'jam_kembali'       => $jam_kembali->end_time,
                 'cara_pemakaian'    => $cara_pemakaian,
                 'type_pemakaian'    => $type_pemakaian,
             ];
