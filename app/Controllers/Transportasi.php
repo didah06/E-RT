@@ -48,8 +48,8 @@ class Transportasi extends BaseController
     }
     public function select_jadwal_start($tanggal_pemakaian)
     {
-        $defaultNull    = _getVar($this->request->getVar('df'));
-        $jadwal         = getJadwal($tanggal_pemakaian)->getResult();
+        $defaultNull        = _getVar($this->request->getVar('df'));
+        $jadwal             = getJadwal($tanggal_pemakaian)->getResult();
         // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
         if ($defaultNull == '') {
             $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
@@ -116,6 +116,12 @@ class Transportasi extends BaseController
                 $json['input']['signature']    = 'Signature masih kosong';
             }
         }
+        $tanggal_pemakaian  = _getVar($this->request->getVar('tanggal_pemakaian'));
+        $min_date = date('Y-m-d');
+        if ($tanggal_pemakaian < $min_date) {
+            $json['input']['tanggal_pemakaian'] = 'tanggal input pemakaian error';
+            $json['error'] = 'minimum tanggal input adalah hari ini';
+        }
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             // $kendaraan          = getData('ms_kendaraan', ['id_kendaraan' => _getVar($this->request->getVar('id_kendaraan'))])->get()->getRow();
             $jam_keberangkatan  = getData('ms_jadwal', ['start_time' => _getVar($this->request->getVar('jam_keberangkatan'))])->get()->getRow();
@@ -123,8 +129,6 @@ class Transportasi extends BaseController
             $status             = getData('ms_status', ['id_status' => 1])->get()->getRow();
             $kode_booking       = generateKodeBooking();
             $user               = getUser(['id' => _session('id')])->getRow();
-            $tanggal_pemakaian = _getVar($this->request->getVar('tanggal_pemakaian'));
-            $tanggal = $tanggal_pemakaian !== "" ? $tanggal_pemakaian : date('Y-m-d', strtotime('-0 day'));
             $cara_pemakaian     = _getVar($this->request->getVar('cara_pemakaian'));
             $type_pemakaian     = _getVar($this->request->getVar('type_pemakaian'));
             $tujuan             = _getVar($this->request->getVar('tujuan'));
@@ -157,7 +161,7 @@ class Transportasi extends BaseController
                     'departemen'        => $user->departemen,
                     'nama'              => $user->nama,
                     'pemohon_ttd'       => $ttd,
-                    'tanggal_pemakaian' => $tanggal,
+                    'tanggal_pemakaian' => $tanggal_pemakaian,
                     'id_jadwal_start'   => $jam_keberangkatan->id_jadwal_start,
                     'jam_keberangkatan' => $jam_keberangkatan->start_time,
                     'id_jadwal_end'     => $jam_kembali->id_jadwal_end,
