@@ -57,14 +57,9 @@ class Transportasi extends BaseController
             $select    = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
         }
         foreach ($jadwal as $item) {
-            if ($item->tujuan != "") {
-                $disable = "disabled";
-                $str = ' - ' . $item->departemen . ' ' . $item->tujuan;
-            } else {
-                $disable = "";
-                $str = '';
-            }
-            $select    .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time  . $str . '</option>';
+            $disable = ($item->tujuan != "") ? "disabled" : "";
+            $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
+            $select .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time . $str . '</option>';
         }
         echo $select;
     }
@@ -79,14 +74,9 @@ class Transportasi extends BaseController
             $select    = '<option value="" selected>--Semua Jam Kembali--</option>';
         }
         foreach ($jadwal as $item) {
-            if ($item->tujuan != "") {
-                $disable = "disabled";
-                $str = ' - ' . $item->departemen . ' ' . $item->tujuan;
-            } else {
-                $disable = "";
-                $str = '';
-            }
-            $select    .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time  . $str . '</option>';
+            $disable = ($item->tujuan != "") ? "disabled" : "";
+            $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
+            $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time . $str . '</option>';
         }
         echo $select;
     }
@@ -168,7 +158,9 @@ class Transportasi extends BaseController
                     'nama'              => $user->nama,
                     'pemohon_ttd'       => $ttd,
                     'tanggal_pemakaian' => $tanggal,
+                    'id_jadwal_start'   => $jam_keberangkatan->id_jadwal_start,
                     'jam_keberangkatan' => $jam_keberangkatan->start_time,
+                    'id_jadwal_end'     => $jam_kembali->id_jadwal_end,
                     'jam_kembali'       => $jam_kembali->end_time,
                     'cara_pemakaian'    => $cara_pemakaian,
                     'type_pemakaian'    => $type_pemakaian,

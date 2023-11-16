@@ -321,15 +321,15 @@ function selectKodeBooking()
 function selectJadwalStart($where = [])
 {
     $db = connectdb('ms_jadwal');
-    $db->select("id_jadwal as id, start_time as text");
-    $db->orderBy('id_jadwal', 'ASC');
+    $db->select("id_jadwal_start as id, start_time as text");
+    $db->orderBy('start_time', 'ASC');
     return $db->get()->getResult();
 }
 function selectJadwalEnd()
 {
     $db = connectdb('ms_jadwal');
-    $db->select("id_jadwal as id, end_time as text");
-    $db->orderBy('id_jadwal', 'ASC');
+    $db->select("id_jadwal_end as id, end_time as text");
+    $db->orderBy('end_time', 'ASC');
     return $db->get()->getResult();
 }
 function isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_kembali)
@@ -455,32 +455,45 @@ function isMenuMalamExist($tgl_menu)
 function getJadwal($tanggal_pemakaian)
 {
     $db = connectdb('ms_jadwal');
-    // $db->where($where);
     $db->select("ms_jadwal.*, 
-    CONCAT( '(', 
-           CASE
-               WHEN ms_jadwal.start_time != ''  AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.departemen ELSE null END, 
-           ')') AS departemen,
     CONCAT(
-           CASE
-               WHEN ms_jadwal.start_time != '' AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.tujuan ELSE null END, 
-           ')') AS tujuan");
+        CASE
+            WHEN ms_jadwal.start_time IS NOT NULL AND ms_jadwal.id_jadwal_start = tb_booking_transport.id_jadwal_start AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian'
+            THEN tb_booking_transport.departemen
+            ELSE NULL
+        END,
+        ')') AS departemen,
+    CONCAT(
+        CASE
+            WHEN ms_jadwal.start_time IS NOT NULL AND ms_jadwal.id_jadwal_start = tb_booking_transport.id_jadwal_start AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian'
+            THEN tb_booking_transport.tujuan
+            ELSE NULL
+        END,
+        ')') AS tujuan");
     $db->join('tb_booking_transport', 'tb_booking_transport.jam_keberangkatan = ms_jadwal.start_time', 'left');
+    $db->orderBy('ms_jadwal.id_jadwal_start');
     return $db->get();
 }
 function getJadwalEnd($tanggal_pemakaian)
 {
     $db = connectdb('ms_jadwal');
-    $db->select("ms_jadwal.*,
-    CONCAT( '(', 
-            CASE 
-            WHEN ms_jadwal.end_time != '' AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.departemen ELSE null END,
-            ')') AS departemen,
+    $db->select("ms_jadwal.*, 
     CONCAT(
-            CASE 
-            WHEN ms_jadwal.end_time != '' AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian' THEN tb_booking_transport.tujuan ELSE null END,
-            ')') AS tujuan");
+        CASE
+            WHEN ms_jadwal.end_time IS NOT NULL AND ms_jadwal.id_jadwal_start= tb_booking_transport.id_jadwal_start AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian'
+            THEN tb_booking_transport.departemen
+            ELSE NULL
+        END,
+        ')') AS departemen,
+    CONCAT(
+        CASE
+            WHEN ms_jadwal.end_time IS NOT NULL AND ms_jadwal.id_jadwal_start = tb_booking_transport.id_jadwal_start AND tb_booking_transport.tanggal_pemakaian = '$tanggal_pemakaian'
+            THEN tb_booking_transport.tujuan
+            ELSE NULL
+        END,
+        ')') AS tujuan");
     $db->join('tb_booking_transport', 'tb_booking_transport.jam_kembali = ms_jadwal.end_time', 'left');
+    $db->orderBy('ms_jadwal.id_jadwal_start');
     return $db->get();
 }
 function selectSeragam()

@@ -11,26 +11,11 @@
  Target Server Version : 100422
  File Encoding         : 65001
 
- Date: 25/10/2023 11:35:30
+ Date: 16/11/2023 10:32:07
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for migrations
--- ----------------------------
-DROP TABLE IF EXISTS `migrations`;
-CREATE TABLE `migrations`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `version` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `class` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `group` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `namespace` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `time` int(11) NOT NULL,
-  `batch` int(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for ms_area
@@ -43,18 +28,6 @@ CREATE TABLE `ms_area`  (
   `created_by` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `created_at` time(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id_area`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for ms_barang_kondisi
--- ----------------------------
-DROP TABLE IF EXISTS `ms_barang_kondisi`;
-CREATE TABLE `ms_barang_kondisi`  (
-  `id_kondisi` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `kondisi` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `created_by` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `created_at` time(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id_kondisi`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -119,11 +92,12 @@ CREATE TABLE `ms_divisi`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `ms_jadwal`;
 CREATE TABLE `ms_jadwal`  (
-  `id_jadwal` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_jadwal_start` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
   `start_time` time(0) NULL DEFAULT NULL,
+  `id_jadwal_end` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `end_time` time(0) NULL DEFAULT NULL,
   `is_aktif` int(1) NULL DEFAULT 1,
-  PRIMARY KEY (`id_jadwal`) USING BTREE
+  PRIMARY KEY (`id_jadwal_start`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -236,7 +210,7 @@ CREATE TABLE `ms_menu_sub`  (
   `sort` int(2) NULL DEFAULT NULL,
   `is_aktif` int(1) NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for ms_role
@@ -298,7 +272,7 @@ CREATE TABLE `ms_user`  (
   `last_history` int(11) NULL DEFAULT 1,
   `last_login` int(11) NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_access_menu
@@ -311,7 +285,7 @@ CREATE TABLE `tb_access_menu`  (
   `id_menu` int(4) NULL DEFAULT NULL,
   `id_menu_sub` int(4) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 126 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 132 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_booking_transport
@@ -331,7 +305,9 @@ CREATE TABLE `tb_booking_transport`  (
   `tanggal_pemakaian` date NULL DEFAULT NULL,
   `type_pemakaian` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `cara_pemakaian` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `id_jadwal_start` int(11) NULL DEFAULT NULL,
   `jam_keberangkatan` time(0) NULL DEFAULT NULL,
+  `id_jadwal_end` int(11) NULL DEFAULT NULL,
   `jam_kembali` time(0) NULL DEFAULT NULL,
   `tujuan` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `acara_kegiatan` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -375,7 +351,7 @@ CREATE TABLE `tb_booking_transport`  (
   `created_at` int(11) NULL DEFAULT NULL,
   `is_aktif` int(1) NULL DEFAULT 1,
   PRIMARY KEY (`id_booking`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_daftar_menu
@@ -393,6 +369,8 @@ CREATE TABLE `tb_daftar_menu`  (
   `rating` int(11) NULL DEFAULT NULL,
   `saran` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `is_aktif` int(1) NULL DEFAULT 1,
+  `rating_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `rating_at` int(11) NULL DEFAULT NULL,
   `created_by` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `created_at` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id_menu`) USING BTREE
@@ -434,6 +412,27 @@ CREATE TABLE `tb_inventaris`  (
   `created_at` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id_inventaris`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_inventaris_fotokopi
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_inventaris_fotokopi`;
+CREATE TABLE `tb_inventaris_fotokopi`  (
+  `id_inventaris_fotokopi` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `kode_barang` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `nama_barang` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `jumlah_barang` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `merk` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `no_serial` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tgl_pengadaan_barang` date NULL DEFAULT NULL,
+  `kondisi` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `lokasi_penyimpanan` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` time(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_inventaris_fotokopi`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_jadwal_transport
@@ -488,7 +487,37 @@ CREATE TABLE `tb_kebersihan_dapur`  (
   `created_by` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `created_at` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id_kebersihan_dapur`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_pembelian_barang_fotokopi
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_pembelian_barang_fotokopi`;
+CREATE TABLE `tb_pembelian_barang_fotokopi`  (
+  `id_pembelian_barang` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `kode_barang` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `nama_barang` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `merk` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `no_serial` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `jenis_pengajuan` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tanggal` date NULL DEFAULT NULL,
+  `jml_barang` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `harga` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `struk` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tgl_pembelian` date NULL DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `approved_RT_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `approved_RT_at` time(0) NULL DEFAULT NULL,
+  `approved_RT_ttd` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tolak_RT_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tolak_RT_at` time(0) NULL DEFAULT NULL,
+  `tolak_RT_ttd` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tolak_ket` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` time(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_pembelian_barang`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_pemeliharaan_transport
@@ -509,6 +538,75 @@ CREATE TABLE `tb_pemeliharaan_transport`  (
   `is_aktif` int(1) NULL DEFAULT 1,
   PRIMARY KEY (`id_pemeliharaan`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_pemesanan_seragam
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_pemesanan_seragam`;
+CREATE TABLE `tb_pemesanan_seragam`  (
+  `id_pemesanan` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_pengambilan` int(11) NULL DEFAULT NULL,
+  `id_seragam` int(11) NULL DEFAULT NULL,
+  `jenis_seragam` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `departemen` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `id_vendor` int(11) NULL DEFAULT NULL,
+  `vendor` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tgl_pemesanan` date NULL DEFAULT NULL,
+  `ukuran` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `jumlah_pesanan` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `biaya` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tgl_pengiriman` date NULL DEFAULT NULL,
+  `jumlah_dikirim` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0',
+  `sisa_pesanan` int(11) NULL DEFAULT 0,
+  `created_pengiriman_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_pengiriman_at` time(0) NULL DEFAULT NULL,
+  `tgl_diterima` date NULL DEFAULT NULL,
+  `jumlah_diterima` int(11) NULL DEFAULT 0,
+  `jumlah_diambil` int(11) NULL DEFAULT 0,
+  `created_terima_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_terima_at` time(0) NULL DEFAULT NULL,
+  `stok_seragam` int(11) NULL DEFAULT 0,
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `status_stok` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` time(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_pemesanan`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_pengaduan
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_pengaduan`;
+CREATE TABLE `tb_pengaduan`  (
+  `id_pengaduan` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_seragam` int(11) NULL DEFAULT NULL,
+  `departemen` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tgl_pengaduan` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `pengaduan` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `saran` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` time(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_pengaduan`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_pengambilan_seragam
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_pengambilan_seragam`;
+CREATE TABLE `tb_pengambilan_seragam`  (
+  `id_pengambilan` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_seragam` int(11) NULL DEFAULT NULL,
+  `jenis_seragam` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `departemen` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tgl_pengambilan_seragam` date NULL DEFAULT NULL,
+  `jumlah_ambil_seragam` int(11) NULL DEFAULT NULL,
+  `stok_seragam` int(11) NULL DEFAULT 0,
+  `foto` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` time(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_pengambilan`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_pengawasan
@@ -555,6 +653,7 @@ CREATE TABLE `tb_petugas_dapur`  (
   `id_petugas_dapur` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NULL DEFAULT NULL,
   `nama` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tanggal` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `id_shift` int(11) NULL DEFAULT NULL,
   `shift` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `foto` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -562,7 +661,7 @@ CREATE TABLE `tb_petugas_dapur`  (
   `created_by` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `created_at` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id_petugas_dapur`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_porsi_makanan
@@ -583,5 +682,53 @@ CREATE TABLE `tb_porsi_makanan`  (
   `created_at` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id_porsi_makanan`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_seragam
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_seragam`;
+CREATE TABLE `tb_seragam`  (
+  `id_seragam` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_dept` int(11) NULL DEFAULT NULL,
+  `departemen` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `jenis_seragam` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `gambar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` time(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_seragam`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_transaksi_fotokopi
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_transaksi_fotokopi`;
+CREATE TABLE `tb_transaksi_fotokopi`  (
+  `id_transaksi_fotokopi` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `departemen` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `jenis_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `kebutuhan_transaksi` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `tanggal` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `jml_halaman` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `keterangan` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `harga_perhalaman` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `total_harga` int(11) NULL DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `file` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` time(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_transaksi_fotokopi`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_vendor
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_vendor`;
+CREATE TABLE `tb_vendor`  (
+  `id_vendor` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `vendor` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `telp` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id_vendor`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
