@@ -175,6 +175,7 @@ class Transportasi extends BaseController
                     'id_status'         => $status->id_status,
                     'status'            => $status->status,
                     'created_at'        => time(),
+                    'created_id'        => _session('id'),
                 ];
                 if (isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan->start_time, $jam_kembali->end_time) > 0) {
                     $json['error'] = 'Maaf! pada Jam tersebut sudah ada yang booking';
@@ -269,33 +270,42 @@ class Transportasi extends BaseController
             'e_cara_pemakaian'    => $this->_validation('e_cara_pemakaian', 'Cara Pemakaian', 'required'),
             'e_type_pemakaian'    => $this->_validation('e_type_pemakaian', 'Tipe Pemakaian', 'required'),
         ];
+        $booking            = getData('tb_booking_transport', ['id_booking' => _getVar($this->request->getVar('e_id_booking'))])->get()->getRow();
+        $tanggal_pemakaian  = _getVar($this->request->getVar('e_tanggal_pemakaian'));
+        $min_date = date('Y-m-d');
+        if ($tanggal_pemakaian >= $min_date || $tanggal_pemakaian === $booking->tanggal_pemakaian) {
+            $data['tanggal_pemakaian'] = $tanggal_pemakaian;
+        } else {
+            $json['input']['e_tanggal_pemakaian'] = 'tanggal input pemakaian error';
+            $json['error'] = 'minimum tanggal input adalah hari ini';
+        }
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             $booking            = getData('tb_booking_transport', ['id_booking' => _getVar($this->request->getVar('e_id_booking'))])->get()->getRow();
             $jam_keberangkatan  = getData('ms_jadwal', ['start_time' => _getVar($this->request->getVar('e_jam_keberangkatan'))])->get()->getRow();
             $jam_kembali        = getData('ms_jadwal', ['end_time' => _getVar($this->request->getVar('e_jam_kembali'))])->get()->getRow();
-            $tanggal_pemakaian  = _getVar($this->request->getVar('e_tanggal_pemakaian'));
             $jumlah_peserta     = _getVar($this->request->getVar('e_jumlah_peserta'));
             $anggaran           = _getVar($this->request->getVar('e_anggaran'));
             $tujuan             = _getVar($this->request->getVar('e_tujuan'));
             $acara_kegiatan     = _getVar($this->request->getVar('e_acara_kegiatan'));
             $cara_pemakaian    = _getVar($this->request->getVar('e_cara_pemakaian'));
             $type_pemakaian    = _getVar($this->request->getVar('e_type_pemakaian'));
-            $data = [
-                'tanggal_pemakaian' => $tanggal_pemakaian,
-                'jumlah_peserta'    => $jumlah_peserta,
-                'anggaran'          => $anggaran,
-                'tujuan'            => $tujuan,
-                'acara_kegiatan'    => $acara_kegiatan,
-                'id_jadwal_start'   => $jam_keberangkatan->id_jadwal_start,
-                'jam_keberangkatan' => $jam_keberangkatan->start_time,
-                'id_jadwal_end'     => $jam_keberangkatan->id_jadwal_end,
-                'jam_kembali'       => $jam_kembali->end_time,
-                'cara_pemakaian'    => $cara_pemakaian,
-                'type_pemakaian'    => $type_pemakaian,
-            ];
-            if (isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_kembali) > 0) {
-                $json['error'] = 'Maaf! pada Jam tersebut sudah ada yang booking';
+
+            if (!$booking) {
+                $json['error'] = 'data booking tidak ditemukan';
             } else {
+                $data = [
+                    'tanggal_pemakaian' => $tanggal_pemakaian,
+                    'jumlah_peserta'    => $jumlah_peserta,
+                    'anggaran'          => $anggaran,
+                    'tujuan'            => $tujuan,
+                    'acara_kegiatan'    => $acara_kegiatan,
+                    'id_jadwal_start'   => $jam_keberangkatan->id_jadwal_start,
+                    'jam_keberangkatan' => $jam_keberangkatan->start_time,
+                    'id_jadwal_end'     => $jam_keberangkatan->id_jadwal_end,
+                    'jam_kembali'       => $jam_kembali->end_time,
+                    'cara_pemakaian'    => $cara_pemakaian,
+                    'type_pemakaian'    => $type_pemakaian,
+                ];
                 $update = updateData('tb_booking_transport', $data, ['id_booking' => $booking->id_booking]);
                 if ($update) {
                     $json['success'] = $update;

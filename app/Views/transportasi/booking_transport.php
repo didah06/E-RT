@@ -201,12 +201,14 @@
                                                     </button> -->
                                                 </a>
                                                 <?php if ($table->status === 'ditolak' || $table->status === 'baru') : ?>
-                                                    <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                        <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
-                                                    </span>
-                                                    <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" type="button">
-                                                        <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
-                                                    </span>
+                                                    <?php if (_session('user_id') === $table->created_id) : ?>
+                                                        <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                            <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
+                                                        </span>
+                                                        <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" type="button">
+                                                            <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
+                                                        </span>
+                                                    <?php endif; ?>
                                                 <?php endif; ?>
                                             </td>
                                             <td>
@@ -256,7 +258,7 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Tanggal Pemakaian</label>
-                                                <input type="date" class="form-control" min="<?= date('Y-m-d', strtotime('-0 day')) ?>" name="e_tanggal_pemakaian" id="tanggal_pemakaian" onchange="checktime()">
+                                                <input type="date" class="form-control" name="e_tanggal_pemakaian" id="tanggal_pemakaian" onchange="checktime()">
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -389,6 +391,23 @@
                 $.get("<?= base_url('select_jadwal_end'); ?>/" + $(this).val(), function(d) {
                     $('select[name="jam_kembali"]').html(d);
                     $('select[name="jam_kembali"]').selectpicker('refresh');
+                });
+            }
+        })
+        $('input[name="e_tanggal_pemakaian"]').on('change', function() {
+            checktime();
+            if ($(this).val) {
+                $('select[name="e_jam_keberangkatan"]').html('<option value="" selected disabled>Loading...</option>');
+                $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
+                $.get("<?= base_url('select_jadwal_start'); ?>/" + $(this).val(), function(d) {
+                    $('select[name="e_jam_keberangkatan"]').html(d);
+                    $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
+                });
+                $('select[name="e_jam_kembali"]').html('<option value="" selected disabled>Loading...</option>');
+                $('select[name="e_jam_kembali"]').selectpicker('refresh');
+                $.get("<?= base_url('select_jadwal_end'); ?>/" + $(this).val(), function(d) {
+                    $('select[name="e_jam_kembali"]').html(d);
+                    $('select[name="e_jam_kembali"]').selectpicker('refresh');
                 });
             }
         })
