@@ -144,7 +144,7 @@ class Fotocopy extends BaseController
         $data['area']       = selectArea();
         $data['start_date'] = $start_date == "" ? date('Y-m-d') : $start_date;
         $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
-        $data['transaksi'] = getData('tb_transaksi_fotokopi', ['tanggal BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null, 'kebutuhan_transaksi' => $filter_kebutuhan_transaksi])->get()->getResult();
+        $data['transaksi'] = getData('tb_transaksi_fotokopi', ['tanggal BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null])->get()->getResult();
         return _tempHTML('fotocopy/transaksi', $data);
     }
     public function transaksi_save()
@@ -152,10 +152,7 @@ class Fotocopy extends BaseController
         $json['input'] = [
             'tanggal'           => $this->_validation('tanggal', 'Tanggal', 'required|valid_date'),
             'jml_halaman'       => $this->_validation('jml_halaman', 'Jumlah Halaman', 'required'),
-            'harga_perhalaman'  => $this->_validation('harga_perhalaman', 'Harga Perhalaman', 'required'),
-            'total_harga'       => $this->_validation('total_harga', 'Total Harga', 'required|decimal'),
-            // 'foto'              => $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
-            // 'file'              => $this->_validation('file', 'File', 'uploaded[file]|mime_in[file,doc,pdf]'),
+            'pemakaian_kertas'        => $this->_validation('pemakaian_kertas', 'Pemakaian Kertas', 'required'),
         ];
         $json['select'] = [
             'id_dept'           => $this->_validation('id_dept', 'Departemen', 'required'),
@@ -165,10 +162,8 @@ class Fotocopy extends BaseController
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             $tanggal = _getVar($this->request->getVar('tanggal'));
             $jml_halaman = _getVar($this->request->getVar('jml_halaman'));
-            $harga_perhalaman = _getVar($this->request->getVar('harga_perhalaman'));
-            $total_harga = $jml_halaman * $harga_perhalaman;
-            $foto = $this->request->getFile('foto');
-            $file = $this->request->getFile('file');
+            $keterangan = _getVar($this->request->getVar('keterangan'));
+            $pemakaian_kertas = _getVar($this->request->getVar('pemakaian_kertas'));
             $jenis_user = _getVar($this->request->getVar('jenis_user'));
             $kebutuhan_transaksi = _getVar($this->request->getVar('kebutuhan_transaksi'));
             $departemen = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('id_dept'))])->get()->getRow();
@@ -181,29 +176,12 @@ class Fotocopy extends BaseController
                     'kebutuhan_transaksi' => $kebutuhan_transaksi,
                     'tanggal'             => $tanggal,
                     'jml_halaman'         => $jml_halaman,
-                    'harga_perhalaman'    => $harga_perhalaman,
-                    'total_harga'         => $total_harga,
+                    'keterangan'          => $keterangan,
+                    'pemakaian_kertas'    => $pemakaian_kertas,
                     'created_by'          => _session('nama'),
                     'created_at'          => time(),
                 ];
-
-                if ($foto->getError() == 0 && $foto->isValid() && !$foto->hasMoved()) {
-                    $photo = $foto->getRandomName();
-                    $foto->move(FCPATH . './public/assets/images/fotocopy/transaksi', $photo);
-                    $data['foto'] = $photo;
-                }
-                if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-                    $file = $_FILES['file'];
-                    $destination = FCPATH . './public/assets/images/fotocopy/file_fotocopy/' . $file['name'];
-                    if (move_uploaded_file($file['tmp_name'], $destination)) {
-                        $data['file'] = $file['name'];
-                    } else {
-                        $json['error'] = 'File move failed';
-                    }
-                }
-
                 $add = addData('tb_transaksi_fotokopi', $data);
-
                 if ($add) {
                     $json['success'] = $add;
                 } else {
@@ -219,6 +197,46 @@ class Fotocopy extends BaseController
     {
         $data['pembelian_perawatan'] = getData('tb_pembelian_barang_fotokopi')->get()->getResult();
         return _tempHTML('fotocopy/pembelian_perawatan', $data);
+    }
+    public function pembelian_perawatan_save()
+    {
+        $json['input'] = [
+            'nama_barang'   => $this->_validation('nama_barang', 'Nama Barang', 'required'),
+            'merk'          => $this->_validation('merk', 'Merk', 'required'),
+            'no_serial'     => $this->_validation('no_serial', 'No Serial', 'required'),
+            'tanggal'       => $this->_validation('tanggal', 'Tanggal Pengajuan', 'required|valid_date'),
+            'jml_barang'    => $this->_validation('jml_barang', 'Jumlah Barang', 'required'),
+        ];
+        $json['select'] = [
+            'jenis_pengajuan'   => $this->_validation('jenis_pengajuan', 'Jenis Pengajuan', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $kode_barang          = generate_kode_barang();
+            $nama_barang          = _getVar($this->request->getVar('nama_barang'));
+            $merk                 = _getVar($this->request->getVar('merk'));
+            $no_serial            = _getVar($this->request->getVar('no_serial'));
+            $tanggal              = _getVar($this->request->getVar('tanggal'));
+            $jml_barang             = _getVar($this->request->getVar('jml_barang'));
+            $jenis_pengajuan            = _getVar($this->request->getVar('jenis_pengajuan'));
+            $data = [
+                'kode_barang'   => $kode_barang,
+                'nama_barang'   => $nama_barang,
+                'merk'          => $merk,
+                'no_serial'     => $no_serial,
+                'tanggal'       => $tanggal,
+                'jml_barang'    => $jml_barang,
+                'jenis_pengajuan' => $jenis_pengajuan,
+                'status'          => 'pengajuan'
+            ];
+            $add = addData('tb_pembelian_barang_fotokopi', $data);
+            if ($add) {
+                $json['success'] = $add;
+            } else {
+                $json['error']  = 'pengajuan pembelian barang gagal ditambahkan';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
     }
     public function get_pembelian_perawatan($kode_barang)
     {
@@ -398,9 +416,9 @@ class Fotocopy extends BaseController
         $filter_kebutuhan_transaksi = _getVar($this->request->getVar('kebutuhan_transaksi'));
         $data['shift']      = selectShift();
         $data['area']       = selectArea();
-        $data['start_date'] = $start_date == "" ? date('Y-m-d') : $start_date;
+        $data['start_date'] = $start_date == "" ? date('Y-m-') . '01' : $start_date;
         $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
-        $data['laporan_transaksi'] = getData('tb_transaksi_fotokopi', ['tanggal BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null, 'kebutuhan_transaksi' => $filter_kebutuhan_transaksi])->get()->getResult();
+        $data['laporan_transaksi'] = getData('tb_transaksi_fotokopi', ['tanggal BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null])->get()->getResult();
         return _tempHTML('fotocopy/laporan', $data);
     }
 }

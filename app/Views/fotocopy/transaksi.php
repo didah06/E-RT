@@ -85,19 +85,19 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label">Harga Perhalaman</label>
-                                                <input type="text" name="harga_perhalaman" id="harga" class="form-control divide">
+                                                <label class="form-label">Pemakaian Kertas</label>
+                                                <input name="pemakaian_kertas" class="form-control divide"></input>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label">Total Harga</label>
-                                                <input type="text" name="total_harga" id="total_harga" class="form-control divide">
+                                                <label class="form-label">Keterangan</label>
+                                                <textarea name="keterangan" class="form-control"></textarea>
                                                 <div class="invalid-feedback"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <!-- <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Foto</label>
                                                 <input type="file" name="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
@@ -107,10 +107,10 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">File</label>
-                                                <input type="file" name="file" class="form-control" accept=".doc, .pdf">
+                                                <input type="file" name="file[]" multiple class="form-control" accept=".doc, .pdf">
                                                 <div class="invalid-feedback"></div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="text-center pt-3 pb-3">
@@ -173,40 +173,30 @@
                                         <th>Jenis User</th>
                                         <th>tanggal</th>
                                         <th>Jumlah Halaman</th>
-                                        <th>Harga Perhalaman</th>
-                                        <th>Total Harga</th>
-                                        <th>Foto</th>
-                                        <th>File</th>
+                                        <th>Pemakaian Kertas</th>
+                                        <th>keterangan</th>
+                                        <!-- <th>Harga Perhalaman</th>
+                                        <th>Total Harga</th> -->
+                                        <!-- <th>Foto</th>
+                                        <th>File</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($transaksi as $table) : ?>
                                         <tr>
-                                            <td class="text-center"></td>
-                                            <td><span class="<?= $table->kebutuhan_transaksi === 'fotocopy' ? 'badge badge-info' : 'badge badge:warning'; ?>">
+                                            <td class="text-center">
+                                                <button class="btn btn-warning"><i class="zmdi zmdi-eyedropper" style="font-size: 15px;"></i></button>
+                                            </td>
+                                            <td><span class="<?= $table->kebutuhan_transaksi === 'fotocopy' ? 'badge badge-info' : 'badge badge-warning'; ?>">
                                                     <?= $table->kebutuhan_transaksi === 'fotocopy' ? 'fotocopy' : 'laminating'; ?></span></td>
                                             <td><?= $table->departemen; ?></td>
                                             <td><?= $table->created_by; ?></td>
                                             <td><?= $table->jenis_user; ?></td>
                                             <td><?= $table->tanggal; ?></td>
                                             <td><?= $table->jml_halaman; ?></td>
-                                            <td><?= $table->harga_perhalaman; ?></td>
-                                            <td><?= $table->total_harga; ?></td>
-                                            <td>
-                                                <?php if ($table->foto != null) : ?>
-                                                    <a href="<?= base_url('public/assets/images/fotocopy/transaksi/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
-                                                <?php else : ?>
-                                                    <?php echo '-'; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($table->file != null) : ?>
-                                                    <a href="<?= base_url('public/assets/images/fotocopy/file_fotocopy/' . $table->file) ?>" class="btn btn-light">
-                                                        <i class="zmdi zmdi-file"></i></a>
-                                                <?php else : ?>
-                                                    <?php echo '-'; ?>
-                                                <?php endif; ?>
-                                            </td>
+                                            <td><?= $table->pemakaian_kertas; ?></td>
+                                            <td><?= $table->keterangan; ?></td>
+                                            <!--  -->
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -227,16 +217,12 @@
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
-            var formData = new FormData(this);
+            // var formData = new FormData(this);
             $.ajax({
                 url: e.target.action,
                 type: 'post',
                 dataType: 'json',
-                data: formData,
-                enctype: 'multipart/form-data',
-                cache: false,
-                contentType: false,
-                processData: false,
+                data: $(this).serialize,
                 error: function(xhr) {
                     processDone();
                     invalidError({

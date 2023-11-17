@@ -65,36 +65,22 @@
                                 <thead>
                                     <tr>
                                         <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
-                                        <th class="text-center">#</th>
                                         <th>Kebutuhan Transaksi</th>
                                         <th>Departemen</th>
                                         <th>Jenis User</th>
                                         <th>Jumlah Halaman</th>
-                                        <th>Harga Perhalaman</th>
-                                        <th>Total Harga</th>
-                                        <th>Foto</th>
-                                        <th>File</th>
+                                        <th>Pemakaian Kertas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($laporan_transaksi as $table) : ?>
                                         <tr>
-                                            <td class="text-center"></td>
                                             <td><span class="<?= $table->kebutuhan_transaksi === 'fotocopy' ? 'badge badge-info' : 'badge badge:warning'; ?>">
                                                     <?= $table->kebutuhan_transaksi === 'fotocopy' ? 'fotocopy' : 'laminating'; ?></span></td>
                                             <td><?= $table->departemen; ?></td>
                                             <td><?= $table->jenis_user; ?></td>
                                             <td><?= $table->jml_halaman; ?></td>
-                                            <td><?= $table->harga_perhalaman; ?></td>
-                                            <td><?= $table->total_harga; ?></td>
-                                            <td>
-                                                <?php if ($table->foto != null) : ?>
-                                                    <a href="<?= base_url('public/assets/images/fotocopy/transaksi/' . $table->foto) ?>" class="btn btn-light"><i class="zmdi zmdi-image-alt"></i></a>
-                                                <?php else : ?>
-                                                    <?php echo '-'; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><?= $table->file; ?></td>
+                                            <td><?= $table->pemakaian_kertas; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

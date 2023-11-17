@@ -25,8 +25,85 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <div class="body">
+                        <div class="modal fade" id="Modaladd" data-backdrop="false" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Pembelian/Perawatan Barang Fotokopi</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="error-area"></div>
+                                        <?= form_open(base_url('pembelian_perawatan'), ['class' => 'add-form']); ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Nama Barang</label>
+                                                    <input type="text" class="form-control" name="nama_barang">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Merk</label>
+                                                    <input type="text" class="form-control" name="merk">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">No Serial</label>
+                                                    <input type="text" class="form-control" name="no_serial">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Jenis Pengajuan</label>
+                                                    <select class="form-control select-only" name="jenis_pengajuan">
+                                                        <option value="" selected disabled>- Pilih Pengajuan -</option>
+                                                        <option value="perawatan">Perawatan</option>
+                                                        <option value="pembelian">Pembelian</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Tanggal Pengajuan</label>
+                                                    <input type="date" class="form-control" name="tanggal">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Jumlah Barang</label>
+                                                    <input type="text" class="form-control" name="jml_barang">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Harga</label>
+                                                    <input type="text" class="form-control divide" name="harga">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row text-center">
+                                            <div class="col-md-12">
+                                                <button class="btn btn-success" type="submit">pengajuan pembelian</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mb-5">
-                            <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Pembelian Barang
+                            <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Pengajuan Pembelian Barang
                                 </i></button>
                         </div>
                         <!-- Signature Edit -->
@@ -197,7 +274,7 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td>
-                                                <span class="<?= $table->status === 'pengajuan pembelian' ? 'badge badge-danger' : ($table->status === 'pengajuan perawatan' ? 'badge badge-warning' : 'badge badge-success'); ?>">
+                                                <span class="<?= $table->status === 'pengajuan' ? 'badge badge-danger' : 'badge badge-warning'; ?>">
                                                     <?= $table->status === 'pengajuan' ? 'pengajuan' : ($table->status === 'approved' ? 'approved' : ($table->status === 'pembelian' ? 'pembelian' : ($table->status === 'perawatan' ? 'perawatan' : ($table->status)))); ?>
                                                 </span>
                                             </td>
@@ -389,6 +466,33 @@
                 }
             })
         });
+        $('.add-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        $('input[name=rscript]').val(d['rscript']);
+                        $('#ModalFormPengajuan').modal('hide');
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                        Swal.fire('Tambah data gagal', d['msg'], 'error');
+                    }
+                }
+            })
+        })
         $('.signature-clear').on('click', function(event) {
             signaturePad.clear();
         });
