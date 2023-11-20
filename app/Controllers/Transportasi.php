@@ -35,6 +35,10 @@ class Transportasi extends BaseController
     }
     public function index()
     {
+        $user     = getUser(['id' => _session('id')])->getRow();
+        if (_session('jenis') != 'Admin') {
+            $data['departemen'] = selectDepartemen(['id_divisi' => $user->departemen]);
+        }
         $data['booking'] = $this->model->get()->getResult();
         return $this->respond($data);
     }
@@ -49,34 +53,48 @@ class Transportasi extends BaseController
     public function select_jadwal_start($tanggal_pemakaian)
     {
         $defaultNull        = _getVar($this->request->getVar('df'));
+        $id_booking         = _getVar($this->request->getVar('id_booking'));
         $jadwal             = getJadwal($tanggal_pemakaian)->getResult();
         // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
         if ($defaultNull == '') {
             $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
         } else if ($defaultNull == 1) {
             $select    = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
+        } else {
+            $select = '';
         }
         foreach ($jadwal as $item) {
-            $disable = ($item->tujuan != "") ? "disabled" : "";
+            $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
             $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
-            $select .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time . $str . '</option>';
+            if ($item->id_booking == $id_booking) {
+                $select .= '<option value="' . $item->start_time . '" selected>' . $item->start_time  . $str . '</option>';
+            } else {
+                $select .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time  . $str . '</option>';
+            }
         }
         echo $select;
     }
     public function select_jadwal_end($tanggal_pemakaian)
     {
         $defaultNull    = _getVar($this->request->getVar('df'));
+        $id_booking     = _getVar($this->request->getVar('id_booking'));
         $jadwal         = getJadwalEnd($tanggal_pemakaian)->getResult();
         // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
         if ($defaultNull == '') {
             $select    = '<option value="" selected disabled>--Pilih Jam Kembali--</option>';
         } else if ($defaultNull == 1) {
             $select    = '<option value="" selected>--Semua Jam Kembali--</option>';
+        } else {
+            $select = ''; // Initialize select variable
         }
         foreach ($jadwal as $item) {
-            $disable = ($item->tujuan != "") ? "disabled" : "";
+            $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
             $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
-            $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time . $str . '</option>';
+            if ($item->id_booking == $id_booking) {
+                $select .= '<option value="' . $item->end_time . '" selected>' . $item->end_time . $str . '</option>';
+            } else {
+                $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time . $str . '</option>';
+            }
         }
         echo $select;
     }
@@ -175,7 +193,7 @@ class Transportasi extends BaseController
                     'id_status'         => $status->id_status,
                     'status'            => $status->status,
                     'created_at'        => time(),
-                    'created_id'        => _session('id'),
+                    'created_id'        => _session('user_id'),
                 ];
                 if (isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan->start_time, $jam_kembali->end_time) > 0) {
                     $json['error'] = 'Maaf! pada Jam tersebut sudah ada yang booking';
@@ -289,7 +307,6 @@ class Transportasi extends BaseController
             $acara_kegiatan     = _getVar($this->request->getVar('e_acara_kegiatan'));
             $cara_pemakaian    = _getVar($this->request->getVar('e_cara_pemakaian'));
             $type_pemakaian    = _getVar($this->request->getVar('e_type_pemakaian'));
-
             if (!$booking) {
                 $json['error'] = 'data booking tidak ditemukan';
             } else {

@@ -399,13 +399,13 @@
             if ($(this).val) {
                 $('select[name="e_jam_keberangkatan"]').html('<option value="" selected disabled>Loading...</option>');
                 $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
-                $.get("<?= base_url('select_jadwal_start'); ?>/" + $(this).val(), function(d) {
+                $.get("<?= base_url('select_jadwal_start'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
                     $('select[name="e_jam_keberangkatan"]').html(d);
                     $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
                 });
                 $('select[name="e_jam_kembali"]').html('<option value="" selected disabled>Loading...</option>');
                 $('select[name="e_jam_kembali"]').selectpicker('refresh');
-                $.get("<?= base_url('select_jadwal_end'); ?>/" + $(this).val(), function(d) {
+                $.get("<?= base_url('select_jadwal_end'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
                     $('select[name="e_jam_kembali"]').html(d);
                     $('select[name="e_jam_kembali"]').selectpicker('refresh');
                 });
@@ -445,7 +445,8 @@
             $.getJSON("<?= base_url('booking_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_booking]').val(d['data'].id_booking);
-                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
+                    // $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
+                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian).trigger('change');
                     $('select[name=e_jam_keberangkatan]').val(d['data'].jam_keberangkatan).trigger('change');
                     $('select[name=e_jam_kembali]').val(d['data'].jam_kembali).trigger('change');
                     $('select[name=e_cara_pemakaian').val(d['data'].cara_pemakaian).trigger('change');

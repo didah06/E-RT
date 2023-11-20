@@ -61,5 +61,7 @@ class TransportModel extends Model
         'id_status',
         'status',
         'is_aktif',
+        'created_id',
+        'created_at',
     ];
 }
