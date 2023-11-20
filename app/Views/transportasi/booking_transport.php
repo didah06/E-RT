@@ -170,6 +170,29 @@
                             <button class="btn btn-info" data-toggle="modal" data-target="#ModalFormPengajuan"><i class="zmdi zmdi-plus">Form Pengajuan Kendaraan
                                 </i></button>
                         </div>
+                        <div class="col-md-12">
+                            <form method="GET" action="<?= base_url('/booking') ?>">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="mb-2">
+                                            <label class="form-label">min date</label>
+                                            <input type="date" class="form-control" name="start_date" id="min" value="<?= $start_date; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-2">
+                                            <label class="form-label">max date</label>
+                                            <input type="date" class="form-control" name="end_date" id="max" value="<?= $end_date; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mt-3">
+                                            <button class="btn btn-warning" type="submit">filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
@@ -399,18 +422,36 @@
             if ($(this).val) {
                 $('select[name="e_jam_keberangkatan"]').html('<option value="" selected disabled>Loading...</option>');
                 $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
-                $.get("<?= base_url('select_jadwal_start'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
+                $.get("<?= base_url('select_jadwal_jam_berangkat'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
                     $('select[name="e_jam_keberangkatan"]').html(d);
                     $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
                 });
                 $('select[name="e_jam_kembali"]').html('<option value="" selected disabled>Loading...</option>');
                 $('select[name="e_jam_kembali"]').selectpicker('refresh');
-                $.get("<?= base_url('select_jadwal_end'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
+                $.get("<?= base_url('select_jadwal_jam_kembali'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
                     $('select[name="e_jam_kembali"]').html(d);
                     $('select[name="e_jam_kembali"]').selectpicker('refresh');
                 });
             }
         })
+        $('select[name="e_jam_keberangkatan"]').change(function() {
+            $.get("<?= base_url('select_jadwal_jam_berangkat'); ?>", {
+                tanggal_pemakaian: $('input[name="e_tanggal_pemakaian"]').val(),
+                id_booking: $('input[name="e_id_booking"]').val()
+            }, function(data) {
+                $('select[name="e_jam_keberangkatan"]').html(data);
+                $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
+            });
+        });
+        $('select[name="e_jam_kembali"]').change(function() {
+            $.get("<?= base_url('select_jadwal_jam_kembali'); ?>", {
+                tanggal_pemakaian: $('input[name="e_tanggal_pemakaian"]').val(),
+                id_booking: $('input[name="e_id_booking"]').val()
+            }, function(data) {
+                $('select[name="e_jam_kembali"]').html(data);
+                $('select[name="e_jam_kembali"]').selectpicker('refresh');
+            });
+        });
         $('.add-form').on('submit', function(e) {
             e.preventDefault();
             processStart();

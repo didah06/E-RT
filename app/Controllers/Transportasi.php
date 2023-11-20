@@ -47,7 +47,15 @@ class Transportasi extends BaseController
         $data['kendaraan']  = selectKendaraan();
         $data['start_time'] = selectJadwalStart();
         $data['end_time'] = selectJadwalEnd();
-        $data['booking'] = $this->model->whereNotIn('status', ['diproses', 'selesai'])->get()->getResult();
+        $start_date = _getVar($this->request->getVar('start_date'));
+        $end_date   = _getVar($this->request->getVar('end_date'));
+        $data['start_date'] = $start_date == "" ? date('Y-m-') . '01' : $start_date;
+        $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
+        $data['booking'] = getData('tb_booking_transport')
+            ->whereNotIn('status', ['diproses', 'selesai'])
+            ->where('tanggal_pemakaian BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"')
+            ->get()
+            ->getResult();
         return _tempHTML('transportasi/booking_transport', $data);
     }
     public function select_jadwal_start($tanggal_pemakaian)
@@ -60,17 +68,11 @@ class Transportasi extends BaseController
             $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
         } else if ($defaultNull == 1) {
             $select    = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
-        } else {
-            $select = '';
         }
         foreach ($jadwal as $item) {
             $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
             $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
-            if ($item->id_booking == $id_booking) {
-                $select .= '<option value="' . $item->start_time . '" selected>' . $item->start_time  . $str . '</option>';
-            } else {
-                $select .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time  . $str . '</option>';
-            }
+            $select .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time  . $str . '</option>';
         }
         echo $select;
     }
@@ -84,16 +86,56 @@ class Transportasi extends BaseController
             $select    = '<option value="" selected disabled>--Pilih Jam Kembali--</option>';
         } else if ($defaultNull == 1) {
             $select    = '<option value="" selected>--Semua Jam Kembali--</option>';
-        } else {
-            $select = ''; // Initialize select variable
+        }
+        foreach ($jadwal as $item) {
+            $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
+            $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
+            $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time . $str . '</option>';
+        }
+        echo $select;
+    }
+    public function select_jadwal_jam_berangkat()
+    {
+        $defaultNull        = _getVar($this->request->getVar('df'));
+        $id_booking         = _getVar($this->request->getVar('id_booking'));
+        $tanggal_pemakaian  = _getVar($this->request->getVar('tanggal_pemakaian'));
+        $jadwal             = getJadwal($tanggal_pemakaian)->getResult();
+        // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
+        if ($defaultNull == '') {
+            $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
+        } else if ($defaultNull == 1) {
+            $select    = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
         }
         foreach ($jadwal as $item) {
             $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
             $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
             if ($item->id_booking == $id_booking) {
-                $select .= '<option value="' . $item->end_time . '" selected>' . $item->end_time . $str . '</option>';
+                $select .= '<option value="' . $item->start_time . '" selected>' . $item->start_time  . $str . '</option>';
             } else {
-                $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time . $str . '</option>';
+                $select .= '<option value="' . $item->start_time . '" ' . $disable . '>' . $item->start_time  . $str . '</option>';
+            }
+        }
+        echo $select;
+    }
+    public function select_jadwal_jam_kembali()
+    {
+        $defaultNull        = _getVar($this->request->getVar('df'));
+        $id_booking         = _getVar($this->request->getVar('id_booking'));
+        $tanggal_pemakaian  = _getVar($this->request->getVar('tanggal_pemakaian'));
+        $jadwal             = getJadwal($tanggal_pemakaian)->getResult();
+        // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
+        if ($defaultNull == '') {
+            $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
+        } else if ($defaultNull == 1) {
+            $select    = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
+        }
+        foreach ($jadwal as $item) {
+            $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
+            $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
+            if ($item->id_booking == $id_booking) {
+                $select .= '<option value="' . $item->end_time . '" selected>' . $item->end_time  . $str . '</option>';
+            } else {
+                $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time  . $str . '</option>';
             }
         }
         echo $select;
