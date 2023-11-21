@@ -230,18 +230,18 @@
                         <a href="<?= base_url('logout'); ?>" title="Sign out"><i class="zmdi zmdi-power"></i></a>
                     </div>
                 </li>
-                <li class="<?= is_menu_active('') ?>"> <a href="<?= base_url(); ?>" class="load-click"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
-                <li class="<?= is_menu_active('profile') ?>"> <a href="<?= base_url('profile'); ?>" class="load-click"><i class="zmdi zmdi-account"></i><span>Profile</span></a></li>
+                <li class="<?= is_menu_active('') ?>"> <a href="<?= base_url(); ?>"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
+                <li class="<?= is_menu_active('profile') ?>"> <a href="<?= base_url('profile'); ?>"><i class="zmdi zmdi-account"></i><span>Profile</span></a></li>
 
                 <?php $menu = _userMenu('sistem_manajemen') ?>
                 <?php if ($menu) : ?>
                     <li class="header" data-key="t-menu">RUMAH TANGGA</li>
 
                     <?php foreach ($menu as $userMenu) :
-                        $arrow      = $userMenu->is_sub == 0 ? 'has-arrow' : 'menu-toggle';
-                        $href_menu  = $userMenu->is_sub == 1 ? 'javascript: void(0);' : base_url($userMenu->url); ?>
-
-                        <li class="<?= is_menu_active($userMenu->url); ?>">
+                        $arrow      = $userMenu->is_sub == 1 ? 'menu-toggle' : 'load-click';
+                        $href_menu  = $userMenu->is_sub == 1 ? 'javascript:void(0);' : base_url($userMenu->url);
+                    ?>
+                        <li>
                             <a href="<?= $href_menu; ?>" class="<?= $arrow; ?>">
                                 <i class="<?= $userMenu->icon; ?>"></i>
                                 <span data-key="t-<?= $userMenu->menu; ?>"><?= $userMenu->menu; ?></span>
@@ -250,7 +250,7 @@
                                 <ul class="ml-menu">
                                     <?php foreach (_userSubMenu($userMenu->id) as $userSubMenu) : ?>
                                         <li class="<?= is_menu_active($userSubMenu->url); ?>">
-                                            <a href="<?= base_url($userSubMenu->url); ?>" class="load-click">
+                                            <a href="<?= base_url($userSubMenu->url); ?>">
                                                 <span data-key="t-<?= $userSubMenu->sub_menu; ?>"><?= $userSubMenu->sub_menu; ?></span>
                                             </a>
                                         </li>

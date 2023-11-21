@@ -487,7 +487,7 @@
                 if (d['status'] === true) {
                     $('input[name=e_id_booking]').val(d['data'].id_booking);
                     // $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
-                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian).trigger('change');
+                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
                     $('select[name=e_jam_keberangkatan]').val(d['data'].jam_keberangkatan).trigger('change');
                     $('select[name=e_jam_kembali]').val(d['data'].jam_kembali).trigger('change');
                     $('select[name=e_cara_pemakaian').val(d['data'].cara_pemakaian).trigger('change');
