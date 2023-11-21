@@ -25,13 +25,13 @@ class Transportasi extends BaseController
 
     public function __construct()
     {
-        $this->model       = new TransportModel();
-        $this->modeljadwal = new JadwalTransportModel();
-        $this->modelkendaraan = new KendaraanModel();
-        $this->modelasuransi = new AsuransiModel();
-        $this->modelpajak = new PajakModel();
-        $this->modelsteam = new SteamModel();
-        $this->modelservice = new ServiceModel();
+        $this->model            = new TransportModel();
+        $this->modeljadwal      = new JadwalTransportModel();
+        $this->modelkendaraan   = new KendaraanModel();
+        $this->modelasuransi    = new AsuransiModel();
+        $this->modelpajak       = new PajakModel();
+        $this->modelsteam       = new SteamModel();
+        $this->modelservice     = new ServiceModel();
     }
     public function index()
     {
@@ -54,15 +54,15 @@ class Transportasi extends BaseController
         } else {
             $where = [];
         }
-        $data['kendaraan'] = selectKendaraan();
+        $data['kendaraan']  = selectKendaraan();
         $data['start_time'] = selectJadwalStart();
-        $data['end_time'] = selectJadwalEnd();
+        $data['end_time']   = selectJadwalEnd();
 
-        $start_date = _getVar($this->request->getVar('start_date'));
-        $end_date = _getVar($this->request->getVar('end_date'));
+        $start_date     = _getVar($this->request->getVar('start_date'));
+        $end_date       = _getVar($this->request->getVar('end_date'));
 
-        $data['start_date'] = $start_date == "" ? date('Y-m-') . '01' : $start_date;
-        $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
+        $data['start_date']     = $start_date == "" ? date('Y-m-') . '01' : $start_date;
+        $data['end_date']       = $end_date == "" ? date('Y-m-t') : $end_date;
 
         $data['booking'] = $this->model->where($where)
             ->whereNotIn('status', ['diproses', 'selesai'])
@@ -138,9 +138,9 @@ class Transportasi extends BaseController
         $jadwal             = getJadwal($tanggal_pemakaian)->getResult();
         // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
         if ($defaultNull == '') {
-            $select    = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
+            $select         = '<option value="" selected disabled>--Pilih Jam Keberangkatan--</option>';
         } else if ($defaultNull == 1) {
-            $select    = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
+            $select         = '<option value="" selected>--Semua Jam Keberangkatan--</option>';
         }
         foreach ($jadwal as $item) {
             $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
@@ -174,7 +174,7 @@ class Transportasi extends BaseController
         ];
         $json['select'] = [
             'jam_keberangkatan' => $this->_validation('jam_keberangkatan', 'Jam Keberangkatan', 'required'),
-            'jam_kembali'        => $this->_validation('jam_kembali', 'Jam Kembali', 'required'),
+            'jam_kembali'       => $this->_validation('jam_kembali', 'Jam Kembali', 'required'),
             'cara_pemakaian'    => $this->_validation('cara_pemakaian', 'Cara Pemakaian', 'required'),
             'type_pemakaian'    => $this->_validation('type_pemakaian', 'Tipe Pemakaian', 'required'),
             // 'id_kendaraan'      => $this->_validation('id_kendaraan', 'Jenis Kendaraan', 'required'),
@@ -198,8 +198,8 @@ class Transportasi extends BaseController
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             // $kendaraan          = getData('ms_kendaraan', ['id_kendaraan' => _getVar($this->request->getVar('id_kendaraan'))])->get()->getRow();
             $jam_keberangkatan  = getData('ms_jadwal', ['start_time' => _getVar($this->request->getVar('jam_keberangkatan'))])->get()->getRow();
-            $jam_kembali        = getData('ms_jadwal', ['end_time' => _getVar($this->request->getVar('jam_kembali'))])->get()->getRow();
-            $status             = getData('ms_status', ['id_status' => 1])->get()->getRow();
+            $jam_kembali        = getData('ms_jadwal', ['end_time'   => _getVar($this->request->getVar('jam_kembali'))])->get()->getRow();
+            $status             = getData('ms_status', ['id_status'  => 1])->get()->getRow();
             $kode_booking       = generateKodeBooking();
             $user               = getUser(['id' => _session('id')])->getRow();
             $cara_pemakaian     = _getVar($this->request->getVar('cara_pemakaian'));
@@ -257,7 +257,7 @@ class Transportasi extends BaseController
                     if ($add) {
                         $json['success'] = $add;
                     } else {
-                        $json['error']  = "data gagal ditambahkan";
+                        $json['error']   = "data gagal ditambahkan";
                     }
                 }
             }
@@ -267,22 +267,22 @@ class Transportasi extends BaseController
     }
     public function booking_details($id_booking)
     {
-        $data['kendaraan'] = selectKendaraan();
-        $data['driver']    = selectDriverUser();
-        $data['booking'] = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
+        $data['kendaraan']    = selectKendaraan();
+        $data['driver']       = selectDriverUser();
+        $data['booking']      = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
         $data['booking_list'] = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getResult();
         return _tempHTML('transportasi/booking_details', $data);
     }
     public function details_save()
     {
-        $id_booking = _getVar($this->request->getVar('id_booking'));
+        $id_booking    = _getVar($this->request->getVar('id_booking'));
         $json['input'] = [
             'jumlah_kendaraan' => $this->_validation('jumlah_kendaraan', 'Jumlah Kendaraan', 'required|is_natural'),
             'saldo_awal_etol'  => $this->_validation('saldo_awal_etol', 'Saldo Awal E-tol', 'required|decimal')
         ];
         $json['select'] = [
-            'id_kendaraan' => $this->_validation('id_kendaraan', 'Jenis Kendaraan', 'required'),
-            'user_id'      => $this->_validation('user_id', 'Driver', 'required'),
+            'id_kendaraan'     => $this->_validation('id_kendaraan', 'Jenis Kendaraan', 'required'),
+            'user_id'          => $this->_validation('user_id', 'Driver', 'required'),
         ];
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
             $user               = getData('db_master.ms_user', ['user_id' => _getVar($this->request->getVar('user_id'))])->get()->getRow();
@@ -290,7 +290,7 @@ class Transportasi extends BaseController
             $jumlah_kendaraan   = _getVar($this->request->getVar('jumlah_kendaraan'));
             $saldo_awal_etol    = _getVar($this->request->getVar('saldo_awal_etol'));
             if (!$user) {
-                $json['select']['user_id']    = 'Pilihan data tidak ditemukan';
+                $json['select']['user_id']         = 'Pilihan data tidak ditemukan';
             } else if (!$kendaraan) {
                 $json['select']['id_kendaraan']    = 'Pilihan data tidak ditemukan';
             } else {
@@ -305,7 +305,7 @@ class Transportasi extends BaseController
                 if ($add) {
                     $json['success'] = $add;
                 } else {
-                    $json['error'] = 'data gagal ditambahkan';
+                    $json['error']   = 'data gagal ditambahkan';
                 }
             }
         }
@@ -360,10 +360,10 @@ class Transportasi extends BaseController
             $anggaran           = _getVar($this->request->getVar('e_anggaran'));
             $tujuan             = _getVar($this->request->getVar('e_tujuan'));
             $acara_kegiatan     = _getVar($this->request->getVar('e_acara_kegiatan'));
-            $cara_pemakaian    = _getVar($this->request->getVar('e_cara_pemakaian'));
-            $type_pemakaian    = _getVar($this->request->getVar('e_type_pemakaian'));
+            $cara_pemakaian     = _getVar($this->request->getVar('e_cara_pemakaian'));
+            $type_pemakaian     = _getVar($this->request->getVar('e_type_pemakaian'));
             if (!$booking) {
-                $json['error'] = 'data booking tidak ditemukan';
+                $json['error']  = 'data booking tidak ditemukan';
             } else {
                 $data = [
                     'tanggal_pemakaian' => $tanggal_pemakaian,
@@ -382,7 +382,7 @@ class Transportasi extends BaseController
                 if ($update) {
                     $json['success'] = $update;
                 } else {
-                    $json['error']  = 'data gagal update';
+                    $json['error']   = 'data gagal update';
                 }
             }
         }
@@ -423,7 +423,7 @@ class Transportasi extends BaseController
         }
         if (_validationHasErrors($json['input'])) {
             $old_check            = _getVar($this->request->getVar('old_check'));
-            $status              = getData('ms_status', ['id_status' => 3])->get()->getRow();
+            $status               = getData('ms_status', ['id_status' => 3])->get()->getRow();
             if (!$getBooking) {
                 $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
             } else {
@@ -446,7 +446,7 @@ class Transportasi extends BaseController
                 if ($update) {
                     $json['success'] = $update;
                 } else {
-                    $json['error'] = 'update gagal';
+                    $json['error']   = 'update gagal';
                 }
             }
         }
@@ -456,7 +456,7 @@ class Transportasi extends BaseController
     public function approved_kadiv($id_booking)
     {
         $getBooking = $this->model->find($id_booking);
-        $json['input']    = [
+        $json['input']     = [
             'signature'    => $this->_validation('signature', 'Signature', 'required'),
         ];
         if (!empty($this->request->getVar('signature'))) {
@@ -465,20 +465,20 @@ class Transportasi extends BaseController
             $exp                    = explode(';base64,', $data_signature);
             $image_type             = str_replace('data:image/', '', $exp[0]);
             $signature_base64       = $exp[1];
-            if ($signature_base64 == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
+            if ($signature_base64   == _signatureKosong() && (_getVar($this->request->getVar('old_check')) != 1 || $user->ttd == 'default.png')) {
                 $json['input']['signature']    = 'Signature masih kosong';
             }
         }
         if (_validationHasErrors($json['input'])) {
             $status  = getData('ms_status', ['id_status' => 2])->get()->getRow();
-            $old_check            = _getVar($this->request->getVar('old_check'));
+            $old_check                 = _getVar($this->request->getVar('old_check'));
             if (!$getBooking) {
                 $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
             } else {
                 if ($old_check == 1) {
                     $ttd    = $user->ttd;
                 } else {
-                    $signature    = base64_decode($signature_base64);
+                    $signature  = base64_decode($signature_base64);
                     $ttd        = time() . rand(1, 10000) . '.' . $image_type;
                     file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
                     updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
@@ -494,7 +494,7 @@ class Transportasi extends BaseController
                 if ($update) {
                     $json['success'] = $update;
                 } else {
-                    $json['error'] = 'update gagal';
+                    $json['error']   = 'update gagal';
                 }
             }
         }
@@ -504,7 +504,7 @@ class Transportasi extends BaseController
     public function approved_RT($id_booking)
     {
         $getBooking = $this->model->find($id_booking);
-        $json['input']    = [
+        $json['input']     = [
             'signature'    => $this->_validation('signature', 'Signature tidak boleh kosong', 'required'),
         ];
         if (!empty($this->request->getVar('signature'))) {
@@ -518,8 +518,8 @@ class Transportasi extends BaseController
             }
         }
         if (_validationHasErrors($json['input'])) {
-            $status  = getData('ms_status', ['id_status' => 4])->get()->getRow();
-            $old_check            = _getVar($this->request->getVar('old_check'));
+            $status       = getData('ms_status', ['id_status' => 4])->get()->getRow();
+            $old_check    = _getVar($this->request->getVar('old_check'));
             if (!$getBooking) {
                 $json['msg']           = 'Data tidak ditemukan atau anda tidak memiliki akses';
             } else {
@@ -527,7 +527,7 @@ class Transportasi extends BaseController
                     $ttd    = $user->ttd;
                 } else {
                     $signature    = base64_decode($signature_base64);
-                    $ttd        = time() . rand(1, 10000) . '.' . $image_type;
+                    $ttd          = time() . rand(1, 10000) . '.' . $image_type;
                     file_put_contents(FCPATH . 'public/assets/images/ttd/' . $ttd, $signature);
                     updateData('ms_user', ['ttd' => $ttd], ['id' => $user->id]);
                 }
@@ -641,8 +641,8 @@ class Transportasi extends BaseController
     public function details_jadwal($id_booking)
     {
         $data['start_time'] = selectJadwalStart();
-        $data['end_time'] = selectJadwalEnd();
-        $data['booking'] = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
+        $data['end_time']   = selectJadwalEnd();
+        $data['booking']    = getData('tb_booking_transport', ['id_booking' => $id_booking])->get()->getRow();
         return _tempHTML('transportasi/jadwal_details', $data);
     }
     public function jadwal_save()
@@ -723,14 +723,18 @@ class Transportasi extends BaseController
     public function record()
     {
         $user    = getUser(['id' => _session('id')])->getRow();
-        if (_session('role') == 'Direktur') {
-            $where    = ['direktorat' => $user->direktorat];
-        } else if (_session('role') == 'Kadiv') {
-            $where    = ['divisi' => $user->divisi];
-        } else if (_session('role') == 'Kadep' || _session('role') == 'User') {
-            $where    = ['departemen' => $user->departemen];
+        if ($user) {
+            if (_session('role') == 'Direktur') {
+                $where    = ['direktorat' => $user->direktorat];
+            } else if (_session('role') == 'Kadiv') {
+                $where    = ['divisi' => $user->divisi];
+            } else if (_session('role') == 'Kadep' || _session('role') == 'User') {
+                $where    = ['departemen' => $user->departemen];
+            } else {
+                $where    = [];
+            }
         } else {
-            $where    = [];
+            $where = [];
         }
         $data['record_perjalanan'] = $this->model->where($where)
             ->where('status', 'selesai')->get()->getResult();

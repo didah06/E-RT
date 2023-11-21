@@ -48,7 +48,7 @@
                                     <tbody>
                                         <?php foreach ($inventaris_transport as $table) : ?>
                                             <tr>
-                                                <td>
+                                                <td class="text-center">
                                                     <a href=" <?= base_url('pemeliharaan/' . $table->id_kendaraan); ?>">
                                                         <span class="badge badge-info" style="align-items: center; justify-content: center;">
                                                             <span class=" zmdi zmdi-assignment-check" style="font-size: 18px;"></span>

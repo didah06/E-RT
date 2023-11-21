@@ -44,6 +44,17 @@ CREATE TABLE `ms_barang_security`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for ms_barang_security
+-- ----------------------------
+DROP TABLE IF EXISTS `ms_barang_kondisi`;
+CREATE TABLE `ms_barang_kondisi`  (
+  `id_kondisi` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `kondisi` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `is_aktif` int(1) NULL DEFAULT 1,
+  PRIMARY KEY (`id_kondisi`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for ms_departemen
 -- ----------------------------
 DROP TABLE IF EXISTS `ms_departemen`;
