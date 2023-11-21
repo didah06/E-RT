@@ -63,7 +63,7 @@ class User extends BaseController
                         ];
                     }
                 }
-            } else if ($role == 'Kadep' || $role == 'Staf' || $role == 'TU') {
+            } else if ($role == 'Kadep' || $role == 'User') {
                 $json['select'] = [
                     'id_direktorat'     => $this->_validation('id_direktorat', 'Direktorat', 'required|is_natural'),
                     'id_divisi'         => $this->_validation('id_divisi', 'Divisi', 'required|is_natural'),
@@ -441,7 +441,7 @@ class User extends BaseController
                     $nama           = _getVar($this->request->getVar('nama'));
                     $jabatan        = _getVar($this->request->getVar('jabatan'));
                     $jk             = _getVar($this->request->getVar('jk'));
-                    $hp             = !empty($this->request->getVar('hp')) ? _noHP(_getVar($this->request->getVar('hp'))) : '';
+                    $hp             = !empty($this->request->getVar('hp')) ? _noHP(_getVar($this->request->getVar('hp'))) : $user->hp    = str_replace('+62', '0', $user->hp);;
                     $tmpt_lahir     = _getVar($this->request->getVar('tmpt_lahir'));
                     $tgl_lahir      = _getVar($this->request->getVar('tgl_lahir'));
                     $data           = [
@@ -713,6 +713,7 @@ class User extends BaseController
         $user = getMasterUser([
             'user_id' => $user_id
         ]);
+        $user->hp    = str_replace('+62', '0', $user->hp);
         if ($user) {
             $data = [
                 'status'    => true,

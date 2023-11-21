@@ -29,11 +29,12 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" width="8%">#</th>
+                                        <th>#</th>
                                         <th>Nama</th>
                                         <th>Username</th>
                                         <th>Jenis Kelamin</th>
                                         <th>No Hp</th>
+                                        <th>role</th>
                                         <th>Jabatan</th>
                                         <th>Departemen</th>
                                         <th>Divisi</th>
@@ -53,6 +54,7 @@
                                             <td><?= $table->username; ?></td>
                                             <td><?= $table->jk; ?></td>
                                             <td><?= $table->hp ? $table->hp : '-' ?>
+                                            <td><?= $table->role; ?>
                                             <td><?= $table->jabatan; ?></td>
                                             <td><?= $table->departemen ? $table->departemen : '-'; ?></td>
                                             <td><?= $table->divisi ? $table->divisi : '-'; ?></td>

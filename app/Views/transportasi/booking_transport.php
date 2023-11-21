@@ -422,13 +422,13 @@
             if ($(this).val) {
                 $('select[name="e_jam_keberangkatan"]').html('<option value="" selected disabled>Loading...</option>');
                 $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
-                $.get("<?= base_url('select_jadwal_jam_berangkat'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
+                $.get("<?= base_url('select_jadwal_start'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
                     $('select[name="e_jam_keberangkatan"]').html(d);
                     $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
                 });
                 $('select[name="e_jam_kembali"]').html('<option value="" selected disabled>Loading...</option>');
                 $('select[name="e_jam_kembali"]').selectpicker('refresh');
-                $.get("<?= base_url('select_jadwal_jam_kembali'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
+                $.get("<?= base_url('select_jadwal_end'); ?>/" + $(this).val() + "?id_booking=" + $('input[name="e_id_booking"]').val(), function(d) {
                     $('select[name="e_jam_kembali"]').html(d);
                     $('select[name="e_jam_kembali"]').selectpicker('refresh');
                 });
