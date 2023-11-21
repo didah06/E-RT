@@ -234,6 +234,7 @@
                                     <tr>
                                         <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
                                         <th class="text-center">#</th>
+                                        <th>Action</th>
                                         <th>Status</th>
                                         <th>Kode Barang</th>
                                         <th>Jenis Pengajuan</th>
@@ -255,7 +256,7 @@
                                                 <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
                                                     <?php if ($table->status === 'pengajuan') : ?>
                                                         <button class="btn btn-success btn-approve" type="button" data-toggle="modal" data-target="#ModalSignatureEdit">Approve</button>
-                                                        <button class="btn btn-danger btn-tolak" type="button">Tolak</button>
+                                                        <button class="btn btn-outline-secondary btn-tolak" type="button">Tolak</button>
                                                         <div class="hidden-reason" style="display: none;">
                                                             <textarea id="rejectionReason" placeholder="Masukkan alasan penolakan" name="ditolak_ket"></textarea>
                                                             <button class="btn btn-danger" data-toggle="modal" data-target="#ModalSignatureEditditolak">Konfirmasi Penolakan</button>
@@ -270,6 +271,14 @@
                                                         <span class="badge badge-danger btn-selesai" data-id="<?= $table->kode_barang; ?>" data-toggle="modal" data-target="#ModalPembelianPerawatan" style="align-items: center; justify-content: center; width: 40px; height: 35px;" type="button">
                                                             <i class="zmdi zmdi-check" style="font-size: 20px;"></i>
                                                         </span>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
+                                                    <?php if ($table->status === 'pengajuan') : ?>
+                                                        <button class="btn btn-warning" data-toggle="modal" data-target="#ModalEdit" style="font-size: 14px;"><i class="zmdi zmdi-edit"></i></button>
+                                                        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#ModalEdit" style="font-size: 14px;"><i class="zmdi zmdi-delete"></i></button>
                                                     <?php endif; ?>
                                                 <?php endif; ?>
                                             </td>
@@ -310,6 +319,83 @@
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Edit Pembelian/Perawatan Barang Fotokopi</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="error-area"></div>
+                                        <?= form_open(base_url('pembelian_perawatan'), ['class' => 'add-form']); ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Nama Barang</label>
+                                                    <input type="text" class="form-control" name="e_nama_barang">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Merk</label>
+                                                    <input type="text" class="form-control" name="e_merk">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">No Serial</label>
+                                                    <input type="text" class="form-control" name="e_no_serial">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Jenis Pengajuan</label>
+                                                    <select class="form-control select-only" name="e_jenis_pengajuan">
+                                                        <option value="" selected disabled>- Pilih Pengajuan -</option>
+                                                        <option value="perawatan">Perawatan</option>
+                                                        <option value="pembelian">Pembelian</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Tanggal Pengajuan</label>
+                                                    <input type="date" class="form-control" name="e_tanggal">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Jumlah Barang</label>
+                                                    <input type="text" class="form-control" name="e_jml_barang">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Harga</label>
+                                                    <input type="text" class="form-control divide" name="e_harga">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row text-center">
+                                            <div class="col-md-12">
+                                                <button class="btn btn-success" type="submit">Edit Pengajuan</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
