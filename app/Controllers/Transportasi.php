@@ -35,23 +35,32 @@ class Transportasi extends BaseController
     }
     public function index()
     {
-        $user     = getUser(['id' => _session('id')])->getRow();
-        if (_session('jenis') != 'Admin') {
-            $data['departemen'] = selectDepartemen(['id_divisi' => $user->departemen]);
-        }
         $data['booking'] = $this->model->get()->getResult();
         return $this->respond($data);
     }
     public function booking()
     {
-        $data['kendaraan']  = selectKendaraan();
+        $user    = getUser(['id' => _session('id')])->getRow();
+        if (_session('role') == 'Direktur') {
+            $where    = ['direktorat' => $user->direktorat];
+        } else if (_session('role') == 'Kadiv') {
+            $where    = ['divisi' => $user->divisi];
+        } else if (_session('role') == 'Kadep' || _session('role') == 'User') {
+            $where    = ['departemen' => $user->departemen];
+        } else {
+            $where    = [];
+        }
+        $data['kendaraan'] = selectKendaraan();
         $data['start_time'] = selectJadwalStart();
         $data['end_time'] = selectJadwalEnd();
+
         $start_date = _getVar($this->request->getVar('start_date'));
-        $end_date   = _getVar($this->request->getVar('end_date'));
+        $end_date = _getVar($this->request->getVar('end_date'));
+
         $data['start_date'] = $start_date == "" ? date('Y-m-') . '01' : $start_date;
         $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
-        $data['booking'] = getData('tb_booking_transport')
+
+        $data['booking'] = $this->model->where($where)
             ->whereNotIn('status', ['diproses', 'selesai'])
             ->where('tanggal_pemakaian BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"')
             ->get()
@@ -79,7 +88,7 @@ class Transportasi extends BaseController
     public function select_jadwal_end($tanggal_pemakaian)
     {
         $defaultNull    = _getVar($this->request->getVar('df'));
-        $id_booking     = _getVar($this->request->getVar('id_booking'));
+        $id_booking         = _getVar($this->request->getVar('id_booking'));
         $jadwal         = getJadwalEnd($tanggal_pemakaian)->getResult();
         // $ms_jadwal = getData('ms_jadwal')->get()->getResult();
         if ($defaultNull == '') {
@@ -90,7 +99,7 @@ class Transportasi extends BaseController
         foreach ($jadwal as $item) {
             $disable = ($item->tujuan != "" && $item->id_booking != $id_booking) ? "disabled" : "";
             $str = ($item->tujuan != "") ? ' - ' . $item->departemen . ' ' . $item->tujuan : '';
-            $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time . $str . '</option>';
+            $select .= '<option value="' . $item->end_time . '" ' . $disable . '>' . $item->end_time  . $str . '</option>';
         }
         echo $select;
     }
@@ -607,7 +616,18 @@ class Transportasi extends BaseController
     }
     public function jadwal()
     {
-        $data['jadwal_transport'] = $this->model->where('status', 'diproses')->get()->getResult();
+        $user    = getUser(['id' => _session('id')])->getRow();
+        if (_session('role') == 'Direktur') {
+            $where    = ['direktorat' => $user->direktorat];
+        } else if (_session('role') == 'Kadiv') {
+            $where    = ['divisi' => $user->divisi];
+        } else if (_session('role') == 'Kadep' || _session('role') == 'User') {
+            $where    = ['departemen' => $user->departemen];
+        } else {
+            $where    = [];
+        }
+        $data['jadwal_transport'] = $this->model->where($where)
+            ->where('status', 'diproses')->get()->getResult();
         return _tempHTML('transportasi/jadwal_transport', $data);
     }
     public function details_jadwal($id_booking)
@@ -694,7 +714,18 @@ class Transportasi extends BaseController
     }
     public function record()
     {
-        $data['record_perjalanan'] = $this->model->where('status', 'selesai')->get()->getResult();
+        $user    = getUser(['id' => _session('id')])->getRow();
+        if (_session('role') == 'Direktur') {
+            $where    = ['direktorat' => $user->direktorat];
+        } else if (_session('role') == 'Kadiv') {
+            $where    = ['divisi' => $user->divisi];
+        } else if (_session('role') == 'Kadep' || _session('role') == 'User') {
+            $where    = ['departemen' => $user->departemen];
+        } else {
+            $where    = [];
+        }
+        $data['record_perjalanan'] = $this->model->where($where)
+            ->where('status', 'selesai')->get()->getResult();
         return _tempHTML('transportasi/record_perjalanan', $data);
     }
     public function inventaris()
