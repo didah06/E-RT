@@ -277,8 +277,8 @@
                                             <td>
                                                 <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
                                                     <?php if ($table->status === 'pengajuan') : ?>
-                                                        <button class="btn btn-warning" data-toggle="modal" data-target="#ModalEdit" style="font-size: 14px;"><i class="zmdi zmdi-edit"></i></button>
-                                                        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#ModalEdit" style="font-size: 14px;"><i class="zmdi zmdi-delete"></i></button>
+                                                        <button class="btn btn-warning btn-edit" data-id="<?= $table->kode_barang; ?>" data-toggle="modal" data-target="#ModalEdit" style="font-size: 14px;"><i class="zmdi zmdi-edit"></i></button>
+                                                        <button class="btn btn-outline-secondary btn-delete" data-id="<?= $table->id_pembelian_barang; ?>" style="font-size: 14px;"><i class="zmdi zmdi-delete"></i></button>
                                                     <?php endif; ?>
                                                 <?php endif; ?>
                                             </td>
@@ -331,7 +331,9 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="error-area"></div>
-                                        <?= form_open(base_url('pembelian_perawatan'), ['class' => 'add-form']); ?>
+                                        <?= form_open(base_url('pembelian_perawatan'), ['class' => 'update-form']); ?>
+                                        <input type="hidden" name="_method" value="PUT" />
+                                        <input type="hidden" name="e_kode_barang">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="mb-2">
@@ -382,7 +384,7 @@
                                             <div class="col-md-12">
                                                 <div class="mb-3">
                                                     <label class="form-label">Harga</label>
-                                                    <input type="text" class="form-control divide" name="e_harga">
+                                                    <input type="text" class="form-control" name="e_harga">
                                                     <div class="invalid-feedback"></div>
                                                 </div>
                                             </div>
@@ -523,6 +525,20 @@
                 }
             });
         });
+        $('.btn-edit').on('click', function() {
+            $.getJSON("<?= base_url('get_pembelian_perawatan/'); ?>/" + $(this).data('id'), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=e_kode_barang]').val(d['data'].kode_barang);
+                    $('input[name=e_nama_barang]').val(d['data'].nama_barang);
+                    $('input[name=e_merk]').val(d['data'].merk);
+                    $('input[name=e_no_serial]').val(d['data'].no_serial);
+                    $('select[name=e_jenis_pengajuan]').val(d['data'].jenis_pengajuan).trigger('change');
+                    $('input[name=e_tanggal]').val(d['data'].tanggal);
+                    $('input[name=e_jml_barang]').val(d['data'].jml_barang);
+                    $('input[name=e_harga]').val(d['data'].harga);
+                }
+            });
+        });
         $('.update-multipart').on('submit', function(e) {
             e.preventDefault();
             processStart();
@@ -551,6 +567,64 @@
                     }
                 }
             })
+        });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
+        $('.btn-delete').on('click', function() {
+            var idPembelian = $(this).data('id');
+            Swal.fire({
+                title: 'Apa anda yakin?',
+                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus',
+                confirmButtonColor: '#fd625e',
+                cancelButtonText: 'Batal',
+            }).then(function(result) {
+                if (result.value) {
+                    processStart();
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url('pembelian_perawatan/delete'); ?>/" + idPembelian,
+                        error: function(xhr) {
+                            processDone();
+                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+                        },
+                        success: function(d) {
+                            if (d['success'] > 0) {
+                                location.reload();
+                            } else {
+                                processDone();
+                                invalidError(d);
+                                Swal.fire('Hapus gagal', d['msg'], 'error');
+                            }
+                        }
+                    })
+                }
+            });
         });
         $('.add-form').on('submit', function(e) {
             e.preventDefault();

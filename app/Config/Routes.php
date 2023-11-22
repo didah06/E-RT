@@ -220,6 +220,8 @@ $routes->post('tolak/(:num)', 'Fotocopy::tolak/$1');
 $routes->post('proses_pembelian/(:segment)', 'Fotocopy::proses/$1');
 $routes->get('get_pembelian_perawatan/(:segment)', 'Fotocopy::get_pembelian_perawatan/$1');
 $routes->post('selesai_pembelian', 'Fotocopy::selesai');
+$routes->put('pembelian_perawatan', 'Fotocopy::pembelian_perawatan_update');
+$routes->post('pembelian_perawatan/delete/(:num)', 'Fotocopy::pembelian_perawatan_delete/$1');
 
 
 

@@ -409,6 +409,63 @@ class Fotocopy extends BaseController
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
     }
+    public function pembelian_perawatan_update()
+    {
+        $json['input'] = [
+            'e_nama_barang'   => $this->_validation('e_nama_barang', 'Nama Barang', 'required'),
+            'e_merk'          => $this->_validation('e_merk', 'Merk', 'required'),
+            'e_no_serial'     => $this->_validation('e_no_serial', 'No Serial', 'required'),
+            'e_tanggal'       => $this->_validation('e_tanggal', 'Tanggal Pengajuan', 'required|valid_date'),
+            'e_jml_barang'    => $this->_validation('e_jml_barang', 'Jumlah Barang', 'required'),
+        ];
+        $json['select'] = [
+            'e_jenis_pengajuan'   => $this->_validation('e_jenis_pengajuan', 'Jenis Pengajuan', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $pembelian_perawatan  = getData('tb_pembelian_barang_fotokopi', ['kode_barang' => _getVar($this->request->getVar('e_kode_barang'))])->get()->getRow();
+            $nama_barang          = _getVar($this->request->getVar('e_nama_barang'));
+            $merk                 = _getVar($this->request->getVar('e_merk'));
+            $no_serial            = _getVar($this->request->getVar('e_no_serial'));
+            $tanggal              = _getVar($this->request->getVar('e_tanggal'));
+            $jml_barang           = _getVar($this->request->getVar('e_jml_barang'));
+            $harga                = _getVar($this->request->getVar('e_harga'));
+            $jenis_pengajuan      = _getVar($this->request->getVar('e_jenis_pengajuan'));
+            $data = [
+                'nama_barang'     => $nama_barang,
+                'merk'            => $merk,
+                'no_serial'       => $no_serial,
+                'tanggal'         => $tanggal,
+                'jml_barang'      => $jml_barang,
+                'harga'           => $harga,
+                'jenis_pengajuan' => $jenis_pengajuan,
+                'status'          => $pembelian_perawatan->status,
+            ];
+            $update = updateData('tb_pembelian_barang_fotokopi', $data, ['kode_barang' => $pembelian_perawatan->kode_barang]);
+            if ($update) {
+                $json['success'] = $update;
+            } else {
+                $json['error']  = 'update pengajuan barang gagal';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function pembelian_perawatan_delete($id_pembelian_barang)
+    {
+        $pembelian_perawatan = getData('tb_pembelian_barang_fotokopi', ['id_pembelian_barang' => $id_pembelian_barang])->get()->getRow();
+        if (!$pembelian_perawatan) {
+            $json['msg'] = 'data pembelian tidak ditemukan';
+        } else {
+            $delete = deleteData('tb_pembelian_barang_fotokopi', ['id_pembelian_barang' => $id_pembelian_barang]);
+            if ($delete) {
+                $json['success']    = 1;
+            } else {
+                $json['msg']        = $delete;
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
     public function laporan_transaksi()
     {
         $start_date = _getVar($this->request->getVar('start_date'));
