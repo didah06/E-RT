@@ -103,7 +103,7 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th width="12%">#</th>
+                                        <th class="text-center" width="8%">#</th>
                                         <th>kode kejadian</th>
                                         <th>kejadian</th>
                                         <th>kronologi</th>

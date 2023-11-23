@@ -63,6 +63,7 @@
                                         <th>Ukuran</th>
                                         <th>Jumlah Pesanan</th>
                                         <th>Biaya</th>
+                                        <!-- created pemesanan seragam -->
                                         <th>Tanggal Pengiriman</th>
                                         <th>Jumlah Dikirim</th>
                                         <th>Sisa Pesanan</th>
@@ -72,8 +73,10 @@
                                         <th>Jumlah Diterima</th>
                                         <th>created diterima by</th>
                                         <th>created diterima at</th>
+                                        <th>Tanggal Pengambilan Seragam</th>
                                         <th>Jumlah Diambil</th>
                                         <th>stok seragam</th>
+                                        <!-- created pengambilan seragam -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -86,6 +89,7 @@
                                             <td><?= $table->ukuran; ?></td>
                                             <td><?= $table->jumlah_pesanan; ?></td>
                                             <td><?= $table->biaya; ?></td>
+                                            <!-- created pemesanan seragam -->
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->tgl_pengiriman : '-'; ?></td>
                                             <td><?= ($table->tgl_pengiriman !== null && $table->jumlah_dikirim !== null) ? $table->jumlah_dikirim : '-'; ?></td>
                                             <td><?= $table->sisa_pesanan; ?></td>
@@ -95,8 +99,10 @@
                                             <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->jumlah_diterima : '-' ?></td>
                                             <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->created_terima_by : '-' ?></td>
                                             <td><?= ($table->tgl_diterima !== null && $table->jumlah_diterima !== null) ? $table->created_terima_at : '-' ?></td>
-                                            <td><?= $table->jumlah_diambil; ?></td>
+                                            <td><?= $table->tgl_pengambilan_seragam; ?></td>
+                                            <td><?= $table->jumlah_ambil_seragam; ?></td>
                                             <td><?= $table->stok_seragam; ?></td>
+                                            <!-- created pengambilan seragam -->
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

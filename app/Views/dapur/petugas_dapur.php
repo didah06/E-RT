@@ -96,7 +96,7 @@
                             <table id="dataTable" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">#</th>
+                                        <th class="text-center" width="8%">#</th>
                                         <th>Nama</th>
                                         <th>Tanggal</th>
                                         <th>Shift</th>

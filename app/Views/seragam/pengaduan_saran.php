@@ -86,7 +86,7 @@
                                 <thead>
                                     <tr>
                                         <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
-                                        <th class="text-center">#</th>
+                                        <th class="text-center" width="10%">#</th>
                                         <th>Jenis Seragam</th>
                                         <th>Departemen</th>
                                         <th>Gambar</th>

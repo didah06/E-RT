@@ -569,7 +569,7 @@ class Seragam extends BaseController
             'tgl_pengaduan' => $this->_validation('tgl_pengaduan', 'Tanggal Pengaduan', 'required|valid_date'),
             'pengaduan'     => $this->_validation('pengaduan', 'Pengaduan', 'required'),
             'saran'         => $this->_validation('saran', 'Saran', 'required'),
-            'foto'          =>  $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
+            'foto'          => $this->_validation('foto', 'foto', 'uploaded[foto]|max_size[foto, 1024]|mime_in[foto,image/jpeg,image/png,image/jpg]'),
         ];
         if (_validationHasErrors($json['input'])) {
             $seragam           = getData('tb_seragam', ['id_seragam' => $id_seragam])->get()->getRow();
@@ -621,7 +621,7 @@ class Seragam extends BaseController
         $data['area'] = selectArea();
         $data['start_date'] = $start_date == "" ? date('Y-m-') . '01' : $start_date;
         $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
-        $data['laporan'] = getSeragam(['tgl_pemesanan BETWEEN ' . $data['start_date'] . ' AND ' . $data['end_date'] => null])->getResult(); // Use BETWEEN for date range
+        $data['laporan'] = getSeragam(['tgl_pemesanan BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null])->getResult();
         return _tempHTML('seragam/laporan', $data);
     }
 }

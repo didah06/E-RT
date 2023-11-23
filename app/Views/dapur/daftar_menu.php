@@ -108,7 +108,7 @@
                                 <thead>
                                     <tr>
                                         <!-- <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th> -->
-                                        <th class="text-center">#</th>
+                                        <th class="text-center" width="8%">#</th>
                                         <th>Tanggal Menu</th>
                                         <th>Menu 1</th>
                                         <th>Menu 2</th>

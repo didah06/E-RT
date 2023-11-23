@@ -96,7 +96,7 @@
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
-                                        <th width="12%">#</th>
+                                        <th class="text-center" width="8%">#</th>
                                         <th>Nama Kegiatan</th>
                                         <th>Tipe Kegiatan</th>
                                         <th>Tanggal Kegiatan</th>

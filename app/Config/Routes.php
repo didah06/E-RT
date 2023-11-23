@@ -212,6 +212,7 @@ $routes->get('get_inventaris/(:num)', 'Fotocopy::get_inventaris/$1');
 $routes->post('pengajuan', 'Fotocopy::pengajuan_save');
 $routes->get('transaksi', 'Fotocopy::transaksi_fotokopi');
 $routes->post('transaksi', 'Fotocopy::transaksi_save');
+$routes->get('get_transaksi/(:num)', 'Fotocopy::get_transaksi/$1');
 $routes->get('laporan_fotocopy', 'Fotocopy::laporan_transaksi');
 $routes->get('pembelian_perawatan', 'Fotocopy::pembelian_perawatan');
 $routes->post('pembelian_perawatan', 'Fotocopy::pembelian_perawatan_save');
