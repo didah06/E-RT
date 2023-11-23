@@ -166,6 +166,7 @@ class Fotocopy extends BaseController
             $jenis_user          = _getVar($this->request->getVar('jenis_user'));
             $kebutuhan_transaksi = _getVar($this->request->getVar('kebutuhan_transaksi'));
             $data = [
+                'id_dept'             => $departemen->id_dept,
                 'departemen'          => $departemen->departemen,
                 'jenis_user'          => $jenis_user,
                 'kebutuhan_transaksi' => $kebutuhan_transaksi,
@@ -189,8 +190,6 @@ class Fotocopy extends BaseController
     public function get_transaksi($id_transaksi_fotokopi)
     {
         $transaksi = getData('tb_transaksi_fotokopi', ['id_transaksi_fotokopi' => $id_transaksi_fotokopi])->get()->getRow();
-        var_dump($transaksi);
-        die;
         if ($transaksi) {
             $data = [
                 'status'    => true,
@@ -203,6 +202,47 @@ class Fotocopy extends BaseController
             ];
         }
         echo json_encode($data);
+    }
+    public function transaksi_update()
+    {
+        $id_transaksi_fotokopi = _getVar($this->request->getVar('e_id_transaksi_fotokopi'));
+        $json['input']  = [
+            'e_tanggal'     => $this->_validation('e_tanggal', 'Tanggal', 'required|valid_date'),
+        ];
+        $json['select'] = [
+            'e_id_dept'             => $this->_validation('e_id_dept', 'Departemen', 'required'),
+            'e_kebutuhan_transaksi'   => $this->_validation('e_kebutuhan_transaksi', 'Kebutuhan Transaksi', 'required'),
+            'e_jenis_user'            => $this->_validation('e_jenis_user', 'jenis_user', 'required'),
+        ];
+        if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
+            $departemen         = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('e_id_dept'))])->get()->getRow();
+            $tanggal            = _getVar($this->request->getVar('e_tanggal'));
+            $jml_halaman        = _getVar($this->request->getVar('e_jml_halaman'));
+            $keterangan         = _getVar($this->request->getVar('e_keterangan'));
+            $pemakaian_kertas    = _getVar($this->request->getVar('e_pemakaian_kertas'));
+            $jenis_user          = _getVar($this->request->getVar('e_jenis_user'));
+            $kebutuhan_transaksi = _getVar($this->request->getVar('e_kebutuhan_transaksi'));
+            $data = [
+                'id_dept'             => $departemen->id_dept,
+                'departemen'          => $departemen->departemen,
+                'jenis_user'          => $jenis_user,
+                'kebutuhan_transaksi' => $kebutuhan_transaksi,
+                'tanggal'             => $tanggal,
+                'jml_halaman'         => $jml_halaman,
+                'keterangan'          => $keterangan,
+                'pemakaian_kertas'    => $pemakaian_kertas,
+                'created_by'          => _session('nama'),
+                'created_at'          => time(),
+            ];
+            $update = updateData('tb_transaksi_fotokopi', $data, ['id_transaksi_fotokopi' => $id_transaksi_fotokopi]);
+            if ($update) {
+                $json['success'] = $update;
+            } else {
+                $json['error'] = 'Data transaksi gagal di update';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
     }
     // pembelian perawatan
     public function pembelian_perawatan()

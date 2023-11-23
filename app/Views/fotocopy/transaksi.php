@@ -216,7 +216,7 @@
                                         <div class="error-area"></div>
                                         <?= form_open(base_url('transaksi'), ['class' => 'update-form']); ?>
                                         <input type="hidden" name="_method" value="PUT" />
-                                        <input type="hidden" name="id_transaksi_fotokopi">
+                                        <input type="hidden" name="e_id_transaksi_fotokopi">
                                         <div class="row clearfix">
                                             <div class="col-md-12">
                                                 <div class="mb-3">
@@ -258,15 +258,15 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Jumlah</label>
-                                                    <input type="text" name="e_jml_halaman" id="jml" class="form-control divide">
+                                                    <label class="form-label">Jumlah Halaman</label>
+                                                    <input type="text" name="e_jml_halaman" id="jml" class="form-control">
                                                     <div class="invalid-feedback"></div>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="mb-3">
                                                     <label class="form-label">Jumlah Pemakaian Kertas/Plastik Laminating</label>
-                                                    <input name="e_pemakaian_kertas" class="form-control divide"></input>
+                                                    <input name="e_pemakaian_kertas" class="form-control"></input>
                                                     <div class="invalid-feedback"></div>
                                                 </div>
                                             </div>
@@ -292,9 +292,9 @@
                                             </div>
                                         </div> -->
                                         </div>
-                                    </div>
-                                    <div class="text-center pt-3 pb-3">
-                                        <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                        <div class="text-center pt-3 pb-3">
+                                            <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                        </div>
                                     </div>
                                     </form>
                                 </div>
@@ -337,17 +337,41 @@
                 }
             })
         })
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
         $('.btn-edit').on('click', function() {
             $.getJSON("<?= base_url('get_transaksi/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_transaksi_fotokopi]').val(d['data'].id_transaksi_fotokopi);
-                    $('select[name=e_id_dept]').val(d['data'].departemen).trigger('change');
+                    $('select[name=e_id_dept]').val(d['data'].id_dept).trigger('change');
                     $('select[name=e_jenis_user]').val(d['data'].jenis_user).trigger('change');
                     $('select[name=e_kebutuhan_transaksi]').val(d['data'].kebutuhan_transaksi).trigger('change');
                     $('input[name=e_tanggal]').val(d['data'].tanggal);
                     $('input[name=e_jml_halaman]').val(d['data'].jml_halaman);
                     $('input[name=e_pemakaian_kertas]').val(d['data'].pemakaian_kertas);
-                    $('input[name=e_keterangan]').val(d['data'].keterangan);
+                    $('textarea[name=e_keterangan]').val(d['data'].keterangan);
                 }
             });
         });
