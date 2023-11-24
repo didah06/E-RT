@@ -343,7 +343,8 @@ function isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_k
     // return $count;
     $query = $db->query("SELECT COUNT(*) AS counttime FROM `tb_booking_transport` WHERE `tanggal_pemakaian` = '$tanggal_pemakaian'
     AND (
- (`jam_keberangkatan` <= '$jam_kembali' AND `jam_kembali` >= '$jam_kembali')
+      (`jam_keberangkatan` <= '$jam_keberangkatan' AND `jam_kembali` >= '$jam_keberangkatan') 
+      OR (`jam_keberangkatan` <= '$jam_kembali' AND `jam_kembali` >= '$jam_kembali')
       OR (`jam_keberangkatan` >= '$jam_keberangkatan' AND `jam_kembali` <= '$jam_kembali')
     )");
     return $query->getRow()->counttime;

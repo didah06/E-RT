@@ -435,20 +435,24 @@
             }
         })
         $('select[name="e_jam_keberangkatan"]').change(function() {
+            var jam_berangkat = $(this).val();
             $.get("<?= base_url('select_jadwal_jam_berangkat'); ?>", {
                 tanggal_pemakaian: $('input[name="e_tanggal_pemakaian"]').val(),
                 id_booking: $('input[name="e_id_booking"]').val()
             }, function(data) {
                 $('select[name="e_jam_keberangkatan"]').html(data);
+                $('select[name="e_jam_keberangkatan"]').val(jam_berangkat);
                 $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
             });
         });
         $('select[name="e_jam_kembali"]').change(function() {
+            var jam_kembali = $(this).val();
             $.get("<?= base_url('select_jadwal_jam_kembali'); ?>", {
                 tanggal_pemakaian: $('input[name="e_tanggal_pemakaian"]').val(),
                 id_booking: $('input[name="e_id_booking"]').val()
             }, function(data) {
                 $('select[name="e_jam_kembali"]').html(data);
+                $('select[name="e_jam_kembali"]').val(jam_kembali);
                 $('select[name="e_jam_kembali"]').selectpicker('refresh');
             });
         });
