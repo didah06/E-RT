@@ -202,13 +202,13 @@
                                         <th>Tipe</th>
                                         <th>Kode Booking</th>
                                         <th>Tanggal Pemakaian</th>
+                                        <th>Jam Keberangkatan</th>
+                                        <th>Jam Kembali</th>
                                         <th>Cara Pemakaian</th>
                                         <th>Tujuan</th>
                                         <th>Acara Kegiatan</th>
                                         <th>Nama</th>
                                         <th>Departemen</th>
-                                        <th>Divisi</th>
-                                        <th>Direktorat</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -242,13 +242,13 @@
                                             </td>
                                             <td><?= $table->kode_booking; ?></td>
                                             <td><?= $table->tanggal_pemakaian; ?></td>
+                                            <td><?= $table->jam_keberangkatan; ?></td>
+                                            <td><?= $table->jam_kembali; ?></td>
                                             <td><?= $table->cara_pemakaian; ?></td>
                                             <td><?= $table->tujuan; ?></td>
                                             <td><?= $table->acara_kegiatan; ?>
                                             <td><?= $table->nama; ?></td>
                                             <td><?= $table->departemen ? $table->departemen : '-'; ?></td>
-                                            <td><?= $table->divisi ? $table->divisi : '-'; ?></td>
-                                            <td><?= $table->direktorat ? $table->direktorat : '-'; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -378,6 +378,8 @@
             </div>
 </section>
 <script>
+    var jam_berangkat = '';
+    var jam_kembali = '';
     $('.divide').divide();
     $(document).ready(function() {
         var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
@@ -435,24 +437,24 @@
             }
         })
         $('select[name="e_jam_keberangkatan"]').change(function() {
-            var jam_berangkat = $(this).val();
+            var this_value = $(this).val();
             $.get("<?= base_url('select_jadwal_jam_berangkat'); ?>", {
+                this_value: $(this).val(),
                 tanggal_pemakaian: $('input[name="e_tanggal_pemakaian"]').val(),
                 id_booking: $('input[name="e_id_booking"]').val()
             }, function(data) {
                 $('select[name="e_jam_keberangkatan"]').html(data);
-                $('select[name="e_jam_keberangkatan"]').val(jam_berangkat);
                 $('select[name="e_jam_keberangkatan"]').selectpicker('refresh');
             });
         });
         $('select[name="e_jam_kembali"]').change(function() {
-            var jam_kembali = $(this).val();
+            var this_value = $(this).val();
             $.get("<?= base_url('select_jadwal_jam_kembali'); ?>", {
+                this_value: $(this).val(),
                 tanggal_pemakaian: $('input[name="e_tanggal_pemakaian"]').val(),
                 id_booking: $('input[name="e_id_booking"]').val()
             }, function(data) {
                 $('select[name="e_jam_kembali"]').html(data);
-                $('select[name="e_jam_kembali"]').val(jam_kembali);
                 $('select[name="e_jam_kembali"]').selectpicker('refresh');
             });
         });
@@ -500,6 +502,8 @@
                     $('input[name=e_anggaran]').val(d['data'].anggaran);
                     $('input[name=e_tujuan]').val(d['data'].tujuan);
                     $('input[name=e_acara_kegiatan]').val(d['data'].acara_kegiatan);
+                    jam_berangkat = d['data'].jam_keberangkatan;
+                    jam_kembali = d['data'].jam_kembali;
                 }
             });
         });

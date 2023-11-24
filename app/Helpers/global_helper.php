@@ -328,7 +328,7 @@ function selectJadwalStart($where = [])
 function selectJadwalEnd()
 {
     $db = connectdb('ms_jadwal');
-    $db->select("id_jadwal_end as id, end_time as text");
+    $db->select("id_jadwal_start as id, end_time as text");
     $db->orderBy('end_time', 'ASC');
     return $db->get()->getResult();
 }
@@ -341,12 +341,11 @@ function isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan, $jam_k
     // $db->where('jam_pulang >=', $jam_keberangkatan);
     // $count = $db->countAllResults();
     // return $count;
-    $query = $db->query("SELECT COUNT(*) AS counttime FROM `tb_booking_transport` WHERE `tanggal_pemakaian` = '$tanggal_pemakaian'
-    AND (
-      (`jam_keberangkatan` <= '$jam_keberangkatan' AND `jam_kembali` >= '$jam_keberangkatan') 
-      OR (`jam_keberangkatan` <= '$jam_kembali' AND `jam_kembali` >= '$jam_kembali')
-      OR (`jam_keberangkatan` >= '$jam_keberangkatan' AND `jam_kembali` <= '$jam_kembali')
-    )");
+    $query = $db->query("SELECT count(*) AS counttime from tb_booking_transport where tanggal_pemakaian = '$tanggal_pemakaian'
+		and (
+		(jam_keberangkatan < '$jam_keberangkatan' and jam_kembali > '$jam_kembali')
+		or (jam_keberangkatan > '$jam_keberangkatan' and jam_kembali < '$jam_kembali')
+		)");
     return $query->getRow()->counttime;
 }
 function _signatureKosong()
@@ -456,9 +455,14 @@ function getJadwal($tanggal_pemakaian)
 {
     $db = connectdb('ms_jadwal');
     $db->select("ms_jadwal.*, 
-    (SELECT id_booking FROM tb_booking_transport WHERE ms_jadwal.id_jadwal_start BETWEEN tb_booking_transport.id_jadwal_start AND tb_booking_transport.id_jadwal_end AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS id_booking,
-    (SELECT departemen FROM tb_booking_transport WHERE ms_jadwal.id_jadwal_start BETWEEN tb_booking_transport.id_jadwal_start AND tb_booking_transport.id_jadwal_end AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS departemen,
-    (SELECT tujuan FROM tb_booking_transport WHERE ms_jadwal.id_jadwal_start BETWEEN tb_booking_transport.id_jadwal_start AND tb_booking_transport.id_jadwal_end AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS tujuan");
+    (SELECT id_booking FROM tb_booking_transport 
+     WHERE (ms_jadwal.start_time BETWEEN tb_booking_transport.jam_keberangkatan AND tb_booking_transport.jam_kembali) 
+     AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS id_booking,
+    (SELECT departemen FROM tb_booking_transport WHERE (ms_jadwal.start_time BETWEEN tb_booking_transport.jam_keberangkatan AND tb_booking_transport.jam_kembali) 
+    AND tanggal_pemakaian = '" . $tanggal_pemakaian . "')  AS departemen,
+    (SELECT tujuan FROM tb_booking_transport 
+    WHERE (ms_jadwal.start_time BETWEEN tb_booking_transport.jam_keberangkatan AND tb_booking_transport.jam_kembali)
+    AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS tujuan");
     $db->orderBy('ms_jadwal.id_jadwal_start');
     $db->groupBy('ms_jadwal.id_jadwal_start');
     return $db->get();
@@ -467,9 +471,14 @@ function getJadwalEnd($tanggal_pemakaian)
 {
     $db = connectdb('ms_jadwal');
     $db->select("ms_jadwal.*, 
-    (SELECT id_booking FROM tb_booking_transport WHERE ms_jadwal.id_jadwal_start BETWEEN tb_booking_transport.id_jadwal_start AND tb_booking_transport.id_jadwal_end AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS id_booking,
-    (SELECT departemen FROM tb_booking_transport WHERE ms_jadwal.id_jadwal_end BETWEEN tb_booking_transport.id_jadwal_start AND tb_booking_transport.id_jadwal_end AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS departemen,
-    (SELECT tujuan FROM tb_booking_transport WHERE ms_jadwal.id_jadwal_end BETWEEN tb_booking_transport.id_jadwal_start AND tb_booking_transport.id_jadwal_end AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS tujuan");
+    (SELECT id_booking FROM tb_booking_transport 
+     WHERE (ms_jadwal.end_time BETWEEN tb_booking_transport.jam_keberangkatan AND tb_booking_transport.jam_kembali) 
+     AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS id_booking,
+    (SELECT departemen FROM tb_booking_transport WHERE (ms_jadwal.end_time BETWEEN tb_booking_transport.jam_keberangkatan AND tb_booking_transport.jam_kembali) 
+    AND tanggal_pemakaian = '" . $tanggal_pemakaian . "')  AS departemen,
+    (SELECT tujuan FROM tb_booking_transport 
+    WHERE (ms_jadwal.end_time BETWEEN tb_booking_transport.jam_keberangkatan AND tb_booking_transport.jam_kembali) 
+    AND tanggal_pemakaian = '" . $tanggal_pemakaian . "') AS tujuan");
     $db->orderBy('ms_jadwal.id_jadwal_start');
     $db->groupBy('ms_jadwal.id_jadwal_start');
     return $db->get();
