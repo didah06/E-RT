@@ -193,66 +193,68 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                                <thead>
-                                    <tr>
-                                        <th width="12%">#</th>
-                                        <th>Status</th>
-                                        <th>Tipe</th>
-                                        <th>Kode Booking</th>
-                                        <th>Tanggal Pemakaian</th>
-                                        <th>Jam Keberangkatan</th>
-                                        <th>Jam Kembali</th>
-                                        <th>Cara Pemakaian</th>
-                                        <th>Tujuan</th>
-                                        <th>Acara Kegiatan</th>
-                                        <th>Nama</th>
-                                        <th>Departemen</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($booking as $table) : ?>
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
                                         <tr>
-                                            <td class="text-center">
-                                                <a href=" <?= base_url('details/' . $table->id_booking); ?>">
-                                                    <span class="badge badge-info" style="align-items: center; justify-content: center; width: 40px; height: 35px;">
-                                                        <span class="zmdi zmdi-assignment" style="font-size: 18px;"></span>
-                                                    </span>
-                                                    <!-- <button class="btn btn-info btn-icon hidden-sm-down float-right m-l-3" type="button">
+                                            <th width="12%" class="text-center">#</th>
+                                            <th>Status</th>
+                                            <th>Tipe</th>
+                                            <th>Kode Booking</th>
+                                            <th>Tanggal Pemakaian</th>
+                                            <th>Jam Keberangkatan</th>
+                                            <th>Jam Kembali</th>
+                                            <th>Cara Pemakaian</th>
+                                            <th>Tujuan</th>
+                                            <th>Acara Kegiatan</th>
+                                            <th>Nama</th>
+                                            <th>Departemen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($booking as $table) : ?>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <a href=" <?= base_url('details/' . $table->id_booking); ?>">
+                                                        <span class="badge badge-info" style="align-items: center; justify-content: center; width: 40px; height: 35px;">
+                                                            <span class="zmdi zmdi-assignment" style="font-size: 18px;"></span>
+                                                        </span>
+                                                        <!-- <button class="btn btn-info btn-icon hidden-sm-down float-right m-l-3" type="button">
                                                         <i class="zmdi zmdi-assignment"></i>
                                                     </button> -->
-                                                </a>
-                                                <?php if ($table->status === 'ditolak' || $table->status === 'baru') : ?>
-                                                    <?php if (_session('user_id') === $table->created_id) : ?>
-                                                        <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
-                                                            <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
-                                                        </span>
-                                                        <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" type="button">
-                                                            <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
-                                                        </span>
+                                                    </a>
+                                                    <?php if ($table->status === 'ditolak' || $table->status === 'baru') : ?>
+                                                        <?php if (_session('user_id') === $table->created_id) : ?>
+                                                            <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
+                                                                <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
+                                                            </span>
+                                                            <span class="badge badge-danger btn-delete" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_booking; ?>" type="button">
+                                                                <i class="zmdi zmdi-delete" style="font-size: 18px;"></i>
+                                                            </span>
+                                                        <?php endif; ?>
                                                     <?php endif; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <span class="<?= $table->status === 'baru' ? 'badge badge-primary' : ($table->status === 'diproses' ? 'badge badge-warning' : ($table->status === 'selesai' ? 'badge badge-success' : ($table->status === 'ditolak' ? 'badge badge-danger' : 'badge badge-info'))) ?>">
-                                                    <?= $table->status === 'baru' ? 'Booking Baru' : ($table->status === 'approved kadep' && $table->status === 'approved kadiv' ? 'Booking disetujui' : ($table->status === 'diproses' ? 'Booking diproses' : ($table->status === 'selesai' ? 'Selesai' : ($table->status === 'ditolak' ? 'Booking ditolak' : $table->status)))) ?></span>
-                                            </td>
-                                            <td class="<?= $table->type_pemakaian == 1 ? 'btn-warning' : 'btn-info'; ?>"><?= $table->type_pemakaian == 1 ? 'Urgent' : 'Normal' ?>
-                                            </td>
-                                            <td><?= $table->kode_booking; ?></td>
-                                            <td><?= $table->tanggal_pemakaian; ?></td>
-                                            <td><?= $table->jam_keberangkatan; ?></td>
-                                            <td><?= $table->jam_kembali; ?></td>
-                                            <td><?= $table->cara_pemakaian; ?></td>
-                                            <td><?= $table->tujuan; ?></td>
-                                            <td><?= $table->acara_kegiatan; ?>
-                                            <td><?= $table->nama; ?></td>
-                                            <td><?= $table->departemen ? $table->departemen : '-'; ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                                </td>
+                                                <td>
+                                                    <span class="<?= $table->status === 'baru' ? 'badge badge-primary' : ($table->status === 'diproses' ? 'badge badge-warning' : ($table->status === 'selesai' ? 'badge badge-success' : ($table->status === 'ditolak' ? 'badge badge-danger' : 'badge badge-info'))) ?>">
+                                                        <?= $table->status === 'baru' ? 'Booking Baru' : ($table->status === 'approved kadep' && $table->status === 'approved kadiv' ? 'Booking disetujui' : ($table->status === 'diproses' ? 'Booking diproses' : ($table->status === 'selesai' ? 'Selesai' : ($table->status === 'ditolak' ? 'Booking ditolak' : $table->status)))) ?></span>
+                                                </td>
+                                                <td class="<?= $table->type_pemakaian == 1 ? 'btn-warning' : 'btn-info'; ?>"><?= $table->type_pemakaian == 1 ? 'Urgent' : 'Normal' ?>
+                                                </td>
+                                                <td><?= $table->kode_booking; ?></td>
+                                                <td><?= $table->tanggal_pemakaian; ?></td>
+                                                <td><?= $table->jam_keberangkatan; ?></td>
+                                                <td><?= $table->jam_kembali; ?></td>
+                                                <td><?= $table->cara_pemakaian; ?></td>
+                                                <td><?= $table->tujuan; ?></td>
+                                                <td><?= $table->acara_kegiatan; ?>
+                                                <td><?= $table->nama; ?></td>
+                                                <td><?= $table->departemen ? $table->departemen : '-'; ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <!-- Booking Edit -->
@@ -382,7 +384,25 @@
     var jam_kembali = '';
     $('.divide').divide();
     $(document).ready(function() {
-        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        $('#datatables').on('click', '.btn-edit', function() {
+            $.getJSON("<?= base_url('booking_edit/'); ?>/" + $(this).data('id'), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=e_id_booking]').val(d['data'].id_booking);
+                    // $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
+                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
+                    $('select[name=e_jam_keberangkatan]').val(d['data'].jam_keberangkatan).trigger('change');
+                    $('select[name=e_jam_kembali]').val(d['data'].jam_kembali).trigger('change');
+                    $('select[name=e_cara_pemakaian').val(d['data'].cara_pemakaian).trigger('change');
+                    $('select[name=e_type_pemakaian]').val(d['data'].type_pemakaian).trigger('change');
+                    $('input[name=e_jumlah_peserta]').val(d['data'].jumlah_peserta);
+                    $('input[name=e_anggaran]').val(d['data'].anggaran);
+                    $('input[name=e_tujuan]').val(d['data'].tujuan);
+                    $('input[name=e_acara_kegiatan]').val(d['data'].acara_kegiatan);
+                    jam_berangkat = d['data'].jam_keberangkatan;
+                    jam_kembali = d['data'].jam_kembali;
+                }
+            });
+        });
         $('#tb-notif').DataTable({
             responsive: true,
             ordering: false,
@@ -488,25 +508,6 @@
                 }
             })
         });
-        $('.btn-edit').on('click', function() {
-            $.getJSON("<?= base_url('booking_edit/'); ?>/" + $(this).data('id'), function(d) {
-                if (d['status'] === true) {
-                    $('input[name=e_id_booking]').val(d['data'].id_booking);
-                    // $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
-                    $('input[name=e_tanggal_pemakaian]').val(d['data'].tanggal_pemakaian);
-                    $('select[name=e_jam_keberangkatan]').val(d['data'].jam_keberangkatan).trigger('change');
-                    $('select[name=e_jam_kembali]').val(d['data'].jam_kembali).trigger('change');
-                    $('select[name=e_cara_pemakaian').val(d['data'].cara_pemakaian).trigger('change');
-                    $('select[name=e_type_pemakaian]').val(d['data'].type_pemakaian).trigger('change');
-                    $('input[name=e_jumlah_peserta]').val(d['data'].jumlah_peserta);
-                    $('input[name=e_anggaran]').val(d['data'].anggaran);
-                    $('input[name=e_tujuan]').val(d['data'].tujuan);
-                    $('input[name=e_acara_kegiatan]').val(d['data'].acara_kegiatan);
-                    jam_berangkat = d['data'].jam_keberangkatan;
-                    jam_kembali = d['data'].jam_kembali;
-                }
-            });
-        });
         $('.update-form').on('submit', function(e) {
             e.preventDefault();
             processStart();
@@ -531,7 +532,7 @@
                 }
             })
         });
-        $('.btn-delete').on('click', function() {
+        $('#datatables').on('click', '.btn-delete', function(e) {
             var bookingId = $(this).data('id');
             Swal.fire({
                 title: 'Apa anda yakin?',
@@ -543,6 +544,7 @@
                 cancelButtonText: 'Batal',
             }).then(function(result) {
                 if (result.value) {
+                    e.preventDefault();
                     processStart();
                     $.ajax({
                         type: 'post',
