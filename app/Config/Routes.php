@@ -214,6 +214,7 @@ $routes->get('transaksi', 'Fotocopy::transaksi_fotokopi');
 $routes->post('transaksi', 'Fotocopy::transaksi_save');
 $routes->get('get_transaksi/(:num)', 'Fotocopy::get_transaksi/$1');
 $routes->put('transaksi', 'Fotocopy::transaksi_update');
+$routes->post('transaksi/delete/(:num)', 'Fotocopy::transaksi_delete/$1');
 $routes->get('laporan_fotocopy', 'Fotocopy::laporan_transaksi');
 $routes->get('pembelian_perawatan', 'Fotocopy::pembelian_perawatan');
 $routes->post('pembelian_perawatan', 'Fotocopy::pembelian_perawatan_save');

@@ -126,38 +126,6 @@
                             <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Transaksi Fotokopi
                                 </i></button>
                         </div>
-                        <div class="col-md-12">
-                            <form method="GET" action="<?= base_url('transaksi') ?>">
-                                <div class="row">
-                                    <!-- <div class="col-md-3">
-                                        <div class="mb-2">
-                                            <label class="form-label">Kebutuhan Transaksi</label>
-                                            <select class="form-control select-only" name="kebutuhan_transaksi">
-                                                <option value="fotocopy">Fotocopy</option>
-                                                <option value="laminating">Laminating</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                    <div class="col-md-3">
-                                        <div class="mb-2">
-                                            <label class="form-label">min date</label>
-                                            <input type="date" class="form-control" name="start_date" id="min" value="<?= $start_date; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-2">
-                                            <label class="form-label">max date</label>
-                                            <input type="date" class="form-control" name="end_date" id="max" value="<?= $end_date; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mt-3">
-                                            <button class="btn btn-warning" type="submit">filter</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
@@ -186,6 +154,7 @@
                                         <tr>
                                             <td class="text-center">
                                                 <button class="btn btn-warning btn-edit" data-id="<?= $table->id_transaksi_fotokopi; ?>" data-toggle="modal" data-target="#ModalEdit"><i class="zmdi zmdi-eyedropper" style="font-size: 15px;"></i></button>
+                                                <button class="btn btn-light btn-delete" data-id="<?= $table->id_transaksi_fotokopi; ?>"><i class="zmdi zmdi-delete" style="font-size: 15px;"></i></button>
                                             </td>
                                             <td><span class="<?= $table->kebutuhan_transaksi === 'fotocopy' ? 'badge badge-info' : 'badge badge-warning'; ?>">
                                                     <?= $table->kebutuhan_transaksi === 'fotocopy' ? 'fotocopy' : 'laminating'; ?></span></td>
@@ -372,6 +341,40 @@
                     $('input[name=e_jml_halaman]').val(d['data'].jml_halaman);
                     $('input[name=e_pemakaian_kertas]').val(d['data'].pemakaian_kertas);
                     $('textarea[name=e_keterangan]').val(d['data'].keterangan);
+                }
+            });
+        });
+        $('.btn-delete').on('click', function() {
+            var idtransaksi = $(this).data('id');
+            Swal.fire({
+                title: 'Apa anda yakin?',
+                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus',
+                confirmButtonColor: '#fd625e',
+                cancelButtonText: 'Batal',
+            }).then(function(result) {
+                if (result.value) {
+                    processStart();
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url('transaksi/delete'); ?>/" + idtransaksi,
+                        error: function(xhr) {
+                            processDone();
+                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+                        },
+                        success: function(d) {
+                            if (d['success'] > 0) {
+                                location.reload();
+                            } else {
+                                processDone();
+                                invalidError(d);
+                                Swal.fire('Hapus gagal', d['msg'], 'error');
+                            }
+                        }
+                    })
                 }
             });
         });

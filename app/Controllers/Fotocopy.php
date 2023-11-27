@@ -137,14 +137,7 @@ class Fotocopy extends BaseController
     public function transaksi_fotokopi()
     {
         $data['departemen'] = selectDepartemen();
-        $start_date = _getVar($this->request->getVar('start_date'));
-        $end_date   = _getVar($this->request->getVar('end_date'));
-        $filter_kebutuhan_transaksi = _getVar($this->request->getVar('kebutuhan_transaksi'));
-        $data['shift']      = selectShift();
-        $data['area']       = selectArea();
-        $data['start_date'] = $start_date == "" ? date('Y-m-') . '01' : $start_date;
-        $data['end_date'] = $end_date == "" ? date('Y-m-t') : $end_date;
-        $data['transaksi'] = getData('tb_transaksi_fotokopi', ['tanggal BETWEEN "' . $data['start_date'] . '" AND "' . $data['end_date'] . '"' => null])->get()->getResult();
+        $data['transaksi'] = getData('tb_transaksi_fotokopi')->get()->getResult();
         return _tempHTML('fotocopy/transaksi', $data);
     }
     public function transaksi_save()
@@ -239,6 +232,22 @@ class Fotocopy extends BaseController
                 $json['success'] = $update;
             } else {
                 $json['error'] = 'Data transaksi gagal di update';
+            }
+        }
+        $json['rscript']    = csrf_hash();
+        echo json_encode($json);
+    }
+    public function transaksi_delete($id_transaksi_fotokopi)
+    {
+        $transaksi = getData('tb_transaksi_fotokopi', ['id_transaksi_fotokopi' => $id_transaksi_fotokopi])->get()->getRow();
+        if (!$transaksi) {
+            $json['msg'] = 'data transaksi tidak ditemukan';
+        } else {
+            $delete = deleteData('tb_transaksi_fotokopi', ['id_transaksi_fotokopi' => $id_transaksi_fotokopi]);
+            if ($delete) {
+                $json['success']    = 1;
+            } else {
+                $json['msg']        = $delete;
             }
         }
         $json['rscript']    = csrf_hash();
