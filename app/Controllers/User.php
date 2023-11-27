@@ -29,7 +29,7 @@ class User extends BaseController
         $data['divisi']     = selectDivisi();
         $data['departemen'] = selectDepartemen();
         $data['role']       = selectRole();
-        $data['user']       = getUser(['ms_user.role NOT IN("Satpam", "Driver", "Dapur", "Developer")' => null, 'is_aktif' => 1])->getResult();
+        $data['user']       = getUser(['ms_user.role NOT IN("Developer")' => null, 'is_aktif' => 1])->getResult();
         return _tempHTML('user/index', $data);
     }
     public function user_save()

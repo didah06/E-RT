@@ -30,15 +30,6 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="mb-2">
-                                            <label class="form-label">Kebutuhan Transaksi</label>
-                                            <select class="form-control select-only" name="kebutuhan_transaksi">
-                                                <option value="fotocopy">Fotocopy</option>
-                                                <option value="laminating">Laminating</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-2">
                                             <label class="form-label">min date</label>
                                             <input type="date" class="form-control" name="start_date" id="min" value="<?= $start_date; ?>">
                                         </div>
