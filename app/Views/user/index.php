@@ -26,7 +26,7 @@
                 <div class="card patients-list">
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -357,7 +357,7 @@
                 }
             })
         });
-        $('.btn-delete').on('click', function() {
+        $('#datatables').on('click', '.btn-delete', function() {
             var userId = $(this).data('id');
             Swal.fire({
                 title: 'Apa anda yakin?',
@@ -440,7 +440,7 @@
                 });
             }
         });
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('user_edit'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_user_id]').val(d['data'].user_id);
