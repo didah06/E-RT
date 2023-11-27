@@ -23,6 +23,9 @@
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-md-12">
+                <a href="<?= base_url('pengaduan'); ?>" type="button" class="btn btn-danger">Kembali</a>
+            </div>
+            <div class="col-md-12">
                 <div class="card patients-list" style="padding-bottom: 100%;">
                     <div class="body">
                         <h5><?= $seragam->departemen; ?> <?php echo ' - '; ?> <?= $seragam->jenis_seragam; ?></h5>
