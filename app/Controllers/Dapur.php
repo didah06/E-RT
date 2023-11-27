@@ -337,7 +337,7 @@ class Dapur extends BaseController
             $porsi = getData('tb_porsi_makanan')->get()->getRow();
             $jumlah_produksi = _getVar($this->request->getVar('jumlah_produksi'));
             $jumlah_pembagian = _getVar($this->request->getVar('jumlah_pembagian'));
-            $jumlah_persediaan = _getVar($this->request->getVar('jumlah_persediaan'));
+            $jumlah_persediaan = $jumlah_produksi - $jumlah_pembagian;
             $keterangan = _getVar($this->request->getVar('keterangan'));
             $foto = $this->request->getFile('foto');
             if (!$menu) {
