@@ -88,8 +88,10 @@
                     <div class="body">
                         <div class="row">
                             <div class="text-start">
-                                <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Petugas Dapur
-                                    </i></button>
+                                <div class="mb-3">
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#Modaladd"><i class="zmdi zmdi-plus">Petugas Dapur
+                                        </i></button>
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -233,7 +235,7 @@
                     $('input[name=e_id_petugas_dapur]').val(d['data'].id_petugas_dapur);
                     $('select[name=e_user_id]').val(d['data'].user_id).trigger('change');
                     $('input[name=e_nama]').val(d['data'].nama);
-                    $('input[name=e_tanggal').val(d[data].tanggal);
+                    $('input[name=e_tanggal').val(d['data'].tanggal);
                     $('select[name=e_id_shift]').val(d['data'].id_shift).trigger('change');
                 }
             });
