@@ -63,14 +63,14 @@ class User extends BaseController
                         ];
                     }
                 }
-            } else if ($role == 'Kadep' || $role == 'User') {
+            } else if ($role == 'Kadep' || $role == 'User' || $role == 'RT') {
                 $json['select'] = [
                     'id_direktorat'     => $this->_validation('id_direktorat', 'Direktorat', 'required|is_natural'),
                     'id_divisi'         => $this->_validation('id_divisi', 'Divisi', 'required|is_natural'),
                     'id_dept'           => $this->_validation('id_dept', 'Departemen', 'required|is_natural'),
                 ];
                 if (!empty($this->request->getVar('id_dept'))) {
-                    $divisi    = getData('ms_divisi', ['id_divisi' => _getVar($this->request->getVar('id_divisi'))])->get()->getRow();
+                    $divisi        = getData('ms_divisi', ['id_divisi' => _getVar($this->request->getVar('id_divisi'))])->get()->getRow();
                     $departemen    = getData('ms_departemen', ['id_dept' => _getVar($this->request->getVar('id_dept'))])->get()->getRow();
                     if (!$divisi) {
                         $json['select'] = [
