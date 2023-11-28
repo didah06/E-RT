@@ -111,7 +111,7 @@
                                 </i></button>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
                                         <th class="text-center" width="8%">#</th>
@@ -264,7 +264,7 @@
                 }
             })
         })
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('inventaris_keamanan_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_inventaris]').val(d['data'].id_inventaris);
@@ -301,7 +301,7 @@
                 }
             })
         });
-        $('.btn-delete').on('click', function() {
+        $('#datatables').on('click', '.btn-delete', function() {
             var inventarisId = $(this).data('id');
             Swal.fire({
                 title: 'Apa anda yakin?',
