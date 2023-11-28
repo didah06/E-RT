@@ -75,7 +75,7 @@
                                 </i></button>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
                                 <button class="btn btn-danger mb-3" id="delete-selected">Delete</button>
@@ -186,7 +186,7 @@
                 }
             })
         })
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('data_vendor_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_vendor]').val(d['data'].id_vendor);
@@ -225,7 +225,7 @@
                 }
             })
         });
-        $('#delete-selected').on('click', function() {
+        $('#datatables').on('click', '#delete-selected', function() {
             var idsToDelete = [];
 
             // Find the checkboxes that are checked
