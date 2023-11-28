@@ -33,10 +33,12 @@
                                         <th>Kode_booking</th>
                                         <th>Tujuan</th>
                                         <th>Acara Kegiatan</th>
+                                        <th>Jam Keberangkatan</th>
+                                        <th>Jam Kembali</th>
+                                        <th>Jam Berangkat</th>
+                                        <th>Jam Pulang</th>
                                         <th>Nama</th>
                                         <th>Departemen</th>
-                                        <th>Divisi</th>
-                                        <th>Direktorat</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -49,10 +51,12 @@
                                             <td><?= $table->kode_booking; ?></td>
                                             <td><?= $table->tujuan; ?></td>
                                             <td><?= $table->acara_kegiatan; ?></td>
+                                            <td><?= $table->jam_keberangkatan; ?></td>
+                                            <td><?= $table->jam_kembali; ?></td>
+                                            <td><?= $table->jam_berangkat; ?></td>
+                                            <td><?= $table->jam_pulang; ?></td>
                                             <td><?= $table->nama; ?></td>
                                             <td><?= $table->departemen; ?></td>
-                                            <td><?= $table->divisi; ?></td>
-                                            <td><?= $table->direktorat; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
