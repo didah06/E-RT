@@ -275,7 +275,7 @@
                 }
             })
         })
-        $('.btn-edit').on('click', function() {
+        $('#dataTable').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('porsi_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_porsi_makanan]').val(d['data'].id_porsi_makanan);
@@ -338,7 +338,7 @@
             });
         });
         // delete table
-        $('#delete-selected').on('click', function() {
+        $('#dataTable').on('click', '#delete-selected', function() {
             var idsToDelete = [];
 
             // Find the checkboxes that are checked

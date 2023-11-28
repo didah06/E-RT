@@ -271,7 +271,7 @@
                 }
             })
         })
-        $('.btn-edit').on('click', function() {
+        $('#dataTable').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('kebersihan_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_kebersihan_dapur]').val(d['data'].id_kebersihan_dapur);
@@ -334,7 +334,7 @@
             });
         });
         // delete table
-        $('#delete-selected').on('click', function() {
+        $('#dataTable').on('click', '#delete-selected', function() {
             var idsToDelete = [];
 
             // Find the checkboxes that are checked
