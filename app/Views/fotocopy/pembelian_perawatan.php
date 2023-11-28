@@ -226,7 +226,7 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
                                 <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
@@ -448,7 +448,7 @@
                 }
             });
         });
-        $('.btn-tolak').on('click', function() {
+        $('#datatables').on('click', '.btn-tolak', function() {
             $('.hidden-reason').show();
         });
         $('#signature-edit-ditolak').submit(function(e) {
@@ -496,7 +496,7 @@
                 }
             });
         })
-        $('.btn-proses').on('click', function() {
+        $('#datatables').on('click', '.btn-proses', function() {
             processStart();
             var formData = $(this).serialize();
             $.ajax({
@@ -518,14 +518,14 @@
                 }
             })
         })
-        $('.btn-selesai').on('click', function() {
+        $('#datatables').on('click', '.btn-selesai', function() {
             $.getJSON("<?= base_url('get_pembelian_perawatan/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_kode_barang]').val(d['data'].kode_barang);
                 }
             });
         });
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('get_pembelian_perawatan/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_kode_barang]').val(d['data'].kode_barang);
@@ -592,7 +592,7 @@
                 }
             })
         });
-        $('.btn-delete').on('click', function() {
+        $('#datatables').on('click', '.btn-delete', function() {
             var idPembelian = $(this).data('id');
             Swal.fire({
                 title: 'Apa anda yakin?',
