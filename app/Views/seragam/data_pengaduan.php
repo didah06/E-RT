@@ -28,14 +28,15 @@
             <div class="col-md-12">
                 <div class="card patients-list" style="padding-bottom: 100%;">
                     <div class="body">
-                        <h5><?= $seragam->departemen; ?> <?php echo ' - '; ?> <?= $seragam->jenis_seragam; ?></h5>
+                        <h6><?= $seragam->departemen; ?> <?php echo ' - '; ?> <?= $seragam->jenis_seragam; ?></h6><br>
                         <?php foreach ($pengaduan as $table) : ?>
                             <div class="card-deck">
                                 <div class="card">
                                     <div class="card-body">
-                                        <p class="card-text"><?= $table->pengaduan; ?></p>
+                                        <p class="card-text"><?= $table->pengaduan; ?>, <?= $table->tgl_pengaduan; ?> </p>
                                         <p class="card-text"><?= $table->saran; ?></p>
-                                        <p class="card-text"><small class="text-muted"><?= $table->tgl_pengaduan; ?></small></p>
+                                        <p class="card-text"><small class="text-muted"><?= $table->created_by; ?></small></p>
+                                        <p class="card-text"><small class="text-muted"><?= $table->created_at; ?></small></p>
                                     </div>
                                 </div>
                             </div>
