@@ -159,7 +159,7 @@
                             </form>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
                                 <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
@@ -202,6 +202,104 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- modal -->
+                        <div class="modal fade" id="ModalEdit" data-backdrop="false" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Transaksi Fotocopy</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="error-area"></div>
+                                        <?= form_open(base_url('transaksi'), ['class' => 'update-form']); ?>
+                                        <input type="hidden" name="_method" value="PUT" />
+                                        <input type="hidden" name="e_id_transaksi_fotokopi">
+                                        <div class="row clearfix">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Departemen</label>
+                                                    <select class="form-control select-only" name="e_id_dept">
+                                                        <?php foreach ($departemen as $item) : ?>
+                                                            <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">jenis user</label>
+                                                    <select class="form-control select-only" name="e_jenis_user">
+                                                        <option value="internal">User Internal</option>
+                                                        <option value="eksternal">User Eksternal</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">kebutuhan transaksi</label>
+                                                    <select class="form-control select-only" name="e_kebutuhan_transaksi">
+                                                        <option value="fotocopy">Fotocopy</option>
+                                                        <option value="Laminating">Laminating</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tanggal</label>
+                                                    <input type="date" name="e_tanggal" class="form-control">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Jumlah Halaman</label>
+                                                    <input type="text" name="e_jml_halaman" id="jml" class="form-control">
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Jumlah Pemakaian Kertas/Plastik Laminating</label>
+                                                    <input name="e_pemakaian_kertas" class="form-control"></input>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Keterangan</label>
+                                                    <textarea name="e_keterangan" class="form-control"></textarea>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Foto</label>
+                                                <input type="file" name="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">File</label>
+                                                <input type="file" name="file[]" multiple class="form-control" accept=".doc, .pdf">
+                                                <div class="invalid-feedback"></div>
+                                            </div>
+                                        </div> -->
+                                        </div>
+                                        <div class="text-center pt-3 pb-3">
+                                            <button type="submit" class="btn btn-success btn-round btn-save">Simpan</button>
+                                        </div>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,6 +337,78 @@
                     }
                 }
             })
+        });
+        $('.update-form').on('submit', function(e) {
+            e.preventDefault();
+            processStart();
+            $.ajax({
+                url: e.target.action,
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize(),
+                error: function(xhr) {
+                    processDone();
+                    invalidError({
+                        'error': 'Error ' + xhr.status + ' : ' + xhr.statusText
+                    });
+                },
+                success: function(d) {
+                    if (d['success']) {
+                        location.reload();
+                    } else {
+                        processDone();
+                        invalidError(d);
+                    }
+                }
+            })
+        });
+        $('#datatables').on('click', '.btn-edit', function() {
+            $.getJSON("<?= base_url('get_transaksi/'); ?>/" + $(this).data('id'), function(d) {
+                if (d['status'] === true) {
+                    $('input[name=e_id_transaksi_fotokopi]').val(d['data'].id_transaksi_fotokopi);
+                    $('select[name=e_id_dept]').val(d['data'].id_dept).trigger('change');
+                    $('select[name=e_jenis_user]').val(d['data'].jenis_user).trigger('change');
+                    $('select[name=e_kebutuhan_transaksi]').val(d['data'].kebutuhan_transaksi).trigger('change');
+                    $('input[name=e_tanggal]').val(d['data'].tanggal);
+                    $('input[name=e_jml_halaman]').val(d['data'].jml_halaman);
+                    $('input[name=e_pemakaian_kertas]').val(d['data'].pemakaian_kertas);
+                    $('textarea[name=e_keterangan]').val(d['data'].keterangan);
+                }
+            });
+        });
+        $('#datatables').on('click', '.btn-delete', function() {
+            var idtransaksi = $(this).data('id');
+            Swal.fire({
+                title: 'Apa anda yakin?',
+                text: 'Data ini akan dihapus dan tidak bisa dikembalikan lagi!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus',
+                confirmButtonColor: '#fd625e',
+                cancelButtonText: 'Batal',
+            }).then(function(result) {
+                if (result.value) {
+                    processStart();
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url('transaksi/delete'); ?>/" + idtransaksi,
+                        error: function(xhr) {
+                            processDone();
+                            Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
+                        },
+                        success: function(d) {
+                            if (d['success'] > 0) {
+                                location.reload();
+                            } else {
+                                processDone();
+                                invalidError(d);
+                                Swal.fire('Hapus gagal', d['msg'], 'error');
+                            }
+                        }
+                    })
+                }
+            });
         });
     })
 
