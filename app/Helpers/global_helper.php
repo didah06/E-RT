@@ -149,7 +149,6 @@ function selectRole()
     $db = connectDb('ms_role');
     $db->select('role AS id, role AS text');
     $db->where(['role !=' => 'Developer']);
-    $db->where("role NOT IN ('Driver', 'Satpam', 'Dapur')");
     $db->orderBy('role', 'ASC');
     return $db->get()->getResult();
 }
