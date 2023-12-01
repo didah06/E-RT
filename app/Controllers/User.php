@@ -29,7 +29,7 @@ class User extends BaseController
         $data['divisi']     = selectDivisi();
         $data['departemen'] = selectDepartemen();
         $data['role']       = selectRole();
-        $data['user']       = getUser(['ms_user.role NOT IN("Satpam", "Driver", "Dapur", "Developer")' => null, 'is_aktif' => 1])->getResult();
+        $data['user']       = getUser([''ms_user.role NOT IN("Developer")' => null, 'is_aktif' => 1])->getResult();
         return _tempHTML('user/index', $data);
     }
     public function user_save()
@@ -156,7 +156,7 @@ class User extends BaseController
                     $divisi = getData('ms_divisi', ['id_divisi' => _getVar($this->request->getVar('e_id_divisi'))])->get()->getRow();
                     $json['select']['id_divisi'] = 'Pilihan data tidak ditemukan';
                 }
-            } else if ($role == 'Kadep' || $role == 'Staf' || $role == 'TU') {
+            } else if ($role == 'Kadep' || $role == 'User' || $role == 'TU') {
                 $json['select'] = [
                     'e_id_direktorat'     => $this->_validation('e_id_direktorat', 'Direktorat', 'required|is_natural'),
                     'e_id_divisi'         => $this->_validation('e_id_divisi', 'Divisi', 'required|is_natural'),
