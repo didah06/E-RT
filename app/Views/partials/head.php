@@ -236,20 +236,21 @@
                 <?php $menu = _userMenu('sistem_manajemen') ?>
                 <?php if ($menu) : ?>
                     <li class="header" data-key="t-menu">RUMAH TANGGA</li>
+
                     <?php foreach ($menu as $userMenu) :
-                        $href_menu = $userMenu->is_sub == 1 ? 'javascript:void(0);' : base_url($userMenu->url);
-                        $arrow = $userMenu->is_sub == 1 ? 'menu-toggle' : 'load-click';
+                        $arrow      = $userMenu->is_sub == 1 ? 'menu-toggle' : 'load-click';
+                        $href_menu  = $userMenu->is_sub == 1 ? 'javascript:void(0);' : base_url($userMenu->url);
                     ?>
                         <li>
                             <a href="<?= $href_menu; ?>" class="<?= $arrow; ?>">
                                 <i class="<?= $userMenu->icon; ?>"></i>
                                 <span data-key="t-<?= $userMenu->menu; ?>"><?= $userMenu->menu; ?></span>
                             </a>
-                            <?php if ($userMenu->is_sub == 1) :  ?>
+                            <?php if ($userMenu->is_sub == 1) : ?>
                                 <ul class="ml-menu">
                                     <?php foreach (_userSubMenu($userMenu->id) as $userSubMenu) : ?>
                                         <li class="<?= is_menu_active($userSubMenu->url); ?>">
-                                            <a href="<?= base_url($userSubMenu->url); ?>" class="load-click">
+                                            <a href="<?= base_url($userSubMenu->url); ?>">
                                                 <span data-key="t-<?= $userSubMenu->sub_menu; ?>"><?= $userSubMenu->sub_menu; ?></span>
                                             </a>
                                         </li>
@@ -746,14 +747,3 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $('.menu-toggle').click(function() {
-                // Remove 'toggled' class from all menu items
-                $('.menu-toggle').removeClass('toggled waves-effect waves-block');
-
-                // Add 'toggled' class to the clicked menu item
-                $(this).addClass('toggled waves-effect waves-block');
-            });
-        });
-    </script>
