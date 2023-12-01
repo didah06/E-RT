@@ -180,18 +180,18 @@ function _userMenu($segmen)
 {
     if (_session('role') == 'Developer') {
         if ($segmen == 'user_pengguna') {
-            $menu = getData('ms_menu', ['is_aktif' => 1, 'ms_menu.id IN(1,2,3)' => null], 'sort ASC')->get()->getResult();
+            $menu = getData('ms_menu', ['is_aktif' => 1, 'ms_menu.id IN(1)' => null], 'sort ASC')->get()->getResult();
         } elseif ($segmen == 'sistem_manajemen') {
-            $menu = getData('ms_menu', ['is_aktif' => 1, 'ms_menu.id IN(4,5,6,7,8)' => null], 'sort ASC')->get()->getResult();
+            $menu = getData('ms_menu', ['is_aktif' => 1, 'ms_menu.id IN(2,3,4,5,6)' => null], 'sort ASC')->get()->getResult();
         }
     } else {
         $db = connectDb('ms_menu');
         $db->select('ms_menu.*');
         $db->join('tb_access_menu', 'id_menu = ms_menu.id');
         if ($segmen == 'user_pengguna') {
-            $db->where(['ms_menu.id IN(1,2,3)' => null]);
+            $db->where(['ms_menu.id IN(1)' => null]);
         } else if ($segmen == 'sistem_manajemen') {
-            $db->where(['ms_menu.id IN(4,5,6,7,8)' => null]);
+            $db->where(['ms_menu.id IN(2,3,4,5,6)' => null]);
         }
         $db->where(['(role = "' . _session('role') . '" OR id_user = ' . _session('id') . ')' => null, 'is_aktif' => 1]);
         $db->groupBy('id_menu');
