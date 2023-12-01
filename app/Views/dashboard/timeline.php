@@ -25,7 +25,7 @@
                     <?php if ($booking->id_status >= 6) : ?>
                         <li>
                             <time class="cbp_tmtime"><span class="hidden"><?= (date('D', $booking->selesai_at)); ?></span> <span class="large"><?= date('d-m-Y H:i:s', $booking->selesai_at); ?></span></time>
-                            <div class="cbp_tmicon bg-green"><i class="zmdi zmdi-calendar"></i></div>
+                            <div class="cbp_tmicon bg-green"><i class="zmdi zmdi-calendar" style="color: #ffffff;"></i></div>
                             <div class="cbp_tmlabel empty">
                                 <span><?= $booking->selesai_by; ?></span>
                                 <p><?= $booking->id_status == 6 ? 'selesai' : 'selesai'; ?></p>
@@ -35,7 +35,7 @@
                     <?php if ($booking->id_status >= 5) : ?>
                         <li>
                             <time class="cbp_tmtime"><span><?= (date('D', $booking->ditolak_at)); ?></span> <span><?= date('d-m-Y H:i:s', $booking->ditolak_at); ?></span></time>
-                            <div class="cbp_tmicon bg-danger"><i class="zmdi zmdi-calendar"></i></div>
+                            <div class="cbp_tmicon bg-danger"><i class="zmdi zmdi-calendar" style="color: #ffffff;"></i></div>
                             <div class="cbp_tmlabel">
                                 <h2><a href="javascript:void(0);"><?= $booking->ditolak_by; ?></h2>
                                 <p><?= $booking->id_status == 5 ? 'ditolak' : 'ditolak'; ?></p>
@@ -45,7 +45,7 @@
                     <?php if ($booking->id_status >= 4) : ?>
                         <li>
                             <time class="cbp_tmtime"><span><?= (date('D', $booking->approved_rt_at)); ?></span> <span><?= date('d-m-Y H:i:s', $booking->approved_rt_at); ?></span></time>
-                            <div class="cbp_tmicon bg-blush"><i class="zmdi zmdi-calendar"></i></div>
+                            <div class="cbp_tmicon bg-blush"><i class="zmdi zmdi-calendar" style="color: #ffffff;"></i></div>
                             <div class="cbp_tmlabel">
                                 <h2><a href="javascript:void(0);"><?= $booking->approved_rt_by; ?></a></h2>
                                 <p><?= $booking->id_status == 4 ? 'diproses' : 'diproses'; ?></p>
@@ -55,7 +55,7 @@
                     <?php if ($booking->id_status >= 3) : ?>
                         <li>
                             <time class="cbp_tmtime"><span><?= (date('D', $booking->approved_kadiv_at)); ?></span> <span><?= date('d-m-Y H:i:s', $booking->approved_kadiv_at); ?></span></time>
-                            <div class="cbp_tmicon bg-orange"><i class="zmdi zmdi-calendar"></i></div>
+                            <div class="cbp_tmicon bg-orange"><i class="zmdi zmdi-calendar" style="color: #ffffff;"></i></div>
                             <div class="cbp_tmlabel">
                                 <h2><a href="javascript:void(0);"><?= $booking->approved_kadiv_by; ?></a></h2>
                                 <p><?= $booking->id_status == 3 ? 'approved kadiv' : 'approved kadiv'; ?></p>
@@ -65,7 +65,7 @@
                     <?php if ($booking->id_status >= 2) : ?>
                         <li>
                             <time class="cbp_tmtime"><span><?= (date('D', $booking->approved_kadep_at)); ?></span> <span><?= date('d-m-Y H:i:s', $booking->approved_kadep_at); ?></span></time>
-                            <div class="cbp_tmicon bg-orange"><i class="zmdi zmdi-calendar"></i></div>
+                            <div class="cbp_tmicon bg-orange"><i class="zmdi zmdi-calendar" style="color: #ffffff;"></i></div>
                             <div class="cbp_tmlabel">
                                 <h2><a href="javascript:void(0);"><?= $booking->approved_kadep_by; ?></a></h2>
                                 <p><?= $booking->id_status == 2 ? 'approved kadep' : 'approved kadep'; ?></p>
@@ -75,7 +75,7 @@
                     <?php if ($booking->id_status >= 1) : ?>
                         <li>
                             <time class="cbp_tmtime"><span><?= (date('D', $booking->created_at)); ?></span> <span><?= date('d-m-Y H:i:s', $booking->created_at); ?></span></time>
-                            <div class="cbp_tmicon bg-info"><i class="zmdi zmdi-calendar"></i></div>
+                            <div class="cbp_tmicon bg-info"><i class="zmdi zmdi-calendar" style="color: #ffffff;"></i></div>
                             <div class="cbp_tmlabel">
                                 <h2><a href="javascript:void(0);"><?= $booking->nama; ?></a></h2>
                                 <p><?= $booking->id_status == 1 ? 'baru' : 'baru'; ?></p>
