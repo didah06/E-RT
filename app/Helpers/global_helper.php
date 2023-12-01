@@ -503,12 +503,17 @@ function selectVendor()
 }
 function getSeragam($where = [], $order = '')
 {
-    $db = connectdb('tb_seragam');
+    $db = connectdb('tb_pemesanan_seragam');
     $db->where($where);
     $db->orderBy($order);
-    $db->select('tb_seragam.*, tb_pemesanan_seragam.*, tb_pengambilan_seragam.*');
-    $db->join('tb_pemesanan_seragam', 'tb_pemesanan_seragam.id_seragam = tb_seragam.id_seragam', 'LEFT');
-    $db->join('tb_pengambilan_seragam', 'tb_pengambilan_seragam.id_seragam = tb_seragam.id_seragam', 'LEFT');
+    $db->select('tb_pemesanan_seragam.id_seragam, tb_pemesanan_seragam.departemen, tb_pemesanan_seragam.jenis_seragam, tb_pemesanan_seragam.tgl_pemesanan, tb_pemesanan_seragam.ukuran, tb_pemesanan_seragam.jumlah_pesanan, 
+    tb_pemesanan_seragam.biaya, tb_vendor.vendor,tb_pemesanan_seragam.created_by, tb_pemesanan_seragam.created_at,
+    tb_pemesanan_seragam.tgl_pengiriman, tb_pemesanan_seragam.jumlah_dikirim, tb_pemesanan_seragam.sisa_pesanan, tb_pemesanan_seragam.created_pengiriman_by, 
+    tb_pemesanan_seragam.created_pengiriman_at, tb_pemesanan_seragam.tgl_diterima, tb_pemesanan_seragam.jumlah_diterima, tb_pemesanan_seragam.created_terima_by, tb_pemesanan_seragam.created_terima_at,
+    tb_pengambilan_seragam.tgl_pengambilan_seragam, tb_pengambilan_seragam.jumlah_ambil_seragam, tb_pengambilan_seragam.stok_seragam, tb_pengambilan_seragam.foto, tb_pengambilan_seragam.created_by, tb_pengambilan_seragam.created_at');
+    $db->join('tb_seragam', 'tb_seragam.id_seragam = tb_seragam.id_seragam', 'LEFT');
+    $db->join('tb_vendor', 'tb_vendor.id_vendor = tb_pemesanan_seragam.id_vendor', 'LEFT');
+    $db->join('tb_pengambilan_seragam', 'tb_pengambilan_seragam.id_seragam = tb_pemesanan_seragam.id_seragam', 'LEFT');
     return $db->get();
 }
 function generate_kode_barang()
