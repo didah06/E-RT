@@ -171,6 +171,7 @@ class Fotocopy extends BaseController
                 $json['select']['id_dept'] = 'departemen tidak ditemukan';
             } else {
                 $data = [
+                    'id_dept'             => $departemen->id_dept,
                     'departemen'          => $departemen->departemen,
                     'jenis_user'          => $jenis_user,
                     'kebutuhan_transaksi' => $kebutuhan_transaksi,
