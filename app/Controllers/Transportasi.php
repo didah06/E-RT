@@ -378,11 +378,15 @@ class Transportasi extends BaseController
                     'cara_pemakaian'    => $cara_pemakaian,
                     'type_pemakaian'    => $type_pemakaian,
                 ];
-                $update = updateData('tb_booking_transport', $data, ['id_booking' => $booking->id_booking]);
-                if ($update) {
-                    $json['success'] = $update;
+                if (isJamKeberangkatanTerisi($tanggal_pemakaian, $jam_keberangkatan->start_time, $jam_kembali->end_time) > 0) {
+                    $json['error'] = 'Maaf! pada Jam tersebut sudah ada yang booking';
                 } else {
-                    $json['error']   = 'data gagal update';
+                    $update = updateData('tb_booking_transport', $data, ['id_booking' => $booking->id_booking]);
+                    if ($update) {
+                        $json['success'] = $update;
+                    } else {
+                        $json['error']   = 'data gagal update';
+                    }
                 }
             }
         }
