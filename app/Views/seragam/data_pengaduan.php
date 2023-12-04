@@ -33,9 +33,10 @@
                             <div class="card-deck">
                                 <div class="card">
                                     <div class="card-body">
-                                        <p class="card-text"><?= $table->pengaduan; ?></p>
+                                       <p class="card-text"><?= $table->pengaduan; ?>, <?= $table->tgl_pengaduan; ?> </p>
                                         <p class="card-text"><?= $table->saran; ?></p>
-                                        <p class="card-text"><small class="text-muted"><?= $table->tgl_pengaduan; ?></small></p>
+                                        <p class="card-text"><small class="text-muted"><?= $table->created_by; ?></small></p>
+                                        <p class="card-text"><small class="text-muted"><?= $table->created_at; ?></small></p>
                                     </div>
                                 </div>
                             </div>
