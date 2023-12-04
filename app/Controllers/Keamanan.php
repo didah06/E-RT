@@ -53,6 +53,7 @@ class Keamanan extends BaseController
                     $foto->move(FCPATH . './public/assets/images/keamanan/foto_kejadian', $photo);
                     $data = [
                         'kode_kejadian'  => $kode_kejadian,
+                        'user_id'        => _session('id'),
                         'kejadian'       => $kejadian,
                         'kronologi'      => $kronologi,
                         'tgl_kejadian'   => $tgl_kejadian,
@@ -97,7 +98,7 @@ class Keamanan extends BaseController
     }
     public function laporan_update()
     {
-        $id_keamanan           = _getVar($this->request->getVar('e_id_kejadian'));
+        $id_keamanan           = _getVar($this->request->getVar('e_id_keamanan'));
         $json['input'] = [
             'e_kejadian'       => $this->_validation('e_kejadian', 'Kejadian', 'required'),
             'e_kronologi'      => $this->_validation('e_kronologi', 'Kronologi', 'required'),
