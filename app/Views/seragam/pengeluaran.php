@@ -26,7 +26,7 @@
                 <div class="card patients-list">
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
                                 <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
