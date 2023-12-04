@@ -32,7 +32,8 @@
                             </div>
                         </li>
                     <?php endif; ?>
-                    <?php if ($booking->id_status >= 5) : ?>
+                    <?php if ($booking->status === 'ditolak') : ?>
+                        <?php if ($booking->id_status >= 5) : ?>
                         <li>
                             <time class="cbp_tmtime"><span><?= (date('D', $booking->ditolak_at)); ?></span> <span><?= date('d-m-Y H:i:s', $booking->ditolak_at); ?></span></time>
                             <div class="cbp_tmicon bg-danger"><i class="zmdi zmdi-calendar" style="color: #ffffff;"></i></div>
@@ -41,6 +42,7 @@
                                 <p><?= $booking->id_status == 5 ? 'ditolak' : 'ditolak'; ?></p>
                             </div>
                         </li>
+                        <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($booking->id_status >= 4) : ?>
                         <li>
