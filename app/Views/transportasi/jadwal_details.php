@@ -76,9 +76,11 @@
                             </div>
                         </div>
                         <div class="row pl-2">
+                        <?php if (_session('role') == 'RT') : ?>
                             <?php if ($booking->status === 'diproses') : ?>
                                 <a href="<?= base_url('booking_selesai'); ?>" data-id="<?= $booking->id_booking; ?>" data-toggle="modal" data-target="#Modaladd" class="btn btn-success">Booking Selesai</a>
                             <?php endif; ?>
+                        <?php endif; ?>
                         </div>
                     </div>
                     <!-- Booking Edit -->
