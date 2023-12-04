@@ -79,13 +79,11 @@
                                 </i></button>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
-                                <button class="btn btn-danger mb-3" id="delete-selected">Delete</button>
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><i class="zmdi zmdi-delete" style="font-size: 18px; color: red;"></i></th>
                                         <th class="text-center">#</th>
                                         <th>Departemen</th>
                                         <th>Jenis Seragam</th>
@@ -95,7 +93,6 @@
                                 <tbody>
                                     <?php foreach ($seragam as $table) : ?>
                                         <tr>
-                                            <td class="text-center"> <input type="checkbox" class="delete-checkbox" data-id="<?= $table->id_seragam; ?>"></td>
                                             <td class="text-center">
                                                 <span class="badge badge-warning btn-edit" style="align-items: center; justify-content: center; width: 40px; height: 35px;" data-id="<?= $table->id_seragam; ?>" data-toggle="modal" data-target="#ModalEdit" type="button">
                                                     <i class="zmdi zmdi-edit" style="font-size: 18px;"></i>
@@ -202,7 +199,7 @@
                 }
             })
         })
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('seragam_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_seragam]').val(d['data'].id_seragam);
@@ -239,39 +236,6 @@
                     }
                 }
             })
-        });
-        $('#delete-selected').on('click', function() {
-            var idsToDelete = [];
-
-            // Find the checkboxes that are checked
-            $('.delete-checkbox:checked').each(function() {
-                idsToDelete.push($(this).data('id'));
-            });
-
-            if (idsToDelete.length === 0) {
-                alert('Please select items to delete.');
-                return;
-            }
-
-            // Send an AJAX request to the CodeIgniter Controller to delete the selected items
-            $.ajax({
-                method: 'POST',
-                url: "<?= base_url('seragam_delete'); ?>", // Send data as POST, not in the URL
-                data: {
-                    id_seragam: idsToDelete
-                },
-                error: function(xhr) {
-                    Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
-                },
-                success: function(d) {
-                    if (d.success) {
-                        location.reload();
-                    } else {
-                        invalidError(d);
-                        Swal.fire('Hapus gagal', d.msg, 'error');
-                    }
-                }
-            });
         });
     });
 </script>
