@@ -334,7 +334,7 @@
             });
         });
         // delete table
-        $('#dataTable').on('click', '.delete-selected', function() {
+        $('#dataTable').on('click', '#delete-selected', function() {
             var idsToDelete = [];
 
             // Find the checkboxes that are checked
