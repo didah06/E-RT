@@ -367,11 +367,11 @@ class Keamanan extends BaseController
             $type_kegiatan  = _getVar($this->request->getVar('e_type_kegiatan'));
             $tempat_kegiatan  = _getVar($this->request->getVar('e_tempat_kegiatan'));
             $data = [
-                'e_nama_kegiatan'  => $nama_kegiatan,
-                'e_type_kegiatan'  => $type_kegiatan,
-                'e_tgl_kegiatan'   => $tgl_kegiatan,
-                'e_waktu_kegiatan' => $waktu_kegiatan,
-                'e_tempat_kegiatan' => $tempat_kegiatan,
+                'nama_kegiatan'  => $nama_kegiatan,
+                'type_kegiatan'  => $type_kegiatan,
+                'tgl_kegiatan'   => $tgl_kegiatan,
+                'waktu_kegiatan' => $waktu_kegiatan,
+                'tempat_kegiatan' => $tempat_kegiatan,
             ];
             $update = updateData('tb_informasi', $data, ['id_informasi' => $id_informasi]);
             if ($update) {
