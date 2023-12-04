@@ -17,7 +17,7 @@
                         <div class="row pt-5">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
                                             <tr>
                                                 <th>Jenis Kendaraan</th>
@@ -58,7 +58,7 @@
                                     <button class="btn btn-info" data-toggle="modal" data-target="#ModalAsuransi"><i class="zmdi zmdi-plus"> Asuransi Kendaraan</i></button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -94,7 +94,7 @@
                                     <button class="btn btn-info" data-toggle="modal" data-target="#ModalPajak"><i class="zmdi zmdi-plus"> Pajak Kendaraan</i></button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -292,7 +292,7 @@
                                     <button class="btn btn-info" data-toggle="modal" data-target="#ModalService"><i class="zmdi zmdi-plus"> Service Kendaraan</i></button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <table  id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -334,7 +334,7 @@
                                     <button class="btn btn-info" data-toggle="modal" data-target="#ModalSteam"><i class="zmdi zmdi-plus"> Steam Kendaraan</i></button>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -597,7 +597,7 @@
                 }
             })
         });
-        $('.btn-edit-asuransi').on('click', function() {
+        $('#datatables').on('click', '.btn-edit-asuransi', function() {
             $.getJSON("<?= base_url('asuransi_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_asuransi]').val(d['data'].id_asuransi);
@@ -631,7 +631,7 @@
                 }
             })
         });
-        $('.btn-edit-pajak').on('click', function() {
+        $('#datatables').on('click', '.btn-edit-pajak', function() {
             $.getJSON("<?= base_url('pajak_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_pajak]').val(d['data'].id_pajak);
@@ -639,7 +639,7 @@
                 }
             });
         });
-        $('.btn-edit-service').on('click', function() {
+        $('#datatables').on('click', '.btn-edit-service', function() {
             $.getJSON("<?= base_url('service_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_service]').val(d['data'].id_service);
@@ -648,7 +648,7 @@
                 }
             });
         });
-        $('.btn-edit-steam').on('click', function() {
+        $('#datatables').on('click', '.btn-edit-steam', function() {
             $.getJSON("<?= base_url('steam_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_steam]').val(d['data'].id_pajak);
