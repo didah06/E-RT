@@ -79,7 +79,7 @@
                     <!-- end modal -->
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
                                 <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
@@ -126,7 +126,7 @@
 </section>
 <script>
     $(document).ready(function() {
-        $('.btn-pengaduan').on('click', function() {
+        $('#datatables').on('click', '.btn-pengaduan', function() {
             $.getJSON("<?= base_url('get_seragam/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=id_seragam]').val(d['data'].id_seragam);
