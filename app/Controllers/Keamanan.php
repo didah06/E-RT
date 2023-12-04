@@ -319,6 +319,8 @@ class Keamanan extends BaseController
                 'tgl_kegiatan'   => $tgl_kegiatan,
                 'waktu_kegiatan' => $waktu_kegiatan,
                 'tempat_kegiatan' => $tempat_kegiatan,
+                'created_by'      => _session('nama'),
+                'created_at'      => time()
             ];
             $add = addData('tb_informasi', $data);
             if ($add) {
@@ -387,7 +389,7 @@ class Keamanan extends BaseController
         if (!$informasi) {
             $json['msg'] = 'data Booking tidak ditemukan';
         } else {
-            $delete = $this->model->delete($id_informasi);
+            $delete = deleteData('tb_informasi', ['id_informasi' => $id_informasi]);
             if ($delete) {
                 $json['success']    = 1;
             } else {
