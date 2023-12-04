@@ -2,7 +2,7 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-6 col-sm-12">
-                <h2>Inventaris Barang Fotocopy
+                <h2>Laporan Transaksi Fotocopy
                     <small class="text-muted"><?= appName(); ?></small>
                 </h2>
             </div>
@@ -16,7 +16,7 @@
                 </ul>
             </div>
             <div class=" pt-3 pl-3">
-                <h2>Inventaris Barang Fotocopy</h2>
+                <h2>Laporan Transaksi Fotocopy</h2>
             </div>
         </div>
     </div>
