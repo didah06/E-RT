@@ -63,7 +63,7 @@ class User extends BaseController
                         ];
                     }
                 }
-            } else if ($role == 'Kadep' || $role == 'User') {
+            } else if ($role == 'Kadep' || $role == 'User' || $role == 'RT') {
                 $json['select'] = [
                     'id_direktorat'     => $this->_validation('id_direktorat', 'Direktorat', 'required|is_natural'),
                     'id_divisi'         => $this->_validation('id_divisi', 'Divisi', 'required|is_natural'),
