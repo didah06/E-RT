@@ -252,7 +252,7 @@
         $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('laporan_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
-                    $('input[name=e_id_kejadian]').val(d['data'].id_kejadian);
+                    $('input[name=e_id_keamanan]').val(d['data'].id_keamanan);
                     $('input[name=e_kejadian]').val(d['data'].kejadian);
                     $('input[name=e_kronologi]').val(d['data'].kronologi);
                     $('input[name=e_tgl_kejadian]').val(d['data'].tgl_kejadian);
