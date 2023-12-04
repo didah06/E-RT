@@ -35,8 +35,6 @@
                                         <th>Acara Kegiatan</th>
                                         <th>Nama</th>
                                         <th>Departemen</th>
-                                        <th>Divisi</th>
-                                        <th>Direktorat</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,8 +49,6 @@
                                             <td><?= $table->acara_kegiatan; ?></td>
                                             <td><?= $table->nama; ?></td>
                                             <td><?= $table->departemen; ?></td>
-                                            <td><?= $table->divisi; ?></td>
-                                            <td><?= $table->direktorat; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
