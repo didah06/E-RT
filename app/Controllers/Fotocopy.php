@@ -301,6 +301,8 @@ class Fotocopy extends BaseController
                 'jml_barang'    => $jml_barang,
                 'jenis_pengajuan' => $jenis_pengajuan,
                 'status'          => 'pengajuan'
+                'created_by'      =>_session('nama'),
+                'created_at'      => time()
             ];
             $add = addData('tb_pembelian_barang_fotokopi', $data);
             if ($add) {
