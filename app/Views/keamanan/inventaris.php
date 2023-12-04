@@ -268,7 +268,7 @@
                     $('input[name=e_id_inventaris]').val(d['data'].id_inventaris);
                     $('select[name=e_id_barang]').val(d['data'].id_barang).trigger('change');
                     $('input[name=e_tgl_pengadaan_barang]').val(d['data'].tgl_pengadaan_barang);
-                    $('select[name=e_kondisi]').val(d['data'].id_kondisi).trigger('change');
+                    $('select[name=e_kondisi]').val(d['data'].kondisi).trigger('change');
                     $('input[name=e_tempat_barang_disimpan]').val(d['data'].tempat_barang_disimpan);
                     $('select[name=e_posisi_barang').val(d['data'].posisi_barang).trigger('change');
                     $('input[name=e_keterangan]').val(d['data'].keterangan);
