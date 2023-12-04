@@ -60,11 +60,10 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Kondisi</label>
-                                                <select class="form-control select-only" name="id_kondisi">
+                                                <select class="form-control select-only" name="kondisi">
                                                     <option value="" selected disabled>- Pilih Kondisi -</option>
-                                                    <?php foreach ($kondisi as $item) : ?>
-                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                                    <?php endforeach; ?>
+                                                    <option value="bagus">Bagus</option>
+                                                    <option value="rusak">Rusak</option>
                                                 </select>
                                                 <div class="invalid-feedback"></div>
                                             </div>
@@ -186,11 +185,10 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Kondisi</label>
-                                                <select class="form-control select-only" name="e_id_kondisi">
-                                                    <option value="" selected disabled>- Pilih Kondisi -</option>
-                                                    <?php foreach ($kondisi as $item) : ?>
-                                                        <option value="<?= $item->id; ?>"><?= $item->text; ?></option>
-                                                    <?php endforeach; ?>
+                                                <select class="form-control select-only" name="e_kondisi">
+                                                   <option value="" selected disabled>- Pilih Kondisi -</option>
+                                                    <option value="bagus">Bagus</option>
+                                                    <option value="rusak">Rusak</option>
                                                 </select>
                                                 <div class="invalid-feedback"></div>
                                             </div>
@@ -270,7 +268,7 @@
                     $('input[name=e_id_inventaris]').val(d['data'].id_inventaris);
                     $('select[name=e_id_barang]').val(d['data'].id_barang).trigger('change');
                     $('input[name=e_tgl_pengadaan_barang]').val(d['data'].tgl_pengadaan_barang);
-                    $('select[name=e_id_kondisi]').val(d['data'].id_kondisi).trigger('change');
+                    $('select[name=e_kondisi]').val(d['data'].id_kondisi).trigger('change');
                     $('input[name=e_tempat_barang_disimpan]').val(d['data'].tempat_barang_disimpan);
                     $('select[name=e_posisi_barang').val(d['data'].posisi_barang).trigger('change');
                     $('input[name=e_keterangan]').val(d['data'].keterangan);
