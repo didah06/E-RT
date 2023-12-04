@@ -223,7 +223,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
-                                            <table class="table table-hover">
+                                            <table id="datatables" class="table table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>
@@ -321,7 +321,7 @@
                                                                                 });
                                                                             });
                                                                             // unapproved kadep
-                                                                            $('.btn-unapprove').on('click', function() {
+                                                                            $('#datatables').on('click', '.btn-unapprove', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
                                                                             $('#signature-edit-ditolak').submit(function(e) {
@@ -428,7 +428,7 @@
                                                                                 });
                                                                             });
                                                                             // unapproved kadiv
-                                                                            $('.btn-unapprove-kadiv').on('click', function() {
+                                                                            $('#datatables').on('click', '.btn-unapprove-kadiv', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
                                                                             $('#signature-edit-ditolak').submit(function(e) {
@@ -535,7 +535,7 @@
                                                                                 });
                                                                             });
                                                                             // unapproved RT
-                                                                            $('.btn-unapprove-rt').on('click', function() {
+                                                                            $('#datatables').on('click', '.btn-unapprove-rt', function() {
                                                                                 $('.hidden-reason').show();
                                                                             });
                                                                             $('#signature-edit-ditolak').submit(function() {
@@ -648,7 +648,7 @@
             scrollX: true,
             dom: "<'row'<'col-sm-12 col-md-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 text-center col-md-12'p>>"
         });
-        $('.signature-clear').on('click', function(event) {
+        $('#datatables').on('click', '.signature-clear', function(event) {
             signaturePad.clear();
         });
         $('#ModalSignatureEdit').on('hidden.modal', function(e) {
