@@ -226,7 +226,7 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <!-- delete old menu if menu is not menu current date -->
                                 <!-- delete based on checklist -->
                                 <!-- <button class="btn btn-danger mb-3" id="delete-selected">Delete</button> -->
@@ -253,7 +253,7 @@
                                         <tr>
                                             <td class="text-center">
                                                 <!-- if role RT and Developer -->
-                                                <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
+                                                <?php if (_session('role') == 'RT') : ?>
                                                     <?php if ($table->status === 'pengajuan') : ?>
                                                         <button class="btn btn-success btn-approve" type="button" data-toggle="modal" data-target="#ModalSignatureEdit">Approve</button>
                                                         <button class="btn btn-outline-secondary btn-tolak" type="button">Tolak</button>
@@ -275,7 +275,7 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td>
-                                                <?php if (_session('role') == 'RT' || _session('role') == 'Developer') : ?>
+                                                <?php if (_session('nama') === $table->created_by) : ?>
                                                     <?php if ($table->status === 'pengajuan') : ?>
                                                         <button class="btn btn-warning btn-edit" data-id="<?= $table->kode_barang; ?>" data-toggle="modal" data-target="#ModalEdit" style="font-size: 14px;"><i class="zmdi zmdi-edit"></i></button>
                                                         <button class="btn btn-outline-secondary btn-delete" data-id="<?= $table->id_pembelian_barang; ?>" style="font-size: 14px;"><i class="zmdi zmdi-delete"></i></button>
@@ -448,7 +448,7 @@
                 }
             });
         });
-        $('.btn-tolak').on('click', function() {
+        $('#datatables').on('click', '.btn-tolak', function() {
             $('.hidden-reason').show();
         });
         $('#signature-edit-ditolak').submit(function(e) {
@@ -496,7 +496,7 @@
                 }
             });
         })
-        $('.btn-proses').on('click', function() {
+        $('#datatables').on('click', '.btn-proses', function() {
             processStart();
             var formData = $(this).serialize();
             $.ajax({
@@ -518,14 +518,14 @@
                 }
             })
         })
-        $('.btn-selesai').on('click', function() {
+        $('#datatables').on('click', '.btn-selesai', function() {
             $.getJSON("<?= base_url('get_pembelian_perawatan/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_kode_barang]').val(d['data'].kode_barang);
                 }
             });
         });
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('get_pembelian_perawatan/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_kode_barang]').val(d['data'].kode_barang);
@@ -592,7 +592,7 @@
                 }
             })
         });
-        $('.btn-delete').on('click', function() {
+        $('#datatables').on('click', '.btn-delete', function() {
             var idPembelian = $(this).data('id');
             Swal.fire({
                 title: 'Apa anda yakin?',
@@ -653,7 +653,7 @@
                 }
             })
         })
-        $('.signature-clear').on('click', function(event) {
+        $('#datatables').on('click', '.signature-clear', function(event) {
             signaturePad.clear();
         });
 
