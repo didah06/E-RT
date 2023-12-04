@@ -132,6 +132,8 @@ $routes->post('pengawasan', 'Keamanan::pengawasan_save');
 $routes->get('pengawasan_edit/(:num)', 'Keamanan::pengawasan_edit/$1');
 $routes->put('pengawasan', 'Keamanan::pengawasan_update');
 $routes->resource('keamanan'); // api
+$routes->put('keamanan', 'Keamanan::update');
+$routes->post('keamanan/delete/(:num)', 'Keamanan::delete/$1');
 $routes->get('informasi_keamanan', 'Keamanan::informasi');
 $routes->get('informasi_edit/(:num)', 'Keamanan::informasi_edit/$1');
 $routes->get('inventaris_keamanan', 'Keamanan::inventaris');
