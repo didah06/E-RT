@@ -96,7 +96,7 @@
                                 </i></button>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table  id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
                                         <th width="12%">#</th>
@@ -236,7 +236,7 @@
                 }
             })
         });
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function() {
             $.getJSON("<?= base_url('pengawasan_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_pengawasan]').val(d['data'].id_pengawasan);
