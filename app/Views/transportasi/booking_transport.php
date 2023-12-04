@@ -194,7 +194,7 @@
                             </form>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table id="datatables" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
                                         <th width="12%">#</th>
@@ -486,7 +486,7 @@
                 }
             })
         });
-        $('.btn-edit').on('click', function() {
+        $('#datatables').on('click', '.btn-edit', function(e) {
             $.getJSON("<?= base_url('booking_edit/'); ?>/" + $(this).data('id'), function(d) {
                 if (d['status'] === true) {
                     $('input[name=e_id_booking]').val(d['data'].id_booking);
@@ -527,7 +527,7 @@
                 }
             })
         });
-        $('.btn-delete').on('click', function() {
+       $('#datatables').on('click', '.btn-delete', function(e) {
             var bookingId = $(this).data('id');
             Swal.fire({
                 title: 'Apa anda yakin?',
