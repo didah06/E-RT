@@ -275,7 +275,7 @@
                     $.ajax({
                         type: 'post',
                         dataType: 'json',
-                        url: "<?= base_url('keamanan'); ?>/" + informasiId,
+                       url: "<?= base_url('keamanan/delete'); ?>/" + informasiId,
                         error: function(xhr) {
                             processDone();
                             Swal.fire('Hapus gagal', 'Error ' + xhr.status + ' : ' + xhr.statusText, 'error');
