@@ -140,7 +140,7 @@ $routes->get('inventaris_keamanan', 'Keamanan::inventaris');
 $routes->post('inventaris_keamanan', 'Keamanan::inventaris_save');
 $routes->get('inventaris_keamanan_edit/(:num)', 'Keamanan::inventaris_edit/$1');
 $routes->put('inventaris_keamanan', 'Keamanan::inventaris_update');
-$routes->delete('inventaris_keamanan', 'Keamanan::inventaris_delete');
+
 
 //  Dapur
 // daftar menu
