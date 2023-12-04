@@ -415,7 +415,7 @@ class Keamanan extends BaseController
         ];
         $json['select'] = [
             'id_barang'     => $this->_validation('id_barang', 'Nama Barang', 'required'),
-            'id_kondisi'    => $this->_validation('id_kondisi', 'Kondisi', 'required'),
+            'kondisi'       => $this->_validation('kondisi', 'Kondisi', 'required'),
             // 'posisi_barang' => $this->_validation('posisi_barang', 'Posisi Barang', 'required'),
         ];
         if (_validationHasErrors(array_merge($json['input'], $json['select']))) {
@@ -423,7 +423,7 @@ class Keamanan extends BaseController
             $tempat = _getVar($this->request->getVar('tempat_barang_disimpan'));
             $ket    = _getVar($this->request->getVar('keterangan'));
             $barang = getData('ms_barang_security', ['id_barang' => _getVar($this->request->getVar('id_barang'))])->get()->getRow();
-            $kondisi = getData('ms_barang_kondisi', ['id_kondisi' => _getVar($this->request->getVar('id_kondisi'))])->get()->getRow();
+            $kondisi = _getVar($this->request->getVar('kondisi'));
             $posisi = _getVar($this->request->getVar('posisi_barang'));
             if (!$barang) {
                 $json['select']['id_barang'] = 'barang tidak ditemukan';
@@ -434,7 +434,6 @@ class Keamanan extends BaseController
                     'id_barang'                 => $barang->id_barang,
                     'nama_barang'               => $barang->nama_barang,
                     'tgl_pengadaan_barang'      => $tgl,
-                    'id_kondisi'                => $kondisi->id_kondisi,
                     'kondisi'                   => $kondisi->kondisi,
                     'tempat_barang_disimpan'    => $tempat,
                     'posisi_barang'             => $posisi,
@@ -516,19 +515,5 @@ class Keamanan extends BaseController
         }
         $json['rscript']    = csrf_hash();
         echo json_encode($json);
-    }
-    public function inventaris_delete($id_inventaris)
-    {
-        $inventaris = getData('tb_inventaris', ['id_inventaris' => $id_inventaris])->get()->getRow();
-        if (!$inventaris) {
-            $json['msg'] = 'data Booking tidak ditemukan';
-        } else {
-            $delete = $this->model->delete($inventaris);
-            if ($delete) {
-                $json['success']    = 1;
-            } else {
-                $json['msg']        = $delete;
-            }
-        }
     }
 }
