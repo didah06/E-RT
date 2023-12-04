@@ -59,6 +59,8 @@
                         </div>
                         <div class="row mt-5 mb-5">
                             <div class="col-md-6">
+                                 <strong>Jadwal Booking :</strong>
+                                <?= $booking->jam_keberangkatan; ?>-<?= $booking->jam_kembali; ?><br><br>
                                 <strong>Acara Kegiatan :</strong>
                                 <?= $booking->acara_kegiatan; ?><br><br>
                                 <strong>Tujuan :</strong>
