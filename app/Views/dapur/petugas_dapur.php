@@ -233,7 +233,7 @@
                     $('input[name=e_id_petugas_dapur]').val(d['data'].id_petugas_dapur);
                     $('select[name=e_user_id]').val(d['data'].user_id).trigger('change');
                     $('input[name=e_nama]').val(d['data'].nama);
-                    $('input[name=e_tanggal').val(d[data].tanggal);
+                    $('input[name=e_tanggal').val(d['data'].tanggal);
                     $('select[name=e_id_shift]').val(d['data'].id_shift).trigger('change');
                 }
             });
